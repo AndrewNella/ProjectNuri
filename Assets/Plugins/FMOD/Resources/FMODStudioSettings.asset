@@ -362,16 +362,16 @@ MonoBehaviour:
     HasValue: 0
   displaySortOrder: 0
   childIdentifiers:
-  - fd7c55dab0fce234b8c25f6ffca523c1
-  - de700ef3f37a49b58a57ae3addf01ad9
-  - c88d16e5272a4e241b0ef0ac2e53b73d
-  - b7716510a1f36934c87976f3a81dbf3d
-  - 2c5177b11d81d824dbb064f9ac8527da
-  - 52eb9df5db46521439908db3a29a1bbb
-  - e7a046c753c3c3d4aacc91f6597f310d
-  - 2fea114e74ecf3c4f920e1d5cc1c4c40
-  - 46fbfdf3fc43db0458918377fd40293e
   - 0f8eb3f400726694eb47beb1a9f94ce8
+  - 46fbfdf3fc43db0458918377fd40293e
+  - 2fea114e74ecf3c4f920e1d5cc1c4c40
+  - e7a046c753c3c3d4aacc91f6597f310d
+  - 52eb9df5db46521439908db3a29a1bbb
+  - 2c5177b11d81d824dbb064f9ac8527da
+  - b7716510a1f36934c87976f3a81dbf3d
+  - c88d16e5272a4e241b0ef0ac2e53b73d
+  - de700ef3f37a49b58a57ae3addf01ad9
+  - fd7c55dab0fce234b8c25f6ffca523c1
   codecChannels:
     Value: []
     HasValue: 0
@@ -536,8 +536,8 @@ MonoBehaviour:
   switchSettingsMigration: 1
   HasSourceProject: 1
   HasPlatforms: 1
-  sourceProjectPath: 
-  sourceBankPath: 
+  sourceProjectPath: Assets/_PROJECT/FMOD/NNGameFmod/NNGameFmod.fspro
+  sourceBankPath: Assets/_PROJECT/FMOD/NNGameFmod/Build
   sourceBankPathUnformatted: 
   BankRefreshCooldown: 5
   ShowBankRefreshWindow: 1
@@ -572,21 +572,21 @@ MonoBehaviour:
   SharedLibraryUpdateStage: 0
   SharedLibraryTimeSinceStart: 0
   CurrentVersion: 131622
-  HideSetupWizard: 0
+  HideSetupWizard: 1
   LastEventReferenceScanVersion: 131622
   Platforms:
-  - {fileID: 9192986763875731343}
-  - {fileID: 8323610293709700959}
-  - {fileID: -1089559833214308563}
-  - {fileID: -2034572014282951666}
-  - {fileID: 737274475342363902}
-  - {fileID: -5815427131600731925}
-  - {fileID: 1107557460368588811}
-  - {fileID: -7963337472871894602}
-  - {fileID: -5581944693766159186}
-  - {fileID: -2875693071584787690}
-  - {fileID: -2804550862073623793}
   - {fileID: 1171561159434650288}
+  - {fileID: -2804550862073623793}
+  - {fileID: -2875693071584787690}
+  - {fileID: -5581944693766159186}
+  - {fileID: -7963337472871894602}
+  - {fileID: 1107557460368588811}
+  - {fileID: -5815427131600731925}
+  - {fileID: 737274475342363902}
+  - {fileID: -2034572014282951666}
+  - {fileID: -1089559833214308563}
+  - {fileID: 8323610293709700959}
+  - {fileID: 9192986763875731343}
   MigratedPlatforms: 0500000000000000060000000a0000000800000009000000120000000c000000150000000b0000000200000001000000
 --- !u!114 &737274475342363902
 MonoBehaviour:
