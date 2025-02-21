@@ -1,0 +1,1130 @@
+fileFormatVersion: 2
+guid: f11d06369c63cb5439c32fa14a926e6f
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -2939353528859623479
+    second: Colin Spritesheet_0
+  - first:
+      213: 4236580037148255948
+    second: Colin Spritesheet_1
+  - first:
+      213: 5247282117712788108
+    second: Colin Spritesheet_2
+  - first:
+      213: -5438521200528015066
+    second: Colin Spritesheet_3
+  - first:
+      213: -2864491674792075029
+    second: Colin Spritesheet_4
+  - first:
+      213: -3570189751922408949
+    second: Colin Spritesheet_5
+  - first:
+      213: -3245510023593231715
+    second: Colin Spritesheet_6
+  - first:
+      213: 4739827475849544321
+    second: Colin Spritesheet_7
+  - first:
+      213: 4652220713770274668
+    second: Colin Spritesheet_8
+  - first:
+      213: -9118632069958166144
+    second: Colin Spritesheet_9
+  - first:
+      213: -5496784000656476678
+    second: Colin Spritesheet_10
+  - first:
+      213: 2653662991736156257
+    second: Colin Spritesheet_11
+  - first:
+      213: -5308542153853354058
+    second: Colin Spritesheet_12
+  - first:
+      213: 1448592415434358798
+    second: Colin Spritesheet_13
+  - first:
+      213: -7681525569601524794
+    second: Colin Spritesheet_14
+  - first:
+      213: 6105809035011933834
+    second: Colin Spritesheet_15
+  - first:
+      213: -588453015322945399
+    second: Colin Spritesheet_16
+  - first:
+      213: 8858374560799083676
+    second: Colin Spritesheet_17
+  - first:
+      213: -937265541038701194
+    second: Colin Spritesheet_18
+  - first:
+      213: 2314995608667395055
+    second: Colin Spritesheet_19
+  - first:
+      213: -1937430681611046832
+    second: Colin Spritesheet_20
+  - first:
+      213: 5853760579991664484
+    second: Colin Spritesheet_21
+  - first:
+      213: 4769384329993035916
+    second: Colin Spritesheet_22
+  - first:
+      213: -8097954306879494588
+    second: Colin Spritesheet_23
+  - first:
+      213: 261173920914033437
+    second: Colin Spritesheet_24
+  - first:
+      213: 9054993810388754663
+    second: Colin Spritesheet_25
+  - first:
+      213: -5702940767809260570
+    second: Colin Spritesheet_26
+  - first:
+      213: 6942107979444696184
+    second: Colin Spritesheet_27
+  - first:
+      213: -7235907152657101692
+    second: Colin Spritesheet_28
+  - first:
+      213: 8511683075521757673
+    second: Colin Spritesheet_29
+  - first:
+      213: 8430447991091719862
+    second: Colin Spritesheet_30
+  - first:
+      213: -1118471489178217116
+    second: Colin Spritesheet_31
+  - first:
+      213: -7088873642546580722
+    second: Colin Spritesheet_32
+  - first:
+      213: -4479705087183946875
+    second: Colin Spritesheet_33
+  - first:
+      213: 4515320181517130506
+    second: Colin Spritesheet_34
+  - first:
+      213: -4016488113939631297
+    second: Colin Spritesheet_35
+  - first:
+      213: -5563794764219130185
+    second: Colin Spritesheet_36
+  - first:
+      213: 3565946335625924509
+    second: Colin Spritesheet_37
+  - first:
+      213: -4723651995279888380
+    second: Colin Spritesheet_38
+  - first:
+      213: -6152790884059832417
+    second: Colin Spritesheet_39
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Colin Spritesheet_0
+      rect:
+        serializedVersion: 2
+        x: 10
+        y: 953
+        width: 62
+        height: 146
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9cff703f9815537d0800000000000000
+      internalID: -2939353528859623479
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Colin Spritesheet_1
+      rect:
+        serializedVersion: 2
+        x: 84
+        y: 952
+        width: 62
+        height: 146
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cc6abb0f81b5bca30800000000000000
+      internalID: 4236580037148255948
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Colin Spritesheet_2
+      rect:
+        serializedVersion: 2
+        x: 157
+        y: 951
+        width: 63
+        height: 146
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c8ab786e84712d840800000000000000
+      internalID: 5247282117712788108
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Colin Spritesheet_3
+      rect:
+        serializedVersion: 2
+        x: 232
+        y: 952
+        width: 62
+        height: 145
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 621c81b58cd7684b0800000000000000
+      internalID: -5438521200528015066
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Colin Spritesheet_4
+      rect:
+        serializedVersion: 2
+        x: 306
+        y: 952
+        width: 62
+        height: 146
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: be064fd9ff74f38d0800000000000000
+      internalID: -2864491674792075029
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Colin Spritesheet_5
+      rect:
+        serializedVersion: 2
+        x: 380
+        y: 951
+        width: 63
+        height: 146
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b02cce71653247ec0800000000000000
+      internalID: -3570189751922408949
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Colin Spritesheet_6
+      rect:
+        serializedVersion: 2
+        x: 454
+        y: 952
+        width: 62
+        height: 145
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d9a71c834d1a5f2d0800000000000000
+      internalID: -3245510023593231715
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Colin Spritesheet_7
+      rect:
+        serializedVersion: 2
+        x: 10
+        y: 795
+        width: 62
+        height: 145
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 18206a20aff37c140800000000000000
+      internalID: 4739827475849544321
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Colin Spritesheet_8
+      rect:
+        serializedVersion: 2
+        x: 84
+        y: 796
+        width: 62
+        height: 146
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c6fcdf43712009040800000000000000
+      internalID: 4652220713770274668
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Colin Spritesheet_9
+      rect:
+        serializedVersion: 2
+        x: 158
+        y: 795
+        width: 62
+        height: 146
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 08998a8e17c147180800000000000000
+      internalID: -9118632069958166144
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Colin Spritesheet_10
+      rect:
+        serializedVersion: 2
+        x: 232
+        y: 794
+        width: 63
+        height: 146
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: af5f1d9131087b3b0800000000000000
+      internalID: -5496784000656476678
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Colin Spritesheet_11
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 639
+        width: 63
+        height: 146
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 160b8086e64b3d420800000000000000
+      internalID: 2653662991736156257
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Colin Spritesheet_12
+      rect:
+        serializedVersion: 2
+        x: 85
+        y: 638
+        width: 63
+        height: 146
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6bf326479054456b0800000000000000
+      internalID: -5308542153853354058
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Colin Spritesheet_13
+      rect:
+        serializedVersion: 2
+        x: 159
+        y: 639
+        width: 64
+        height: 145
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e004a4a702f6a1410800000000000000
+      internalID: 1448592415434358798
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Colin Spritesheet_14
+      rect:
+        serializedVersion: 2
+        x: 233
+        y: 638
+        width: 63
+        height: 145
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6cb22d2613db56590800000000000000
+      internalID: -7681525569601524794
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Colin Spritesheet_15
+      rect:
+        serializedVersion: 2
+        x: 307
+        y: 639
+        width: 63
+        height: 145
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a86c146a7f03cb450800000000000000
+      internalID: 6105809035011933834
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Colin Spritesheet_16
+      rect:
+        serializedVersion: 2
+        x: 381
+        y: 639
+        width: 63
+        height: 145
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9881baea91565d7f0800000000000000
+      internalID: -588453015322945399
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Colin Spritesheet_17
+      rect:
+        serializedVersion: 2
+        x: 455
+        y: 639
+        width: 63
+        height: 144
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c9c49c7bab44fea70800000000000000
+      internalID: 8858374560799083676
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Colin Spritesheet_18
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 481
+        width: 63
+        height: 145
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6758c2ec4f92ef2f0800000000000000
+      internalID: -937265541038701194
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Colin Spritesheet_19
+      rect:
+        serializedVersion: 2
+        x: 85
+        y: 482
+        width: 63
+        height: 146
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fe3953f9d34802020800000000000000
+      internalID: 2314995608667395055
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Colin Spritesheet_20
+      rect:
+        serializedVersion: 2
+        x: 159
+        y: 482
+        width: 63
+        height: 145
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 05071ad5f0ddc15e0800000000000000
+      internalID: -1937430681611046832
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Colin Spritesheet_21
+      rect:
+        serializedVersion: 2
+        x: 233
+        y: 482
+        width: 63
+        height: 145
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4677692ab3cbc3150800000000000000
+      internalID: 5853760579991664484
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Colin Spritesheet_22
+      rect:
+        serializedVersion: 2
+        x: 12
+        y: 325
+        width: 63
+        height: 146
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c80ac8267c1403240800000000000000
+      internalID: 4769384329993035916
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Colin Spritesheet_23
+      rect:
+        serializedVersion: 2
+        x: 86
+        y: 324
+        width: 63
+        height: 146
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4466a1376794e9f80800000000000000
+      internalID: -8097954306879494588
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Colin Spritesheet_24
+      rect:
+        serializedVersion: 2
+        x: 158
+        y: 325
+        width: 65
+        height: 145
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d1b4dac1c40ef9300800000000000000
+      internalID: 261173920914033437
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Colin Spritesheet_25
+      rect:
+        serializedVersion: 2
+        x: 234
+        y: 324
+        width: 63
+        height: 145
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7e0259725ecc9ad70800000000000000
+      internalID: 9054993810388754663
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Colin Spritesheet_26
+      rect:
+        serializedVersion: 2
+        x: 308
+        y: 325
+        width: 63
+        height: 145
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6e3b2af46951bd0b0800000000000000
+      internalID: -5702940767809260570
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Colin Spritesheet_27
+      rect:
+        serializedVersion: 2
+        x: 382
+        y: 325
+        width: 63
+        height: 145
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 874b43b2d62575060800000000000000
+      internalID: 6942107979444696184
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Colin Spritesheet_28
+      rect:
+        serializedVersion: 2
+        x: 456
+        y: 325
+        width: 63
+        height: 144
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 48c4a2a38c4e49b90800000000000000
+      internalID: -7235907152657101692
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Colin Spritesheet_29
+      rect:
+        serializedVersion: 2
+        x: 12
+        y: 167
+        width: 63
+        height: 145
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9e1cd2d09a29f1670800000000000000
+      internalID: 8511683075521757673
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Colin Spritesheet_30
+      rect:
+        serializedVersion: 2
+        x: 86
+        y: 168
+        width: 63
+        height: 146
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6be6d6e08c7fef470800000000000000
+      internalID: 8430447991091719862
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Colin Spritesheet_31
+      rect:
+        serializedVersion: 2
+        x: 160
+        y: 168
+        width: 63
+        height: 145
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 46551244b146a70f0800000000000000
+      internalID: -1118471489178217116
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Colin Spritesheet_32
+      rect:
+        serializedVersion: 2
+        x: 234
+        y: 168
+        width: 63
+        height: 145
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e03b1660bf24f9d90800000000000000
+      internalID: -7088873642546580722
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Colin Spritesheet_33
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 11
+        width: 62
+        height: 146
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 58bf3eb25f3e4d1c0800000000000000
+      internalID: -4479705087183946875
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Colin Spritesheet_34
+      rect:
+        serializedVersion: 2
+        x: 85
+        y: 10
+        width: 62
+        height: 146
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a0b1b7a28c3a9ae30800000000000000
+      internalID: 4515320181517130506
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Colin Spritesheet_35
+      rect:
+        serializedVersion: 2
+        x: 157
+        y: 9
+        width: 64
+        height: 146
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f33bc0437519248c0800000000000000
+      internalID: -4016488113939631297
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Colin Spritesheet_36
+      rect:
+        serializedVersion: 2
+        x: 233
+        y: 10
+        width: 62
+        height: 145
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7be5a83e32e69c2b0800000000000000
+      internalID: -5563794764219130185
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Colin Spritesheet_37
+      rect:
+        serializedVersion: 2
+        x: 307
+        y: 10
+        width: 62
+        height: 146
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d9fc61f8c49cc7130800000000000000
+      internalID: 3565946335625924509
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Colin Spritesheet_38
+      rect:
+        serializedVersion: 2
+        x: 381
+        y: 9
+        width: 62
+        height: 146
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 400f6ca8987327eb0800000000000000
+      internalID: -4723651995279888380
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Colin Spritesheet_39
+      rect:
+        serializedVersion: 2
+        x: 456
+        y: 10
+        width: 61
+        height: 145
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f9f1a523a45ec9aa0800000000000000
+      internalID: -6152790884059832417
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable: {}
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

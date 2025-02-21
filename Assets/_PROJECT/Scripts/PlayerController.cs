@@ -5,17 +5,31 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     PlayerActionMap actionMap;
-    public float moveSpeed;
 
+    [SerializeField] LayerMask solidObjectLayer, dangerLayer;
+    [SerializeField] float solidObjectDetectionRadius;
+
+    [Header("Movement Data")]
+
+    [SerializeField] Transform gridparentTransform;
+    public float moveSpeed;
+    [SerializeField] float movementMagnitudeLimit;
     public bool isMoving;
 
     Vector2 inputVector;
+
+    Animator animator;
+
+
+
 
     private void Awake()
     {
         inputVector = Vector2.zero;
         actionMap = new PlayerActionMap();
         actionMap.Enable();
+
+        animator = GetComponent<Animator>();
 
         actionMap.PlayerControllerMap.Movement.performed += x => OnPlayerMoveInput(x.ReadValue<Vector2>());
         actionMap.PlayerControllerMap.Movement.canceled += x => OnPlayerMoveInput(x.ReadValue<Vector2>());
@@ -38,26 +52,59 @@ public class PlayerController : MonoBehaviour
 
             if (inputVector != Vector2.zero)
             {
-                Vector3 _targetPos = transform.position;
+                animator.SetFloat("moveX", inputVector.x);
+                animator.SetFloat("moveY", inputVector.y);
+
+                Vector3 _targetPos = gridparentTransform.position;
                 _targetPos.x += inputVector.x;
                 _targetPos.y += inputVector.y;
 
-                StartCoroutine(Move(_targetPos));
+                if (IsWalkable(_targetPos))
+                {
+
+                    StartCoroutine(Move(_targetPos));
+                }
             }
         }
+        animator.SetBool("isMoving", isMoving);
     }
 
     IEnumerator Move(Vector3 _targetPosition)
     {
         isMoving = true;
-        while ((_targetPosition - transform.position).sqrMagnitude > 0)
+        while ((_targetPosition - gridparentTransform.position).sqrMagnitude > movementMagnitudeLimit)
         {
-            transform.position = Vector3.MoveTowards(transform.position, _targetPosition, moveSpeed * Time.deltaTime);
+            gridparentTransform.position = Vector3.MoveTowards(gridparentTransform.position, _targetPosition, moveSpeed * Time.deltaTime);
+
             yield return null;
         }
-        transform.position = _targetPosition;
+        gridparentTransform.position = _targetPosition;
         Debug.Log(isMoving);
         isMoving = false;
+
+        CheckForEncounter();
+    }
+
+    private void CheckForEncounter()
+    {
+        if (Physics2D.OverlapCircle(gridparentTransform.position, 0.2f, dangerLayer) != null)
+        {
+            if (UnityEngine.Random.Range(1, 101) <= 10)
+            {
+                Debug.Log("Encounter");
+            }
+        }
+    }
+
+    bool IsWalkable(Vector3 _targetPos)
+    {
+
+        if (Physics2D.OverlapCircle(_targetPos, solidObjectDetectionRadius, solidObjectLayer) != null)
+        {
+            return false;
+        }
+        return true;
+
     }
 
 }
