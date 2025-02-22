@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 189ba2e745ab4674d8b5967447a2036a, type: 3}
+  m_Name: Punch
+  m_EditorClassIdentifier: 
+  attackname: Punch
+  attackDescription: A simple strike with a fist or appendage.
+  power: 35
+  accuracy: 100
+  manaCost: 0
+  damageType1: 2
+  damageType2: 0
