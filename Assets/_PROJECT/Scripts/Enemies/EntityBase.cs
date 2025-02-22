@@ -1,33 +1,33 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "MonsterBase", menuName = "Scriptable Objects/MonsterBase")]
-public class MonsterBase : ScriptableObject
+[CreateAssetMenu(fileName = "Entitybase", menuName = "Scriptable Objects/Entitybase")]
+public class EntityBase : ScriptableObject
 {
-    [SerializeField] string monsterName;
+    [SerializeField] string entityName;
 
     [TextArea]
-    [SerializeField] string monsterDescription;
+    [SerializeField] string entityDescription;
 
     [SerializeField] Sprite frontSprite, backSprite;
 
-    [SerializeField] MonsterType enemyType1, enemyType2;
+    [SerializeField] EntityType entityType1, entityType2;
 
     //Basic Data
     [SerializeField] float maxHP, maxMana, lust, attack, defense, magicAttack, magicDefense, speed;
 
-    [SerializeField] List<LearnableAttacks> listOfUsableAttacks;
+    [SerializeField] List<LearnableAttacks> learnableAttacks;
 
     public string Name => name;
 
 
-    public string Description => monsterDescription;
+    public string Description => entityDescription;
 
     public Sprite FrontSprite => frontSprite;
     public Sprite BackSprite => backSprite;
 
-    public MonsterType EnemyType1 => enemyType1;
-    public MonsterType EnemyType2 => enemyType2;
+    public EntityType EnemyType1 => entityType1;
+    public EntityType EnemyType2 => entityType2;
 
 
 
@@ -48,7 +48,7 @@ public class MonsterBase : ScriptableObject
 
     public List<LearnableAttacks> LearnableAttacks
     {
-        get { return LearnableAttacks; }
+        get { return learnableAttacks; }
     }
 
 
@@ -69,7 +69,7 @@ public class LearnableAttacks
         get { return level; }
     }
 }
-public enum MonsterType
+public enum EntityType
 {
     None,
     Slime,

@@ -38,6 +38,7 @@ public class PlayerController : MonoBehaviour
 
     private void OnPlayerMoveInput(Vector2 _incomingVector2)
     {
+        
         Debug.Log("Is Moving");
         inputVector = _incomingVector2;
     }

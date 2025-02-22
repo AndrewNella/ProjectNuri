@@ -30,6 +30,8 @@ public enum AttackType
     Earth,
     Electricity,
     Arousal,
+    SelfBuff,
+    Heal,
     TrueDamage
 
 }
