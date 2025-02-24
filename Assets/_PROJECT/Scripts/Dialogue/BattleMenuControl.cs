@@ -11,14 +11,16 @@ public class BattleMenuControl : MonoBehaviour
 
     [SerializeField] GameObject actionSelector, attackSelector, moveDetails;
 
-    [SerializeField] List<TMP_Text> actionTexts;
-    [SerializeField] List<TMP_Text> attackText;
+    public List<TMP_Text> actionTexts;
+    public List<TMP_Text> attackText;
 
-    [SerializeField] TMP_Text typeText, manaCostText, lustCostText;
+    public TMP_Text typeText, manaCostText, lustCostText;
 
     [Header("First Selected Action")]
     [SerializeField] GameObject actionMenuFirst;
     [SerializeField] GameObject attackMenuFirst;
+
+
 
     public void SetDialogue(string _incomingDialogue)
     {
@@ -74,5 +76,28 @@ public class BattleMenuControl : MonoBehaviour
                 attackText[i].text = "-";
             }
         }
+    }
+
+    public void UpdateAttackDetails(Attack _incomingAttack)
+    {
+        if (_incomingAttack.ManaCost == 0)
+        {
+            manaCostText.text = "Mana Cost: 0";
+        }
+        else manaCostText.text = $"Mana Cost: {_incomingAttack.ManaCost}";
+
+        if (_incomingAttack.Base.LustCost == 0)
+        {
+            manaCostText.text = "Lust Cost: 0";
+
+        }
+        else manaCostText.text = $"Lust Cost:  {_incomingAttack.Base.LustCost}";
+
+        if (_incomingAttack.Base.DamageType2 == AttackType.None)
+        {
+            manaCostText.text = $"Attack Type - {_incomingAttack.Base.DamageType1}";
+
+        }
+        else manaCostText.text = $"Attack Type - {_incomingAttack.Base.DamageType1} - {_incomingAttack.Base.DamageType2}";
     }
 }
