@@ -26,10 +26,12 @@ MonoBehaviour:
   magicAttack: 25
   magicDefense: 10
   speed: 75
-  listOfUsableAttacks:
-  - attackBase: {fileID: 11400000, guid: 570b52db3ac235b4891dd0785e77890e, type: 2}
-    level: 1
+  learnableAttacks:
   - attackBase: {fileID: 11400000, guid: 1c01479088c80aa4d98e012f47ffbc22, type: 2}
     level: 1
-  - attackBase: {fileID: 11400000, guid: e3635754386df5445803350a0cc1bf3e, type: 2}
+  - attackBase: {fileID: 11400000, guid: 570b52db3ac235b4891dd0785e77890e, type: 2}
     level: 2
+  - attackBase: {fileID: 11400000, guid: e3635754386df5445803350a0cc1bf3e, type: 2}
+    level: 3
+  - attackBase: {fileID: 11400000, guid: 7244836881baf854f89f1d2d9f2210d5, type: 2}
+    level: 4

@@ -5,6 +5,8 @@ using TMPro;
 
 using UnityEngine;
 using UnityEngine.EventSystems;
+using Unity.VisualScripting;
+using UnityEngine.UI;
 
 public class BattleController : MonoBehaviour
 {
@@ -14,6 +16,7 @@ public class BattleController : MonoBehaviour
     [SerializeField] BattleMenuControl battleMenuControlSystem;
 
     BattleState state;
+
 
     bool detailsAreUpdated = false;
 
@@ -26,19 +29,40 @@ public class BattleController : MonoBehaviour
     {
         if (state == BattleState.PlayerAttack)
         {
-
-            TMP_Text _textHolder = null;
-            foreach (var text in battleMenuControlSystem.attackText)
+            if (EventSystem.current.currentSelectedGameObject != battleMenuControlSystem.currentlySelectedGameObjectByEventSystem)
             {
-                if (EventSystem.current.currentSelectedGameObject.GetComponentInChildren<TextMeshProUGUI>() == text && _textHolder == null)
+
+                TMP_Text _textHolder = null;
+
+                foreach (var text in battleMenuControlSystem.attackText)
                 {
-                    _textHolder = EventSystem.current.currentSelectedGameObject.GetComponentInChildren<TMP_Text>();
-                    
-                    break;
+                    if (EventSystem.current.currentSelectedGameObject != null && EventSystem.current.currentSelectedGameObject.TryGetComponent<Button>(out Button _button))
+                    {
+
+                        if (_button.GetComponentInChildren<TextMeshProUGUI>() == text && _textHolder == null)
+                        {
+                            _textHolder = EventSystem.current.currentSelectedGameObject.GetComponentInChildren<TMP_Text>();
+
+                        }
+                    }
+
+                }
+                if (_textHolder != null)
+                {
+                    foreach (var knownAttack in playerUnit.entity.knownAttacks)
+                    {
+                        if (_textHolder.text == knownAttack.Base.Attackname)
+                        {
+                            battleMenuControlSystem.UpdateAttackDetails(knownAttack);
+
+                        }
+                    }
                 }
 
             }
-            Debug.Log(_textHolder.text);
+
+
+
 
 
         }
@@ -53,6 +77,7 @@ public class BattleController : MonoBehaviour
         battleMenuControlSystem.SetDialogue($"You were spotted by a {enemyUnit.entity.Base.Name}. You cannot avoid a battle.");
 
         battleMenuControlSystem.SetAttacknames(playerUnit.entity.knownAttacks);
+
 
         yield return StartCoroutine(battleMenuControlSystem.TypeDialogue($"You were spotted by a {enemyUnit.entity.Base.Name}. You cannot avoid a battle."));
         yield return new WaitForSeconds(1f);
@@ -73,16 +98,6 @@ public class BattleController : MonoBehaviour
         battleMenuControlSystem.EnableActionSelector(false);
         battleMenuControlSystem.EnableDialogueText(false);
         battleMenuControlSystem.EnableAttackSelector(true);
-    }
-
-    void UpdateAttackDetails(){
-
-        foreach (var Attackname in playerUnit.entity.knownAttacks)
-        {
-            
-        }
-        battleMenuControlSystem.typeText.text = $"Attack Type - ";
-        detailsAreUpdated = true;
     }
 
 

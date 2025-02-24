@@ -14,12 +14,13 @@ public class BattleMenuControl : MonoBehaviour
     public List<TMP_Text> actionTexts;
     public List<TMP_Text> attackText;
 
-    public TMP_Text typeText, manaCostText, lustCostText;
+    public TMP_Text type1Text, type2Text, manaCostText, lustCostText, attackDescriptionText;
 
     [Header("First Selected Action")]
     [SerializeField] GameObject actionMenuFirst;
     [SerializeField] GameObject attackMenuFirst;
 
+    public GameObject currentlySelectedGameObjectByEventSystem;
 
 
     public void SetDialogue(string _incomingDialogue)
@@ -33,6 +34,7 @@ public class BattleMenuControl : MonoBehaviour
         if (_incomingBool)
         {
             EventSystem.current.SetSelectedGameObject(null);
+
         }
     }
     public void EnableActionSelector(bool _incomingBool)
@@ -49,6 +51,7 @@ public class BattleMenuControl : MonoBehaviour
         if (_incomingBool)
         {
             EventSystem.current.SetSelectedGameObject(attackMenuFirst);
+
         }
     }
 
@@ -80,24 +83,14 @@ public class BattleMenuControl : MonoBehaviour
 
     public void UpdateAttackDetails(Attack _incomingAttack)
     {
-        if (_incomingAttack.ManaCost == 0)
-        {
-            manaCostText.text = "Mana Cost: 0";
-        }
-        else manaCostText.text = $"Mana Cost: {_incomingAttack.ManaCost}";
+        manaCostText.text = $"Mana Cost: {_incomingAttack.ManaCost}";
+        lustCostText.text = $"Lust Cost:  {_incomingAttack.Base.LustCost}";
 
-        if (_incomingAttack.Base.LustCost == 0)
-        {
-            manaCostText.text = "Lust Cost: 0";
+        type1Text.text = $"Attack Type - {_incomingAttack.Base.DamageType1}";
+        type2Text.text = $"Attack Type - {_incomingAttack.Base.DamageType2}";
 
-        }
-        else manaCostText.text = $"Lust Cost:  {_incomingAttack.Base.LustCost}";
 
-        if (_incomingAttack.Base.DamageType2 == AttackType.None)
-        {
-            manaCostText.text = $"Attack Type - {_incomingAttack.Base.DamageType1}";
 
-        }
-        else manaCostText.text = $"Attack Type - {_incomingAttack.Base.DamageType1} - {_incomingAttack.Base.DamageType2}";
+        attackDescriptionText.text = $"{_incomingAttack.Base.AttackDescription}";
     }
 }
