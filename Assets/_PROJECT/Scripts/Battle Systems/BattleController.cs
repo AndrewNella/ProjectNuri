@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using Unity.VisualScripting;
 using UnityEngine.UI;
+using Unity.Multiplayer.Center.Common;
 
 public class BattleController : MonoBehaviour
 {
@@ -17,6 +18,7 @@ public class BattleController : MonoBehaviour
 
     BattleState state;
 
+    Attack currentSelectedAttack;
 
     bool detailsAreUpdated = false;
 
@@ -54,19 +56,44 @@ public class BattleController : MonoBehaviour
                         if (_textHolder.text == knownAttack.Base.Attackname)
                         {
                             battleMenuControlSystem.UpdateAttackDetails(knownAttack);
-
+                            UpdateCurrentlySelectedAttack(knownAttack);
                         }
                     }
                 }
 
             }
-
-
-
-
-
         }
     }
+
+    void UpdateCurrentlySelectedAttack(Attack _incomingAttack)
+    {
+        currentSelectedAttack = _incomingAttack;
+    }
+    private void PlayerAction()
+    {
+        UpdateCurrentlySelectedAttack(null);
+        state = BattleState.PlayerAction;
+        StartCoroutine(battleMenuControlSystem.TypeDialogue("Choose an Action."));
+        battleMenuControlSystem.EnableActionSelector(true);
+    }
+    public void PlayerMove()
+    {
+        state = BattleState.PlayerAttack;
+        battleMenuControlSystem.EnableActionSelector(false);
+        battleMenuControlSystem.EnableDialogueText(false);
+        battleMenuControlSystem.EnableAttackSelector(true);
+    }
+
+    public void InitiateAttack()
+    {
+        if (currentSelectedAttack != null)
+        {
+            battleMenuControlSystem.EnableAttackSelector(false);
+            battleMenuControlSystem.EnableDialogueText(true);
+        }
+    }
+
+    #region Coroutines
     public IEnumerator SetupBattle()
     {
         playerUnit.Setup();
@@ -85,23 +112,47 @@ public class BattleController : MonoBehaviour
         PlayerAction();
 
     }
-
-    private void PlayerAction()
+    public IEnumerator PerformPhysicalAttack()
     {
-        state = BattleState.PlayerAction;
-        StartCoroutine(battleMenuControlSystem.TypeDialogue("Choose an Action."));
-        battleMenuControlSystem.EnableActionSelector(true);
+        state = BattleState.Busy;
+        yield return battleMenuControlSystem.TypeDialogue($"{playerUnit.entity.Base.name} used {currentSelectedAttack.Base.name}.");
+
+
+        yield return new WaitForSeconds(1f);
+        bool _isDefeated = enemyUnit.entity.TakePhysicalDamage(currentSelectedAttack, playerUnit.entity);
+        playerHUD.UpdateHP();
+
+        if (_isDefeated)
+        {
+            yield return battleMenuControlSystem.TypeDialogue($"{enemyUnit.entity.Base.name} was defeated.");
+        }
+        else
+        {
+            StartCoroutine(EnemyAttack());
+        }
+
     }
-    public void PlayerMove()
+    IEnumerator EnemyAttack()
     {
-        state = BattleState.PlayerAttack;
-        battleMenuControlSystem.EnableActionSelector(false);
-        battleMenuControlSystem.EnableDialogueText(false);
-        battleMenuControlSystem.EnableAttackSelector(true);
+        state = BattleState.EnemyAttack;
+        var _attack = enemyUnit.entity.GetRandomAttack();
+
+        yield return battleMenuControlSystem.TypeDialogue($"{enemyUnit.entity.Base.name} used {_attack.Base.name}.");
+        yield return new WaitForSeconds(1f);
+        bool _isDefeated = playerUnit.entity.TakePhysicalDamage(currentSelectedAttack, playerUnit.entity);
+        enemyHUD.UpdateHP();
+
+        if (_isDefeated)
+        {
+            yield return battleMenuControlSystem.TypeDialogue($"{playerUnit.entity.Base.name} was defeated.");
+        }
+        else
+        {
+            PlayerAction();
+        }
     }
 
 
-
-
+    #endregion
     public enum BattleState { Start, PlayerAction, PlayerAttack, EnemyAttack, Busy }
 }

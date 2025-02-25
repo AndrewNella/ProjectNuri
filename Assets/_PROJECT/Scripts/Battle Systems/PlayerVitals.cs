@@ -30,7 +30,7 @@ public class PlayerVitals : MonoBehaviour
     public void SetLust(float _incomingLust)
     {
 
-        healthText.text = $"Lust: {_incomingLust}/100";
+        lustText.text = $"Lust: {_incomingLust}/100";
         lustBar.value = _incomingLust;
 
     }

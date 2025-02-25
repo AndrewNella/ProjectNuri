@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
@@ -8,6 +9,8 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField] LayerMask solidObjectLayer, dangerLayer;
     [SerializeField] float solidObjectDetectionRadius;
+
+    PlayerState state;
 
     [Header("Movement Data")]
 
@@ -34,40 +37,64 @@ public class PlayerController : MonoBehaviour
         actionMap.PlayerControllerMap.Movement.performed += x => OnPlayerMoveInput(x.ReadValue<Vector2>());
         actionMap.PlayerControllerMap.Movement.canceled += x => OnPlayerMoveInput(x.ReadValue<Vector2>());
 
+        actionMap.PlayerControllerMap.Pause.performed += OnPauseInput;
+        actionMap.PlayerControllerMap.Pause.canceled -= OnPauseInput;
+
+    }
+
+    void OnPauseInput(InputAction.CallbackContext _incomingInput)
+    {
+        if (state == PlayerState.MenuNavigation)
+        {
+            ChangePlayerState(PlayerState.OverworldExplore);
+        }
+        else
+        {
+            ChangePlayerState(PlayerState.MenuNavigation);
+        }
+    }
+
+    void Start()
+    {
+        state = PlayerState.OverworldExplore;
     }
 
     private void OnPlayerMoveInput(Vector2 _incomingVector2)
     {
-        
+
         Debug.Log("Is Moving");
         inputVector = _incomingVector2;
     }
 
     void Update()
     {
-        if (!isMoving)
+        if (state == PlayerState.OverworldExplore)
         {
-            //Removes Diagonal Movement
-            if (inputVector.x != 0) inputVector.y = 0;
 
-
-            if (inputVector != Vector2.zero)
+            if (!isMoving)
             {
-                animator.SetFloat("moveX", inputVector.x);
-                animator.SetFloat("moveY", inputVector.y);
+                //Removes Diagonal Movement
+                if (inputVector.x != 0) inputVector.y = 0;
 
-                Vector3 _targetPos = gridparentTransform.position;
-                _targetPos.x += inputVector.x;
-                _targetPos.y += inputVector.y;
 
-                if (IsWalkable(_targetPos))
+                if (inputVector != Vector2.zero)
                 {
+                    animator.SetFloat("moveX", inputVector.x);
+                    animator.SetFloat("moveY", inputVector.y);
 
-                    StartCoroutine(Move(_targetPos));
+                    Vector3 _targetPos = gridparentTransform.position;
+                    _targetPos.x += inputVector.x;
+                    _targetPos.y += inputVector.y;
+
+                    if (IsWalkable(_targetPos))
+                    {
+
+                        StartCoroutine(Move(_targetPos));
+                    }
                 }
             }
+            animator.SetBool("isMoving", isMoving);
         }
-        animator.SetBool("isMoving", isMoving);
     }
 
     IEnumerator Move(Vector3 _targetPosition)
@@ -107,5 +134,11 @@ public class PlayerController : MonoBehaviour
         return true;
 
     }
+    public void ChangePlayerState(PlayerState _incomingState)
+    {
+        state = _incomingState;
+    }
+
+    public enum PlayerState { OverworldExplore, MenuNavigation }
 
 }

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Scripting.APIUpdating;
 
 public class Entity
 {
@@ -65,4 +66,69 @@ public class Entity
         get { return (Base.Speed * Level); }
     }
 
+    public Attack GetRandomAttack()
+    {
+        int r = Random.Range(0, knownAttacks.Count);
+        return knownAttacks[r];
+    }
+
+    public bool TakePhysicalDamage(Attack _incomingAttack, Entity _incomingEntity)
+    {
+        float _damage = _incomingAttack.Base.Power + (_incomingEntity.Attack - Defense) + 2;
+        if (_damage < 0)
+        {
+            _damage = 0;
+        }
+
+        currentHP -= _damage;
+
+        if (currentHP <= 0)
+        {
+            currentHP = 0;
+            return true;
+        }
+
+        return false;
+    }
+
+    public bool TakeMagicDamage(Attack _incomingAttack, Entity _incomingEntity)
+    {
+        float randomModifier = Random.Range(0.85f, 1.25f);
+        float _damage = _incomingAttack.Base.Power + (_incomingEntity.MagicAttack - MagicDefense) + 2;
+        if (_damage < 0)
+        {
+            _damage = 0;
+        }
+
+        _damage *= randomModifier;
+
+        currentHP -= _damage;
+
+        if (currentHP <= 0)
+        {
+            currentHP = 0;
+            return true;
+        }
+
+        return false;
+    }
+
+    public bool TakeArousalDamage(Attack _incomingAttack, Entity _incomingEntity)
+    {
+        float _damage = _incomingAttack.Base.Power + (_incomingEntity.Attack - Defense) + 2;
+        if (_damage < 0)
+        {
+            _damage = 0;
+        }
+
+        currentLust += _damage;
+
+        if (currentLust >= MaxLust)
+        {
+            currentHP = MaxLust;
+            return true;
+        }
+
+        return false;
+    }
 }

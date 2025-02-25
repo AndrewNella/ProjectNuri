@@ -6,8 +6,12 @@ public class BattleHUD : MonoBehaviour
     [SerializeField] TMP_Text nameText, levelText;
     [SerializeField] PlayerVitals vitals;
 
+    Entity currentEntity;
+
     public void SetData(Entity _incomingEntity)
     {
+
+        currentEntity = _incomingEntity;
         nameText.text = _incomingEntity.Base.Name;
         levelText.text = "Lvl " + _incomingEntity.Level;
 
@@ -16,5 +20,18 @@ public class BattleHUD : MonoBehaviour
         vitals.SetMana(_incomingEntity.currentMana);
         vitals.SetLust(_incomingEntity.currentLust);
 
+    }
+
+    public void UpdateMana()
+    {
+        vitals.SetMana(currentEntity.currentMana);
+    }
+    public void UpdateHP()
+    {
+        vitals.SetHP(currentEntity.currentHP);
+    }
+    public void UpdateLust()
+    {
+        vitals.SetLust(currentEntity.currentLust);
     }
 }
