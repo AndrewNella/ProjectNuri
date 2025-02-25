@@ -1,6 +1,7 @@
 using TMPro;
 using UnityEngine;
 
+
 public class BattleHUD : MonoBehaviour
 {
     [SerializeField] TMP_Text nameText, levelText;
@@ -21,20 +22,19 @@ public class BattleHUD : MonoBehaviour
 
         vitals.SetMana(_incomingEntity.currentMana);
         vitals.SetLust(_incomingEntity.currentLust);
-
-
     }
+
 
     public void UpdateMana()
     {
-        vitals.SetMana(currentEntity.currentMana);
+        vitals.AnimateManaBar(currentEntity.currentMana);
     }
     public void UpdateHP()
     {
-        vitals.SetHP(currentEntity.currentHP);
+        vitals.AnimateHPBar(currentEntity.currentHP);
     }
     public void UpdateLust()
     {
-        vitals.SetLust(currentEntity.currentLust);
+        vitals.AnimateLustBar(currentEntity.currentLust);
     }
 }

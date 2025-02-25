@@ -22,7 +22,7 @@ MonoBehaviour:
   maxMana: 100
   maxLust: 100
   attack: 20
-  defense: 40
+  defense: 10
   magicAttack: 25
   magicDefense: 10
   speed: 75

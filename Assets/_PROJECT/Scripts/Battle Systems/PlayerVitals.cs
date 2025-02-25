@@ -1,6 +1,7 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using DG.Tweening;
 
 public class PlayerVitals : MonoBehaviour
 {
@@ -9,6 +10,7 @@ public class PlayerVitals : MonoBehaviour
     [SerializeField] TMP_Text healthText, manaText, lustText;
 
     [SerializeField] float maxHP, maxMana, maxLust;
+    [SerializeField] float animationTime = 1f;
     void Start()
     {
 
@@ -47,23 +49,16 @@ public class PlayerVitals : MonoBehaviour
         lustBar.value = _incomingLust;
 
     }
-    public void SetHP(float _incomingHP, float _incomingMax)
+    public void AnimateHPBar(float _incomingValue)
     {
-
-        healthText.text = $"HP: {_incomingHP}/{_incomingMax}";
-        healthBar.value = _incomingHP;
+        healthBar.DOValue(_incomingValue, animationTime);
     }
-    public void SetMana(float _incomingMana, float _incomingMax)
+    public void AnimateManaBar(float _incomingValue)
     {
-        healthText.text = $"MP: {_incomingMana}/{_incomingMax}";
-        manaBar.value = _incomingMana;
-
+        manaBar.DOValue(_incomingValue, animationTime);
     }
-    public void SetLust(float _incomingLust, float _incomingMax)
+    public void AnimateLustBar(float _incomingValue)
     {
-
-        lustText.text = $"Lust: {_incomingLust}/{_incomingMax}";
-        lustBar.value = _incomingLust;
-
+        lustBar.DOValue(_incomingValue, animationTime);
     }
 }
