@@ -19,6 +19,7 @@ public class Entity
         Level = mLevel;
         currentHP = MaxHp;
         currentMana = MaxMana;
+        Debug.Log($"{currentMana} ----- {MaxMana}");
         currentLust = 0;
 
         knownAttacks = new List<Attack>();
@@ -43,7 +44,7 @@ public class Entity
     }
     public float MaxLust
     {
-        get { return (Base.Lust + Level * 50); }
+        get { return (Base.MaxLust + Level * 50); }
     }
     public float Attack
     {
@@ -125,7 +126,7 @@ public class Entity
 
         if (currentLust >= MaxLust)
         {
-            currentHP = MaxLust;
+            currentLust = MaxLust;
             return true;
         }
 

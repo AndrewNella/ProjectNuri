@@ -23,6 +23,10 @@ public class BattleMenuControl : MonoBehaviour
     public GameObject currentlySelectedGameObjectByEventSystem;
 
 
+    void Start()
+    {
+        
+    }
     public void SetDialogue(string _incomingDialogue)
     {
         dialogText.text = _incomingDialogue;

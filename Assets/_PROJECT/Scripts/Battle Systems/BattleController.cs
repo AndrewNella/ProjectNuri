@@ -90,6 +90,7 @@ public class BattleController : MonoBehaviour
         {
             battleMenuControlSystem.EnableAttackSelector(false);
             battleMenuControlSystem.EnableDialogueText(true);
+            StartCoroutine(PerformPhysicalAttack());
         }
     }
 

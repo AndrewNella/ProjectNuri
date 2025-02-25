@@ -20,7 +20,7 @@ MonoBehaviour:
   entityType2: 0
   maxHP: 100
   maxMana: 100
-  lust: 0
+  maxLust: 100
   attack: 20
   defense: 40
   magicAttack: 25

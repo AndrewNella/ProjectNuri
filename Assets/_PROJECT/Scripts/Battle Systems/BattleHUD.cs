@@ -15,10 +15,13 @@ public class BattleHUD : MonoBehaviour
         nameText.text = _incomingEntity.Base.Name;
         levelText.text = "Lvl " + _incomingEntity.Level;
 
+        vitals.SetMaximums(_incomingEntity);
+
         vitals.SetHP(_incomingEntity.currentHP);
 
         vitals.SetMana(_incomingEntity.currentMana);
         vitals.SetLust(_incomingEntity.currentLust);
+
 
     }
 

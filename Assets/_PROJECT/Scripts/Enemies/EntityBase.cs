@@ -14,7 +14,7 @@ public class EntityBase : ScriptableObject
     [SerializeField] EntityType entityType1, entityType2;
 
     //Basic Data
-    [SerializeField] float maxHP, maxMana, lust, attack, defense, magicAttack, magicDefense, speed;
+    [SerializeField] float maxHP, maxMana, maxLust, attack, defense, magicAttack, magicDefense, speed;
 
     [SerializeField] List<LearnableAttacks> learnableAttacks;
 
@@ -33,7 +33,7 @@ public class EntityBase : ScriptableObject
 
     public float MaxHp => maxHP;
     public float MaxMana => maxMana;
-    public float Lust => lust;
+    public float MaxLust => maxLust;
 
 
     public float Attack => attack;
