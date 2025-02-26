@@ -14,6 +14,7 @@ public class GameController : MonoBehaviour
     void Start()
     {
         playerController.OnEncounter += StartBattle;
+        battleController.OnBattleOver += EndBattle;
     }
 
     void StartBattle()
@@ -21,6 +22,14 @@ public class GameController : MonoBehaviour
         state = GameState.Battle;
         battleController.gameObject.SetActive(true);
         worldCamera.gameObject.SetActive(false);
+        battleController.StartBattle();
+    }
+
+    void EndBattle(bool _isBattleWon)
+    {
+        state = GameState.FreeRoam;
+        battleController.gameObject.SetActive(false);
+        worldCamera.gameObject.SetActive(true);
     }
     void Update()
     {
