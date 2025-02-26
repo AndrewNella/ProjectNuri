@@ -5,7 +5,7 @@ using UnityEngine;
 public class BattleHUD : MonoBehaviour
 {
     [SerializeField] TMP_Text nameText, levelText;
-    [SerializeField] PlayerVitals vitals;
+    [SerializeField] UnitVitals vitals;
 
     Entity currentEntity;
 
@@ -27,14 +27,14 @@ public class BattleHUD : MonoBehaviour
 
     public void UpdateMana()
     {
-        vitals.AnimateManaBar(currentEntity.currentMana);
+        vitals.SetMana(currentEntity.currentMana);
     }
     public void UpdateHP()
     {
-        vitals.AnimateHPBar(currentEntity.currentHP);
+        vitals.SetHP(currentEntity.currentHP);
     }
     public void UpdateLust()
     {
-        vitals.AnimateLustBar(currentEntity.currentLust);
+        vitals.SetLust(currentEntity.currentLust);
     }
 }

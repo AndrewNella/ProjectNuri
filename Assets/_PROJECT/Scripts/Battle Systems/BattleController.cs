@@ -24,8 +24,16 @@ public class BattleController : MonoBehaviour
     bool detailsAreUpdated = false;
 
     int currentAction;
-    public void StartBattle()
+
+
+    Entity enemyEntity;
+
+    public void StartBattle(Entity _enemyEntity)
     {
+        Debug.Log($"Current Player HP is {PlayerController.instance.GetPlayerEntity().currentHP}");
+        Debug.Log($"Current Player Mana is {PlayerController.instance.GetPlayerEntity().currentMana}");
+        Debug.Log($"Current Player Lust is {PlayerController.instance.GetPlayerEntity().currentLust}");
+        enemyEntity = _enemyEntity;
         StartCoroutine(SetupBattle());
     }
     public void HandleUpdate()
@@ -70,6 +78,8 @@ public class BattleController : MonoBehaviour
     {
         currentSelectedAttack = _incomingAttack;
     }
+
+
     private void PlayerAction()
     {
         UpdateCurrentlySelectedAttack(null);
@@ -91,15 +101,39 @@ public class BattleController : MonoBehaviour
         {
             battleMenuControlSystem.EnableAttackSelector(false);
             battleMenuControlSystem.EnableDialogueText(true);
-            StartCoroutine(PerformPhysicalAttack());
+            StartCoroutine(PerformAttack());
+        }
+    }
+
+    void PayCostsForAttack(BattleUnit _incomingUnit)
+    {
+
+        if (currentSelectedAttack.ManaCost > 0)
+        {
+            _incomingUnit.entity.currentMana -= currentSelectedAttack.ManaCost;
+        }
+        if (currentSelectedAttack.LustCost > 0)
+        {
+            _incomingUnit.entity.currentLust += currentSelectedAttack.LustCost;
+        }
+    }
+    void PayCostsForAttack(BattleUnit _incomingUnit, Attack _incomingAttack)
+    {
+        if (_incomingAttack.ManaCost > 0)
+        {
+            _incomingUnit.entity.currentMana -= _incomingAttack.ManaCost;
+        }
+        if (_incomingAttack.LustCost > 0)
+        {
+            _incomingUnit.entity.currentLust += _incomingAttack.LustCost;
         }
     }
 
     #region Coroutines
     public IEnumerator SetupBattle()
     {
-        playerUnit.Setup();
-        enemyUnit.Setup();
+        playerUnit.Setup(PlayerController.instance.GetPlayerEntity());
+        enemyUnit.Setup(enemyEntity);
         playerHUD.SetData(playerUnit.entity);
         enemyHUD.SetData(enemyUnit.entity);
 
@@ -112,15 +146,18 @@ public class BattleController : MonoBehaviour
         yield return new WaitForSeconds(1f);
 
         PlayerAction();
-
     }
-    public IEnumerator PerformPhysicalAttack()
+    public IEnumerator PerformAttack()
     {
         state = BattleState.Busy;
         yield return battleMenuControlSystem.TypeDialogue($"{playerUnit.entity.Base.name} used {currentSelectedAttack.Base.name}.");
 
+        PayCostsForAttack(playerUnit);
+        playerHUD.UpdateMana();
+        playerHUD.UpdateLust();
 
         yield return new WaitForSeconds(1f);
+
         bool _isDefeated = enemyUnit.entity.TakeDamage(currentSelectedAttack, playerUnit.entity);
         enemyHUD.UpdateHP();
 
@@ -145,7 +182,13 @@ public class BattleController : MonoBehaviour
         var _attack = enemyUnit.entity.GetRandomAttack();
 
         yield return battleMenuControlSystem.TypeDialogue($"{enemyUnit.entity.Base.name} used {_attack.Base.name}.");
+        PayCostsForAttack(enemyUnit, _attack);
+        enemyHUD.UpdateMana();
+        enemyHUD.UpdateLust();
+
         yield return new WaitForSeconds(1f);
+
+
         bool _isDefeated = playerUnit.entity.TakeDamage(currentSelectedAttack, playerUnit.entity);
         playerHUD.UpdateHP();
 

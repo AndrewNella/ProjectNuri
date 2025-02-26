@@ -347,6 +347,7 @@ GameObject:
   - component: {fileID: 206695199}
   - component: {fileID: 206695198}
   - component: {fileID: 206695200}
+  - component: {fileID: 206695201}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -388,6 +389,9 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 128
   solidObjectDetectionRadius: 0.1
+  mainPlayerEntity:
+    BaseContainer: {fileID: 11400000, guid: 0f48b4e7f39c20647b1150432cd417c7, type: 2}
+    LevelContainer: 5
   gridparentTransform: {fileID: 1955351485}
   moveSpeed: 4
   movementMagnitudeLimit: 0.001
@@ -469,6 +473,19 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &206695201
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 206695196}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f654b9a749a45948baa1f65345a8d5d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mentors: []
 --- !u!1 &228961785
 GameObject:
   m_ObjectHideFlags: 0
@@ -11887,6 +11904,55 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 8078427822242999567, guid: 02175c5215357db4db00a95d05d7f328, type: 3}
   m_PrefabInstance: {fileID: 6311315560985815696}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1440961709
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1440961710}
+  - component: {fileID: 1440961711}
+  m_Layer: 0
+  m_Name: EnemyHordeParent
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1440961710
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1440961709}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1440961711
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1440961709}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c44201c6f2c1ff64897f251087ced195, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enemies:
+  - BaseContainer: {fileID: 11400000, guid: 16e9afefa30d1f3429a04e9009837fa9, type: 2}
+    LevelContainer: 3
+  - BaseContainer: {fileID: 11400000, guid: 2c5db2e1c0a693e45963a2a6c3fb493a, type: 2}
+    LevelContainer: 5
 --- !u!1 &1476032054
 GameObject:
   m_ObjectHideFlags: 0
@@ -12864,6 +12930,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2108502790}
   - component: {fileID: 2108502791}
+  - component: {fileID: 2108502792}
   m_Layer: 0
   m_Name: Game Controller
   m_TagString: Untagged
@@ -12901,6 +12968,23 @@ MonoBehaviour:
   playerController: {fileID: 206695198}
   battleController: {fileID: 105833478}
   worldCamera: {fileID: 519420031}
+--- !u!114 &2108502792
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2108502789}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8fe1038a2ab9b44f89eb6a3a75ba97e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  areaEnemies:
+  - BaseContainer: {fileID: 11400000, guid: 16e9afefa30d1f3429a04e9009837fa9, type: 2}
+    LevelContainer: 2
+  - BaseContainer: {fileID: 11400000, guid: 2c5db2e1c0a693e45963a2a6c3fb493a, type: 2}
+    LevelContainer: 2
 --- !u!1001 &1594225617817365901
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -13350,3 +13434,4 @@ SceneRoots:
   - {fileID: 1072066156}
   - {fileID: 91866035}
   - {fileID: 228961786}
+  - {fileID: 1440961710}

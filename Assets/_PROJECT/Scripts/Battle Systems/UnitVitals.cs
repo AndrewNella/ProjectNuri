@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
 
-public class PlayerVitals : MonoBehaviour
+public class UnitVitals : MonoBehaviour
 {
     [SerializeField] Slider healthBar, manaBar, lustBar;
 
@@ -20,10 +20,10 @@ public class PlayerVitals : MonoBehaviour
     }
     public void SetMaximums(Entity _incomingEntity)
     {
-        maxHP = _incomingEntity.currentHP;
+        maxHP = _incomingEntity.MaxHp;
         healthBar.maxValue = maxHP;
 
-        maxMana = _incomingEntity.currentMana;
+        maxMana = _incomingEntity.MaxMana;
         manaBar.maxValue = maxMana;
 
         maxLust = _incomingEntity.Base.MaxLust;
@@ -34,30 +34,30 @@ public class PlayerVitals : MonoBehaviour
     {
 
         healthText.text = $"HP: {_incomingHP}/{maxHP}";
-        healthBar.value = _incomingHP;
+        AnimateHPBar(_incomingHP);
     }
     public void SetMana(float _incomingMana)
     {
         manaText.text = $"MP: {_incomingMana}/{maxMana}";
-        manaBar.value = _incomingMana;
+        AnimateManaBar(_incomingMana);
 
     }
     public void SetLust(float _incomingLust)
     {
 
         lustText.text = $"Lust: {_incomingLust}/{maxLust}";
-        lustBar.value = _incomingLust;
+        AnimateLustBar(_incomingLust);
 
     }
-    public void AnimateHPBar(float _incomingValue)
+    void AnimateHPBar(float _incomingValue)
     {
         healthBar.DOValue(_incomingValue, animationTime);
     }
-    public void AnimateManaBar(float _incomingValue)
+    void AnimateManaBar(float _incomingValue)
     {
         manaBar.DOValue(_incomingValue, animationTime);
     }
-    public void AnimateLustBar(float _incomingValue)
+    void AnimateLustBar(float _incomingValue)
     {
         lustBar.DOValue(_incomingValue, animationTime);
     }

@@ -5,6 +5,7 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
+    public static PlayerController instance;
     PlayerActionMap actionMap;
 
     [SerializeField] LayerMask solidObjectLayer, dangerLayer;
@@ -12,6 +13,8 @@ public class PlayerController : MonoBehaviour
 
 
     public event Action OnEncounter;
+
+    [SerializeField] Entity mainPlayerEntity;
 
     [Header("Movement Data")]
 
@@ -29,6 +32,7 @@ public class PlayerController : MonoBehaviour
 
     private void Awake()
     {
+        instance = this;
         inputVector = Vector2.zero;
         actionMap = new PlayerActionMap();
         actionMap.Enable();
@@ -41,21 +45,22 @@ public class PlayerController : MonoBehaviour
         actionMap.PlayerControllerMap.Pause.performed += OnPauseInput;
         actionMap.PlayerControllerMap.Pause.canceled -= OnPauseInput;
 
+        mainPlayerEntity.Init();
+
     }
 
     void OnPauseInput(InputAction.CallbackContext _incomingInput)
     {
 
     }
-
-    void Start()
+    public Entity GetPlayerEntity()
     {
+        return mainPlayerEntity;
     }
 
     private void OnPlayerMoveInput(Vector2 _incomingVector2)
     {
 
-        Debug.Log("Is Moving");
         inputVector = _incomingVector2;
     }
 
@@ -99,13 +104,18 @@ public class PlayerController : MonoBehaviour
             yield return null;
         }
         gridparentTransform.position = _targetPosition;
+
+        Vector3 _holdPosition = gridparentTransform.position;
+        _holdPosition.x = Mathf.Floor(gridparentTransform.position.x) + 0.5f;
+        gridparentTransform.position = _holdPosition;
+
         Debug.Log(isMoving);
         isMoving = false;
 
         CheckForEncounter();
     }
 
-    private void CheckForEncounter()
+    public void CheckForEncounter()
     {
         if (Physics2D.OverlapCircle(gridparentTransform.position, 0.2f, dangerLayer) != null)
         {

@@ -4,8 +4,7 @@ using DG.Tweening;
 
 public class BattleUnit : MonoBehaviour
 {
-    [SerializeField] EntityBase _base;
-    [SerializeField] int level;
+
     [SerializeField] bool isPlayerUnit;
 
     [SerializeField] float animationTimer;
@@ -22,9 +21,9 @@ public class BattleUnit : MonoBehaviour
         image = GetComponent<Image>();
         originalPos = image.transform.localPosition;
     }
-    public void Setup()
+    public void Setup(Entity _incomingEntity)
     {
-        entity = new Entity(_base, level);
+        entity = _incomingEntity;
         if (isPlayerUnit)
         {
 
@@ -45,7 +44,7 @@ public class BattleUnit : MonoBehaviour
         {
             image.transform.localPosition = new Vector3(startPositionX, originalPos.y);
             image.transform.DOLocalMove(originalPos, animationTimer);
-            animator.StopPlayback();
+            // animator.StopPlayback();
         }
     }
 }

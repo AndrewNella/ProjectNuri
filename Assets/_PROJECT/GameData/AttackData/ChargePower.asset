@@ -19,5 +19,4 @@ MonoBehaviour:
   accuracy: 100
   manaCost: 5
   lustCost: 0
-  damageType1: 8
-  damageType2: 0
+  damageType: 8

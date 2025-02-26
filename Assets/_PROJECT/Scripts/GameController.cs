@@ -22,7 +22,9 @@ public class GameController : MonoBehaviour
         state = GameState.Battle;
         battleController.gameObject.SetActive(true);
         worldCamera.gameObject.SetActive(false);
-        battleController.StartBattle();
+        Entity areaEnemy = FindFirstObjectByType<MapArea>().GetComponent<MapArea>().GetRandomAreaEnemy();
+
+        battleController.StartBattle(areaEnemy);
     }
 
     void EndBattle(bool _isBattleWon)
