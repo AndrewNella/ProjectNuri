@@ -247,7 +247,12 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      evislime_0: 7205859361210898333
+      evislime_1: 3625145249614233565
+      evislime_2: 5124779969825009850
+      evislime_3: 4737263701237528588
+      evislime_4: -5349950626223959964
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

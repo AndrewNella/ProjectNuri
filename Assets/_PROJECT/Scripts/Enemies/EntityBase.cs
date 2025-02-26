@@ -26,8 +26,8 @@ public class EntityBase : ScriptableObject
     public Sprite FrontSprite => frontSprite;
     public Sprite BackSprite => backSprite;
 
-    public EntityType EnemyType1 => entityType1;
-    public EntityType EnemyType2 => entityType2;
+    public EntityType EntityType1 => entityType1;
+    public EntityType EntityType2 => entityType2;
 
 
 
@@ -79,4 +79,31 @@ public enum EntityType
     Human,
     Beastkin
 
+}
+
+public class TypeChart
+{
+    static float[][] chart =
+    {        
+    //                      Slash , Impact , Fire , Water , Earth , Elec , Arousal                
+     /*SLM*/   new float[] {1f,     0.5f,   1f,     1f,     1f,     2f,     1f},
+     /*LTX*/   new float[] {1f,     0.5f,   1f,     1f,     1f,     1f,     0.5f},
+     /*TTL*/   new float[] {1.5f,   1f,     0.5f,   0.5f,   0.5f,   0.5f,   1.5f},
+     /*BST*/   new float[] {1f,     1f,     1f,     1f,     1f,     1f,     1.5f},
+     /*HMN*/   new float[] {1f,     1f,     1f,     1f,     1f,     1f,     1f},
+     /*BSK*/   new float[] {0.5f,   1f,     1f,     1f,     1f,     1f,     1.5f}
+    };
+
+    public static float GetEffectiveness(EntityType attackType, EntityType defenseType)
+    {
+        if (attackType == EntityType.None || defenseType == EntityType.None)
+        {
+            return 1f;
+        }
+        int _row = (int)defenseType - 1;
+        int _col = (int)attackType - 1;
+
+        return chart[_row][_col];
+
+    }
 }

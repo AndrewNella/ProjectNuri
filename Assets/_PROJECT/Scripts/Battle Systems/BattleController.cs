@@ -120,7 +120,7 @@ public class BattleController : MonoBehaviour
 
 
         yield return new WaitForSeconds(1f);
-        bool _isDefeated = enemyUnit.entity.TakePhysicalDamage(currentSelectedAttack, playerUnit.entity);
+        bool _isDefeated = enemyUnit.entity.TakeDamage(currentSelectedAttack, playerUnit.entity);
         enemyHUD.UpdateHP();
 
         
@@ -142,7 +142,7 @@ public class BattleController : MonoBehaviour
 
         yield return battleMenuControlSystem.TypeDialogue($"{enemyUnit.entity.Base.name} used {_attack.Base.name}.");
         yield return new WaitForSeconds(1f);
-        bool _isDefeated = playerUnit.entity.TakePhysicalDamage(currentSelectedAttack, playerUnit.entity);
+        bool _isDefeated = playerUnit.entity.TakeDamage(currentSelectedAttack, playerUnit.entity);
         playerHUD.UpdateHP();
 
         if (_isDefeated)

@@ -73,7 +73,7 @@ public class Entity
         return knownAttacks[r];
     }
 
-    public bool TakePhysicalDamage(Attack _incomingAttack, Entity _incomingEntity)
+    public bool TakeDamage(Attack _incomingAttack, Entity _incomingEntity)
     {
         float _damage = _incomingAttack.Base.Power + (_incomingEntity.Attack - Defense) + 2;
         if (_damage < 0)
@@ -88,6 +88,8 @@ public class Entity
             currentHP = 0;
             return true;
         }
+
+        
 
         return false;
     }
