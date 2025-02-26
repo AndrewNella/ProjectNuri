@@ -16,6 +16,7 @@ public class BattleController : MonoBehaviour
 
     [SerializeField] BattleMenuControl battleMenuControlSystem;
 
+    public event Action<bool> OnBattleOver;
     BattleState state;
 
     Attack currentSelectedAttack;
@@ -23,7 +24,7 @@ public class BattleController : MonoBehaviour
     bool detailsAreUpdated = false;
 
     int currentAction;
-    void Start()
+    public void StartBattle()
     {
         StartCoroutine(SetupBattle());
     }
@@ -123,11 +124,14 @@ public class BattleController : MonoBehaviour
         bool _isDefeated = enemyUnit.entity.TakeDamage(currentSelectedAttack, playerUnit.entity);
         enemyHUD.UpdateHP();
 
-        
+
 
         if (_isDefeated)
         {
             yield return battleMenuControlSystem.TypeDialogue($"{enemyUnit.entity.Base.name} was defeated.");
+            yield return new WaitForSeconds(2f);
+
+            OnBattleOver(true);
         }
         else
         {
@@ -148,6 +152,9 @@ public class BattleController : MonoBehaviour
         if (_isDefeated)
         {
             yield return battleMenuControlSystem.TypeDialogue($"{playerUnit.entity.Base.name} was defeated.");
+            yield return new WaitForSeconds(2f);
+
+            OnBattleOver(false);
         }
         else
         {
