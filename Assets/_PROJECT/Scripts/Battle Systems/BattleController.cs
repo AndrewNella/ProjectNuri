@@ -27,7 +27,7 @@ public class BattleController : MonoBehaviour
     {
         StartCoroutine(SetupBattle());
     }
-    private void Update()
+    public void HandleUpdate()
     {
         if (state == BattleState.PlayerAttack)
         {

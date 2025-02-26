@@ -10,14 +10,13 @@ public class AttackBase : ScriptableObject
 
     [SerializeField] float power, accuracy, manaCost, lustCost;
 
-    [SerializeField] AttackType damageType1, damageType2;
+    [SerializeField] AttackType damageType1;
 
     public string Attackname => attackname;
     public string AttackDescription => attackDescription;
     public float Power => power;
 
     public AttackType DamageType1 => damageType1;
-    public AttackType DamageType2 => damageType2;
     public float Accuracy => accuracy;
     public float ManaCost => manaCost;
     public float LustCost => lustCost;

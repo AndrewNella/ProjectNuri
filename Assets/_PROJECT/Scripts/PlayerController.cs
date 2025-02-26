@@ -10,7 +10,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] LayerMask solidObjectLayer, dangerLayer;
     [SerializeField] float solidObjectDetectionRadius;
 
-    PlayerState state;
+
+    public event Action OnEncounter;
 
     [Header("Movement Data")]
 
@@ -44,19 +45,11 @@ public class PlayerController : MonoBehaviour
 
     void OnPauseInput(InputAction.CallbackContext _incomingInput)
     {
-        if (state == PlayerState.MenuNavigation)
-        {
-            ChangePlayerState(PlayerState.OverworldExplore);
-        }
-        else
-        {
-            ChangePlayerState(PlayerState.MenuNavigation);
-        }
+
     }
 
     void Start()
     {
-        state = PlayerState.OverworldExplore;
     }
 
     private void OnPlayerMoveInput(Vector2 _incomingVector2)
@@ -66,35 +59,34 @@ public class PlayerController : MonoBehaviour
         inputVector = _incomingVector2;
     }
 
-    void Update()
+    public void HandleUpdate()
     {
-        if (state == PlayerState.OverworldExplore)
+
+
+        if (!isMoving)
         {
+            //Removes Diagonal Movement
+            if (inputVector.x != 0) inputVector.y = 0;
 
-            if (!isMoving)
+
+            if (inputVector != Vector2.zero)
             {
-                //Removes Diagonal Movement
-                if (inputVector.x != 0) inputVector.y = 0;
+                animator.SetFloat("moveX", inputVector.x);
+                animator.SetFloat("moveY", inputVector.y);
 
+                Vector3 _targetPos = gridparentTransform.position;
+                _targetPos.x += inputVector.x;
+                _targetPos.y += inputVector.y;
 
-                if (inputVector != Vector2.zero)
+                if (IsWalkable(_targetPos))
                 {
-                    animator.SetFloat("moveX", inputVector.x);
-                    animator.SetFloat("moveY", inputVector.y);
 
-                    Vector3 _targetPos = gridparentTransform.position;
-                    _targetPos.x += inputVector.x;
-                    _targetPos.y += inputVector.y;
-
-                    if (IsWalkable(_targetPos))
-                    {
-
-                        StartCoroutine(Move(_targetPos));
-                    }
+                    StartCoroutine(Move(_targetPos));
                 }
             }
-            animator.SetBool("isMoving", isMoving);
         }
+        animator.SetBool("isMoving", isMoving);
+
     }
 
     IEnumerator Move(Vector3 _targetPosition)
@@ -119,7 +111,7 @@ public class PlayerController : MonoBehaviour
         {
             if (UnityEngine.Random.Range(1, 101) <= 10)
             {
-                Debug.Log("Encounter");
+                OnEncounter();
             }
         }
     }
@@ -134,11 +126,5 @@ public class PlayerController : MonoBehaviour
         return true;
 
     }
-    public void ChangePlayerState(PlayerState _incomingState)
-    {
-        state = _incomingState;
-    }
-
-    public enum PlayerState { OverworldExplore, MenuNavigation }
 
 }

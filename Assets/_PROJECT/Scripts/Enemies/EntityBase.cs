@@ -94,9 +94,9 @@ public class TypeChart
      /*BSK*/   new float[] {0.5f,   1f,     1f,     1f,     1f,     1f,     1.5f}
     };
 
-    public static float GetEffectiveness(EntityType attackType, EntityType defenseType)
+    public static float GetEffectiveness(AttackType attackType, EntityType defenseType)
     {
-        if (attackType == EntityType.None || defenseType == EntityType.None)
+        if (attackType == AttackType.None || defenseType == EntityType.None)
         {
             return 1f;
         }

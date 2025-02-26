@@ -75,7 +75,8 @@ public class Entity
 
     public bool TakeDamage(Attack _incomingAttack, Entity _incomingEntity)
     {
-        float _damage = _incomingAttack.Base.Power + (_incomingEntity.Attack - Defense) + 2;
+        float effectivenessModifier = TypeChart.GetEffectiveness(_incomingAttack.Base.DamageType1, _incomingEntity.Base.EntityType1) * TypeChart.GetEffectiveness(_incomingAttack.Base.DamageType1, _incomingEntity.Base.EntityType2);
+        float _damage = effectivenessModifier * _incomingAttack.Base.Power + (_incomingEntity.Attack - Defense) + 2;
         if (_damage < 0)
         {
             _damage = 0;
@@ -89,7 +90,7 @@ public class Entity
             return true;
         }
 
-        
+
 
         return false;
     }
