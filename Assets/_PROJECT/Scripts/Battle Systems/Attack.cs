@@ -1,12 +1,12 @@
 using UnityEngine;
 
-public class AttackConstructor
+public class Attack
 {
     public AttackBase Base { get; set; }
 
     public float ManaCost { get; set; }
 
-    public AttackConstructor(AttackBase aBase)
+    public Attack(AttackBase aBase)
     {
         Base = aBase;
         ManaCost = aBase.ManaCost;

@@ -12,24 +12,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e40e8c39b307d9240be0758bc289be0a, type: 3}
   m_Name: SlimeBase
   m_EditorClassIdentifier: 
-  monsterName: 
-  monsterDescription: 
-  frontSprite: {fileID: 21300000, guid: 818cf159951cf9a4e8e810b2bbab4096, type: 3}
-  backSprite: {fileID: 21300000, guid: 18fc6e8e3f72b154fba88f358748be28, type: 3}
-  enemyType1: 1
-  enemyType2: 0
+  entityName: 
+  entityDescription: 
+  frontSprite: {fileID: 368543389579951487, guid: e27efea9929ba75448bd9eccc1a44990, type: 3}
+  backSprite: {fileID: 2542698315722941828, guid: e27efea9929ba75448bd9eccc1a44990, type: 3}
+  entityType1: 1
+  entityType2: 0
   maxHP: 100
   maxMana: 20
-  lust: 0
-  attack: 5
+  maxLust: 20
+  attack: 40
   defense: 10
   magicAttack: 2
   magicDefense: 2
   speed: 50
-  listOfUsableAttacks:
+  learnableAttacks:
   - attackBase: {fileID: 11400000, guid: 570b52db3ac235b4891dd0785e77890e, type: 2}
     level: 1
-  - attackBase: {fileID: 11400000, guid: d2e23d387350a5d408e84ab9fb0e8a4f, type: 2}
-    level: 2
-  - attackBase: {fileID: 11400000, guid: 64ad0763b16c310439084a794d357da7, type: 2}
-    level: 3

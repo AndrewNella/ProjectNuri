@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
@@ -8,6 +9,9 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField] LayerMask solidObjectLayer, dangerLayer;
     [SerializeField] float solidObjectDetectionRadius;
+
+
+    public event Action OnEncounter;
 
     [Header("Movement Data")]
 
@@ -34,16 +38,31 @@ public class PlayerController : MonoBehaviour
         actionMap.PlayerControllerMap.Movement.performed += x => OnPlayerMoveInput(x.ReadValue<Vector2>());
         actionMap.PlayerControllerMap.Movement.canceled += x => OnPlayerMoveInput(x.ReadValue<Vector2>());
 
+        actionMap.PlayerControllerMap.Pause.performed += OnPauseInput;
+        actionMap.PlayerControllerMap.Pause.canceled -= OnPauseInput;
+
+    }
+
+    void OnPauseInput(InputAction.CallbackContext _incomingInput)
+    {
+
+    }
+
+    void Start()
+    {
     }
 
     private void OnPlayerMoveInput(Vector2 _incomingVector2)
     {
+
         Debug.Log("Is Moving");
         inputVector = _incomingVector2;
     }
 
-    void Update()
+    public void HandleUpdate()
     {
+
+
         if (!isMoving)
         {
             //Removes Diagonal Movement
@@ -67,6 +86,7 @@ public class PlayerController : MonoBehaviour
             }
         }
         animator.SetBool("isMoving", isMoving);
+
     }
 
     IEnumerator Move(Vector3 _targetPosition)
@@ -91,7 +111,7 @@ public class PlayerController : MonoBehaviour
         {
             if (UnityEngine.Random.Range(1, 101) <= 10)
             {
-                Debug.Log("Encounter");
+                OnEncounter();
             }
         }
     }
