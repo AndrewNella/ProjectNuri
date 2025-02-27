@@ -9,7 +9,7 @@ public class BattleMenuControl : MonoBehaviour
     [SerializeField] TMP_Text dialogText;
     [SerializeField] float dialogueLetterWaiterTimer;
 
-    [SerializeField] GameObject actionSelector, attackSelector, moveDetails;
+    [SerializeField] GameObject actionSelector, attackSelector, moveDetails, inventoryScreen;
 
     public List<TMP_Text> actionTexts;
     public List<TMP_Text> attackText;
@@ -19,14 +19,14 @@ public class BattleMenuControl : MonoBehaviour
     [Header("First Selected Action")]
     [SerializeField] GameObject actionMenuFirst;
     [SerializeField] GameObject attackMenuFirst;
+    [SerializeField] GameObject inventoryMenuFirst;
 
     public GameObject currentlySelectedGameObjectByEventSystem;
 
 
-    void Start()
-    {
-        
-    }
+    public GameObject ActionSelection => actionSelector;
+    public GameObject AttackSelector => attackSelector;
+    public GameObject InventoryMenu => inventoryScreen;
     public void SetDialogue(string _incomingDialogue)
     {
         dialogText.text = _incomingDialogue;
@@ -38,8 +38,16 @@ public class BattleMenuControl : MonoBehaviour
         if (_incomingBool)
         {
             EventSystem.current.SetSelectedGameObject(null);
-
         }
+    }
+    public void EnableInventoryScreen(bool _incomingBool)
+    {
+        inventoryScreen.SetActive(_incomingBool);
+        if (_incomingBool)
+        {
+            EventSystem.current.SetSelectedGameObject(inventoryMenuFirst);
+        }
+
     }
     public void EnableActionSelector(bool _incomingBool)
     {

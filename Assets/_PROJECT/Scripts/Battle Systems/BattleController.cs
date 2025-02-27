@@ -21,13 +21,24 @@ public class BattleController : MonoBehaviour
 
     Attack currentSelectedAttack;
 
-    bool detailsAreUpdated = false;
-
-    int currentAction;
-
 
     Entity enemyEntity;
 
+
+    private void Start()
+    {
+    }
+
+    private void OnEnable()
+    {
+        MainInputActionController.instance.OnPauseTrigger += ReturnToMainBattleMenu;
+    }
+
+    private void OnDisable()
+    {
+        MainInputActionController.instance.OnPauseTrigger -= ReturnToMainBattleMenu;
+
+    }
     public void StartBattle(Entity _enemyEntity)
     {
         Debug.Log($"Current Player HP is {PlayerController.instance.GetPlayerEntity().currentHP}");
@@ -78,13 +89,31 @@ public class BattleController : MonoBehaviour
     {
         currentSelectedAttack = _incomingAttack;
     }
+    public void ReturnToMainBattleMenu()
+    {
+        if (battleMenuControlSystem.AttackSelector.activeSelf)
+        {
+            battleMenuControlSystem.EnableAttackSelector(false);
+        }
+        if (battleMenuControlSystem.InventoryMenu.activeSelf)
+        {
+            battleMenuControlSystem.EnableInventoryScreen(false);
+        }
+
+        battleMenuControlSystem.EnableDialogueText(true);
+        PlayerAction();
+    }
+    void OpenInventoryScreen()
+    {
+        battleMenuControlSystem.EnableInventoryScreen(true);
+    }
 
 
     private void PlayerAction()
     {
         UpdateCurrentlySelectedAttack(null);
         state = BattleState.PlayerAction;
-        StartCoroutine(battleMenuControlSystem.TypeDialogue("Choose an Action."));
+        battleMenuControlSystem.SetDialogue("Choose an Action.");
         battleMenuControlSystem.EnableActionSelector(true);
     }
     public void PlayerMove()

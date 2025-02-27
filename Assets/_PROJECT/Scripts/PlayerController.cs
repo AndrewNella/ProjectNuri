@@ -6,7 +6,6 @@ using UnityEngine.InputSystem;
 public class PlayerController : MonoBehaviour
 {
     public static PlayerController instance;
-    PlayerActionMap actionMap;
 
     [SerializeField] LayerMask solidObjectLayer, dangerLayer;
     [SerializeField] float solidObjectDetectionRadius;
@@ -34,25 +33,20 @@ public class PlayerController : MonoBehaviour
     {
         instance = this;
         inputVector = Vector2.zero;
-        actionMap = new PlayerActionMap();
-        actionMap.Enable();
+
 
         animator = GetComponent<Animator>();
 
-        actionMap.PlayerControllerMap.Movement.performed += x => OnPlayerMoveInput(x.ReadValue<Vector2>());
-        actionMap.PlayerControllerMap.Movement.canceled += x => OnPlayerMoveInput(x.ReadValue<Vector2>());
+        MainInputActionController.instance.actionMap.PlayerControllerMap.Movement.performed += x => OnPlayerMoveInput(x.ReadValue<Vector2>());
+        MainInputActionController.instance.actionMap.PlayerControllerMap.Movement.canceled += x => OnPlayerMoveInput(x.ReadValue<Vector2>());
 
-        actionMap.PlayerControllerMap.Pause.performed += OnPauseInput;
-        actionMap.PlayerControllerMap.Pause.canceled -= OnPauseInput;
+
 
         mainPlayerEntity.Init();
 
     }
 
-    void OnPauseInput(InputAction.CallbackContext _incomingInput)
-    {
 
-    }
     public Entity GetPlayerEntity()
     {
         return mainPlayerEntity;
