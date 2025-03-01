@@ -6,10 +6,10 @@ public class FieldMonster : MonoBehaviour
 {
     public enum MonsterState { IDLE, WANDER, RECOGNIZE };
 
-    MonsterBase _base;
-
     [SerializeField] LayerMask solidObjectLayer, playerLayer;
     [SerializeField] float solidObjectDetectionRadius;
+
+    [SerializeField] GameObject monsterBase;
 
     [Header("Movement Data")]
 

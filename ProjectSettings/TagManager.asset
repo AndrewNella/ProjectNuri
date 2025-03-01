@@ -3,7 +3,8 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 3
-  tags: []
+  tags:
+  - Monster
   layers:
   - Default
   - TransparentFX
@@ -13,7 +14,7 @@ TagManager:
   - UI
   - SolidObjects
   - DangerousArea
-  - 
+  - FieldMonster
   - 
   - 
   - 
@@ -47,11 +48,11 @@ TagManager:
   - name: Foreground
     uniqueID: 1994368231
     locked: 0
-  - name: Player
-    uniqueID: 1509661445
-    locked: 0
   - name: Monster
     uniqueID: 4164544911
+    locked: 0
+  - name: Player
+    uniqueID: 1509661445
     locked: 0
   m_RenderingLayers:
   - Default
