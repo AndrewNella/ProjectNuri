@@ -110,10 +110,15 @@ public class PlayerController : MonoBehaviour
     {
         if (Physics2D.OverlapCircle(gridparentTransform.position, 0.2f, dangerLayer) != null)
         {
-                animator.SetBool("isMoving", false);
-                
-                OnEncounter();
+            TriggerEncounter();
         }
+    }
+
+    public void TriggerEncounter()
+    {
+        animator.SetBool("isMoving", false);
+
+        OnEncounter();
     }
 
     bool IsWalkable(Vector3 _targetPos)
