@@ -45,6 +45,7 @@ public class BattleMenuControl : MonoBehaviour
         inventoryScreen.SetActive(_incomingBool);
         if (_incomingBool)
         {
+
             EventSystem.current.SetSelectedGameObject(inventoryMenuFirst);
         }
 

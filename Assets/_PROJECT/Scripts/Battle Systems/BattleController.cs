@@ -12,7 +12,6 @@ using Unity.Multiplayer.Center.Common;
 public class BattleController : MonoBehaviour
 {
     [SerializeField] BattleUnit playerUnit, enemyUnit;
-    [SerializeField] BattleHUD playerHUD, enemyHUD;
 
     [SerializeField] BattleMenuControl battleMenuControlSystem;
 
@@ -25,9 +24,7 @@ public class BattleController : MonoBehaviour
     Entity enemyEntity;
 
 
-    private void Start()
-    {
-    }
+    public BattleState GetCurrentBattleState => state;
 
     private void OnEnable()
     {
@@ -49,7 +46,7 @@ public class BattleController : MonoBehaviour
     }
     public void HandleUpdate()
     {
-        if (state == BattleState.PlayerAttack)
+        if (state == BattleState.AttackSelection)
         {
             if (EventSystem.current.currentSelectedGameObject != battleMenuControlSystem.currentlySelectedGameObjectByEventSystem)
             {
@@ -99,29 +96,37 @@ public class BattleController : MonoBehaviour
         {
             battleMenuControlSystem.EnableInventoryScreen(false);
         }
-
         battleMenuControlSystem.EnableDialogueText(true);
-        PlayerAction();
+        ActionSelection();
     }
-    void OpenInventoryScreen()
+    public void OpenInventoryScreen()
     {
+
+        UpdateCurrentlySelectedAttack(null);
+        state = BattleState.Inventory;
         battleMenuControlSystem.EnableInventoryScreen(true);
     }
 
 
-    private void PlayerAction()
+    private void ActionSelection()
     {
         UpdateCurrentlySelectedAttack(null);
-        state = BattleState.PlayerAction;
+        state = BattleState.ActionSelection;
         battleMenuControlSystem.SetDialogue("Choose an Action.");
         battleMenuControlSystem.EnableActionSelector(true);
     }
-    public void PlayerMove()
+    public void AttackSelection()
     {
-        state = BattleState.PlayerAttack;
+        state = BattleState.AttackSelection;
         battleMenuControlSystem.EnableActionSelector(false);
         battleMenuControlSystem.EnableDialogueText(false);
         battleMenuControlSystem.EnableAttackSelector(true);
+    }
+
+    void BattleOver(bool _incomingBool)
+    {
+        state = BattleState.BattleOver;
+        OnBattleOver(_incomingBool);
     }
 
     public void InitiateAttack()
@@ -130,22 +135,10 @@ public class BattleController : MonoBehaviour
         {
             battleMenuControlSystem.EnableAttackSelector(false);
             battleMenuControlSystem.EnableDialogueText(true);
-            StartCoroutine(PerformAttack());
+            StartCoroutine(PlayerAttack());
         }
     }
 
-    void PayCostsForAttack(BattleUnit _incomingUnit)
-    {
-
-        if (currentSelectedAttack.ManaCost > 0)
-        {
-            _incomingUnit.entity.currentMana -= currentSelectedAttack.ManaCost;
-        }
-        if (currentSelectedAttack.LustCost > 0)
-        {
-            _incomingUnit.entity.currentLust += currentSelectedAttack.LustCost;
-        }
-    }
     void PayCostsForAttack(BattleUnit _incomingUnit, Attack _incomingAttack)
     {
         if (_incomingAttack.ManaCost > 0)
@@ -163,8 +156,6 @@ public class BattleController : MonoBehaviour
     {
         playerUnit.Setup(PlayerController.instance.GetPlayerEntity());
         enemyUnit.Setup(enemyEntity);
-        playerHUD.SetData(playerUnit.entity);
-        enemyHUD.SetData(enemyUnit.entity);
 
         battleMenuControlSystem.SetDialogue($"You were spotted by a {enemyUnit.entity.Base.Name}. You cannot avoid a battle.");
 
@@ -174,67 +165,65 @@ public class BattleController : MonoBehaviour
         yield return StartCoroutine(battleMenuControlSystem.TypeDialogue($"You were spotted by a {enemyUnit.entity.Base.Name}. You cannot avoid a battle."));
         yield return new WaitForSeconds(1f);
 
-        PlayerAction();
+        ActionSelection();
     }
-    public IEnumerator PerformAttack()
+    public IEnumerator PlayerAttack()
     {
-        state = BattleState.Busy;
-        yield return battleMenuControlSystem.TypeDialogue($"{playerUnit.entity.Base.name} used {currentSelectedAttack.Base.name}.");
+        state = BattleState.PerformAttack;
+        yield return PerformAttack(playerUnit, enemyUnit, currentSelectedAttack);
 
-        PayCostsForAttack(playerUnit);
-        playerHUD.UpdateMana();
-        playerHUD.UpdateLust();
-
-        yield return new WaitForSeconds(1f);
-
-        bool _isDefeated = enemyUnit.entity.TakeDamage(currentSelectedAttack, playerUnit.entity);
-        enemyHUD.UpdateHP();
-
-
-
-        if (_isDefeated)
-        {
-            yield return battleMenuControlSystem.TypeDialogue($"{enemyUnit.entity.Base.name} was defeated.");
-            yield return new WaitForSeconds(2f);
-
-            OnBattleOver(true);
-        }
-        else
+        if (state == BattleState.PerformAttack)
         {
             StartCoroutine(EnemyAttack());
+
         }
+
 
     }
     IEnumerator EnemyAttack()
     {
-        state = BattleState.EnemyAttack;
+        state = BattleState.PerformAttack;
         var _attack = enemyUnit.entity.GetRandomAttack();
 
-        yield return battleMenuControlSystem.TypeDialogue($"{enemyUnit.entity.Base.name} used {_attack.Base.name}.");
-        PayCostsForAttack(enemyUnit, _attack);
-        enemyHUD.UpdateMana();
-        enemyHUD.UpdateLust();
+        yield return PerformAttack(enemyUnit, playerUnit, _attack);
+        if (state == BattleState.PerformAttack)
+        {
+            ActionSelection();
+        }
+
+    }
+    IEnumerator PerformAttack(BattleUnit _incomingSourceUnit, BattleUnit _incomingTargetUnit, Attack _attack)
+    {
+        yield return battleMenuControlSystem.TypeDialogue($"{_incomingSourceUnit.entity.Base.name} used {_attack.Base.name}.");
+        PayCostsForAttack(_incomingSourceUnit, _attack);
+        _incomingSourceUnit.HUD.UpdateMana();
+        _incomingSourceUnit.HUD.UpdateLust();
 
         yield return new WaitForSeconds(1f);
 
 
-        bool _isDefeated = playerUnit.entity.TakeDamage(currentSelectedAttack, playerUnit.entity);
-        playerHUD.UpdateHP();
+        bool _isDefeated = _incomingTargetUnit.entity.TakeDamage(_attack, _incomingSourceUnit.entity);
+        _incomingTargetUnit.HUD.UpdateHP();
 
         if (_isDefeated)
         {
-            yield return battleMenuControlSystem.TypeDialogue($"{playerUnit.entity.Base.name} was defeated.");
+            yield return battleMenuControlSystem.TypeDialogue($"{_incomingTargetUnit.entity.Base.name} was defeated.");
             yield return new WaitForSeconds(2f);
+            CheckForBattleOver(_incomingTargetUnit);
 
-            OnBattleOver(false);
         }
-        else
+
+    }
+    void CheckForBattleOver(BattleUnit _defeatedUnit)
+    {
+        if (_defeatedUnit.IsPlayerUnit)
         {
-            PlayerAction();
+            BattleOver(false);
         }
+        else BattleOver(true);
+
     }
 
-
     #endregion
-    public enum BattleState { Start, PlayerAction, PlayerAttack, EnemyAttack, Busy }
+    public enum BattleState { Start, ActionSelection, AttackSelection, PerformAttack, Busy, Inventory, BattleOver }
 }
