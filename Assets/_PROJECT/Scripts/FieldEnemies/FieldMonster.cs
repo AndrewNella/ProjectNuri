@@ -8,8 +8,9 @@ public class FieldMonster : MonoBehaviour
     [SerializeField] LayerMask solidObjectLayer, playerLayer;
     [SerializeField] float solidObjectDetectionRadius;
 
-    [SerializeField] GameObject monsterBase;
+    [SerializeField] BattleUnit battleUnit;
 
+    [SerializeField] BattleController battleController;
     [SerializeField] FieldEnemyController fieldEnemyController;
 
     TargetScanner targetScanner;
@@ -146,6 +147,7 @@ public class FieldMonster : MonoBehaviour
             Vector3 dir = playerPos - transform.position;
             if (dir.sqrMagnitude < 0.1)
             {
+                //battleController.enemyUnit = battleUnit;
                 player.GetComponent<PlayerController>().CheckForEncounter();
                 fieldEnemyController.isBattle = true;
             }
