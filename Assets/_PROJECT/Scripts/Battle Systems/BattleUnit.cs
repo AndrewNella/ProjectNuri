@@ -11,7 +11,7 @@ public class BattleUnit : MonoBehaviour
     [SerializeField] float animationTimer;
     [SerializeField] float startPositionX;
 
-    [SerializeField] Animator animator;
+//    [SerializeField] Animator animator;
 
     Image image;
     Vector3 originalPos;
@@ -36,10 +36,10 @@ public class BattleUnit : MonoBehaviour
 
             image.sprite = entity.Base.FrontSprite;
         }
-        PlayEnterAnimation();
+    //    PlayEnterAnimation();
     }
 
-    public void PlayEnterAnimation()
+/*    public void PlayEnterAnimation()
     {
         if (!isPlayerUnit)
         {
@@ -47,5 +47,5 @@ public class BattleUnit : MonoBehaviour
             image.transform.DOLocalMove(originalPos, animationTimer);
             animator.StopPlayback();
         }
-    }
+    } */
 }

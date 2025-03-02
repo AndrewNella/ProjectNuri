@@ -4,12 +4,15 @@ using UnityEngine;
 
 public class FieldMonster : MonoBehaviour
 {
-    public enum MonsterState { IDLE, WANDER, RECOGNIZE };
 
     [SerializeField] LayerMask solidObjectLayer, playerLayer;
     [SerializeField] float solidObjectDetectionRadius;
 
     [SerializeField] GameObject monsterBase;
+
+    [SerializeField] FieldEnemyController fieldEnemyController;
+
+    TargetScanner targetScanner;
 
     [Header("Movement Data")]
 
@@ -17,23 +20,29 @@ public class FieldMonster : MonoBehaviour
     public float baseWanderingPeriod;
     public float moveSpeed;
     [SerializeField] float movementMagnitudeLimit;
-    public bool isMoving;
 
-    private float wanderingPeriod;
+    public bool isBattlePhase;
+    public bool isMoving;
+    public bool isAggressive;
+
+    private float movingPeroid;
 
     Vector2 randVector;
 
     Animator animator;
+    GameObject player;
 
     private void Awake()
     {
-        wanderingPeriod = baseWanderingPeriod;
+        movingPeroid = baseWanderingPeriod;
         randVector = Vector2.zero;
 
+        player = GameObject.FindWithTag("Player");
         animator = GetComponent<Animator>();
+        targetScanner = GetComponent<TargetScanner>();
     }
 
-    private void Wandering(int randomValue)
+    private void Moving(int randomValue)
     {   
         switch (randomValue)
         {
@@ -63,20 +72,53 @@ public class FieldMonster : MonoBehaviour
                 _targetPos.x += randVector.x;
                 _targetPos.y += randVector.y;
 
-                if (IsWanderable(_targetPos))
+                if (IsWanderable(_targetPos) && fieldEnemyController.isBattle == false)
                 {
                     StartCoroutine(Move(_targetPos));
                 }
                 else
-                    wanderingPeriod = 0f; // Restart Wandering State if cannot move.
+                    movingPeroid = 0f; // Restart Wandering State if cannot move.
             }
         }
-        wanderingPeriod -= Time.deltaTime;
+        movingPeroid -= Time.deltaTime;
 
-        if(wanderingPeriod <= 0)
+        if(movingPeroid <= 0)
         {
-            Wandering(UnityEngine.Random.Range(0, 4));
-            wanderingPeriod = baseWanderingPeriod + UnityEngine.Random.Range(0f, 0.2f * baseWanderingPeriod);
+            if(isAggressive == false)
+            {
+                Moving(UnityEngine.Random.Range(0, 4));
+                movingPeroid = baseWanderingPeriod + UnityEngine.Random.Range(0f, 0.2f * baseWanderingPeriod);
+            }
+            else
+            {
+                Vector3 playerPos = targetScanner.nearestTarget.position;
+                if (playerPos != null)
+                {
+                    Vector3 dir = playerPos - transform.position;
+                    dir = dir.normalized;
+                    Debug.Log(dir);
+                    if ((Math.Abs(dir.x) >= Math.Abs(dir.y)) && dir.x >= 0)
+                    {
+                        Moving(0);
+                        movingPeroid = baseWanderingPeriod + UnityEngine.Random.Range(0f, 0.2f * baseWanderingPeriod);
+                    }
+                    if ((Math.Abs(dir.x) >= Math.Abs(dir.y)) && dir.x <= 0)
+                    {
+                        Moving(1);
+                        movingPeroid = baseWanderingPeriod + UnityEngine.Random.Range(0f, 0.2f * baseWanderingPeriod);
+                    }
+                    if ((Math.Abs(dir.x) < Math.Abs(dir.y)) && dir.y >= 0)
+                    {
+                        Moving(2);
+                        movingPeroid = baseWanderingPeriod + UnityEngine.Random.Range(0f, 0.2f * baseWanderingPeriod);
+                    }
+                    if ((Math.Abs(dir.x) < Math.Abs(dir.y)) && dir.y <= 0)
+                    {
+                        Moving(3);
+                        movingPeroid = baseWanderingPeriod + UnityEngine.Random.Range(0f, 0.2f * baseWanderingPeriod);
+                    }
+                }
+            }
         }
 
         animator.SetBool("isMoving", isMoving);
@@ -97,15 +139,22 @@ public class FieldMonster : MonoBehaviour
         }
         gridparentTransform.position = _targetPosition;
         isMoving = false;
+
+        if(player != null)
+        {
+            Vector3 playerPos = targetScanner.nearestTarget.position;
+            Vector3 dir = playerPos - transform.position;
+            if (dir.sqrMagnitude < 0.1)
+            {
+                player.GetComponent<PlayerController>().CheckForEncounter();
+                fieldEnemyController.isBattle = true;
+            }
+        }
     }
     bool IsWanderable(Vector3 _targetPos)
     {
 
         if (Physics2D.OverlapCircle(_targetPos, solidObjectDetectionRadius, solidObjectLayer) != null)
-        {
-            return false;
-        }
-        if (Physics2D.OverlapCircle(_targetPos, solidObjectDetectionRadius, playerLayer) != null)
         {
             return false;
         }
