@@ -10,7 +10,6 @@ public class PlayerController : MonoBehaviour
     [SerializeField] LayerMask solidObjectLayer, dangerLayer;
     [SerializeField] float solidObjectDetectionRadius;
 
-
     public event Action OnEncounter;
 
     [SerializeField] Entity mainPlayerEntity;
@@ -25,8 +24,6 @@ public class PlayerController : MonoBehaviour
     Vector2 inputVector;
 
     Animator animator;
-
-
 
 
     private void Awake()
@@ -113,12 +110,9 @@ public class PlayerController : MonoBehaviour
     {
         if (Physics2D.OverlapCircle(gridparentTransform.position, 0.2f, dangerLayer) != null)
         {
-            if (UnityEngine.Random.Range(1, 101) <= 10)
-            {
                 animator.SetBool("isMoving", false);
-
+                
                 OnEncounter();
-            }
         }
     }
 
