@@ -5,12 +5,14 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
-    PlayerActionMap actionMap;
+    public static PlayerController instance;
 
     [SerializeField] LayerMask solidObjectLayer, dangerLayer;
     [SerializeField] float solidObjectDetectionRadius;
 
     public event Action OnEncounter;
+
+    [SerializeField] Entity mainPlayerEntity;
 
     [Header("Movement Data")]
 
@@ -26,33 +28,30 @@ public class PlayerController : MonoBehaviour
 
     private void Awake()
     {
+        instance = this;
         inputVector = Vector2.zero;
-        actionMap = new PlayerActionMap();
-        actionMap.Enable();
+
 
         animator = GetComponent<Animator>();
 
-        actionMap.PlayerControllerMap.Movement.performed += x => OnPlayerMoveInput(x.ReadValue<Vector2>());
-        actionMap.PlayerControllerMap.Movement.canceled += x => OnPlayerMoveInput(x.ReadValue<Vector2>());
+        MainInputActionController.instance.actionMap.PlayerControllerMap.Movement.performed += x => OnPlayerMoveInput(x.ReadValue<Vector2>());
+        MainInputActionController.instance.actionMap.PlayerControllerMap.Movement.canceled += x => OnPlayerMoveInput(x.ReadValue<Vector2>());
 
-        actionMap.PlayerControllerMap.Pause.performed += OnPauseInput;
-        actionMap.PlayerControllerMap.Pause.canceled -= OnPauseInput;
 
-    }
 
-    void OnPauseInput(InputAction.CallbackContext _incomingInput)
-    {
+        mainPlayerEntity.Init();
 
     }
 
-    void Start()
+
+    public Entity GetPlayerEntity()
     {
+        return mainPlayerEntity;
     }
 
     private void OnPlayerMoveInput(Vector2 _incomingVector2)
     {
 
-        Debug.Log("Is Moving");
         inputVector = _incomingVector2;
     }
 
@@ -96,6 +95,11 @@ public class PlayerController : MonoBehaviour
             yield return null;
         }
         gridparentTransform.position = _targetPosition;
+
+        Vector3 _holdPosition = gridparentTransform.position;
+        _holdPosition.x = Mathf.Floor(gridparentTransform.position.x) + 0.5f;
+        gridparentTransform.position = _holdPosition;
+
         Debug.Log(isMoving);
         isMoving = false;
 
@@ -106,10 +110,15 @@ public class PlayerController : MonoBehaviour
     {
         if (Physics2D.OverlapCircle(gridparentTransform.position, 0.2f, dangerLayer) != null)
         {
-                animator.SetBool("isMoving", false);
-                
-                OnEncounter();
+            TriggerEncounter();
         }
+    }
+
+    public void TriggerEncounter()
+    {
+        animator.SetBool("isMoving", false);
+
+        OnEncounter();
     }
 
     bool IsWalkable(Vector3 _targetPos)

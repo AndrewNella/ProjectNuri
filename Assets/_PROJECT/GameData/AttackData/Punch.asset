@@ -17,5 +17,5 @@ MonoBehaviour:
   power: 35
   accuracy: 100
   manaCost: 0
-  damageType1: 2
-  damageType2: 0
+  lustCost: 0
+  damageType: 2

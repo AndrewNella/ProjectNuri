@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e40e8c39b307d9240be0758bc289be0a, type: 3}
+  m_Name: LatexSlime
+  m_EditorClassIdentifier: 
+  entityName: Latex Slime
+  entityDescription: ' A slime that has reached maturity. It''s texture is no longer
+    like water, but is very sticky and is now black in colour. It is much more threatening
+    alone than lesser slimes. If one were to beat a victom, they will cover the victim
+    and use them as a slime core, taking control of their body and drowing them in
+    pleasure.'
+  frontSprite: {fileID: 7205859361210898333, guid: da3fb1c93f968904997bf2ba6708d5a2, type: 3}
+  backSprite: {fileID: 5124779969825009850, guid: da3fb1c93f968904997bf2ba6708d5a2, type: 3}
+  entityType1: 1
+  entityType2: 2
+  maxHP: 200
+  maxMana: 50
+  maxLust: 100
+  attack: 50
+  defense: 100
+  magicAttack: 20
+  magicDefense: 20
+  speed: 60
+  learnableAttacks:
+  - attackBase: {fileID: 11400000, guid: 570b52db3ac235b4891dd0785e77890e, type: 2}
+    level: 2

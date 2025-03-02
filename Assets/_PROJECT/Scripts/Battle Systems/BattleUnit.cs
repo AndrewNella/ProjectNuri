@@ -4,27 +4,44 @@ using DG.Tweening;
 
 public class BattleUnit : MonoBehaviour
 {
-    [SerializeField] EntityBase _base;
-    [SerializeField] int level;
+
     [SerializeField] bool isPlayerUnit;
+
+    [SerializeField] BattleHUD hud;
+
+    public BattleHUD HUD
+    {
+        get { return hud; }
+    }
+
+    public bool IsPlayerUnit
+    {
+        get { return isPlayerUnit; }
+    }
 
     [SerializeField] float animationTimer;
     [SerializeField] float startPositionX;
 
-//    [SerializeField] Animator animator;
+    // [SerializeField] Animator animator;
 
     Image image;
     Vector3 originalPos;
     public Entity entity { get; set; }
 
+
+
     private void Awake()
     {
         image = GetComponent<Image>();
         originalPos = image.transform.localPosition;
+        if (hud == null)
+        {
+            hud = this.gameObject.GetComponentInChildren<BattleHUD>();
+        }
     }
-    public void Setup()
+    public void Setup(Entity _incomingEntity)
     {
-        entity = new Entity(_base, level);
+        entity = _incomingEntity;
         if (isPlayerUnit)
         {
 
@@ -36,16 +53,17 @@ public class BattleUnit : MonoBehaviour
 
             image.sprite = entity.Base.FrontSprite;
         }
-    //    PlayEnterAnimation();
+        hud.SetData(_incomingEntity);
+        // PlayEnterAnimation();
     }
 
-/*    public void PlayEnterAnimation()
+    public void PlayEnterAnimation()
     {
         if (!isPlayerUnit)
         {
             image.transform.localPosition = new Vector3(startPositionX, originalPos.y);
             image.transform.DOLocalMove(originalPos, animationTimer);
-            animator.StopPlayback();
+            // animator.StopPlayback();
         }
-    } */
+    }
 }

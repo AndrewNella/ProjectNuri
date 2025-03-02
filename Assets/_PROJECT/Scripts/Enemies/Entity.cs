@@ -2,10 +2,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Scripting.APIUpdating;
 
+[System.Serializable]
 public class Entity
 {
-    public EntityBase Base { get; set; }
-    public int Level { get; set; }
+
+    [SerializeField] EntityBase BaseContainer;
+    [SerializeField] int LevelContainer;
+    public EntityBase Base { get { return BaseContainer; } }
+    public int Level { get { return LevelContainer; } }
 
     public float currentHP { get; set; }
     public float currentMana { get; set; }
@@ -13,13 +17,11 @@ public class Entity
 
     public List<Attack> knownAttacks { get; set; }
 
-    public Entity(EntityBase mBase, int mLevel)
+    public void Init()
     {
-        Base = mBase;
-        Level = mLevel;
+
         currentHP = MaxHp;
         currentMana = MaxMana;
-        Debug.Log($"{currentMana} ----- {MaxMana}");
         currentLust = 0;
 
         knownAttacks = new List<Attack>();
@@ -76,7 +78,11 @@ public class Entity
     public bool TakeDamage(Attack _incomingAttack, Entity _incomingEntity)
     {
         float effectivenessModifier = TypeChart.GetEffectiveness(_incomingAttack.Base.DamageType1, _incomingEntity.Base.EntityType1) * TypeChart.GetEffectiveness(_incomingAttack.Base.DamageType1, _incomingEntity.Base.EntityType2);
-        float _damage = effectivenessModifier * _incomingAttack.Base.Power + (_incomingEntity.Attack - Defense) + 2;
+
+        float _attack = (_incomingAttack.Base.isMagicalAttack) ? _incomingEntity.MagicAttack : _incomingEntity.Attack;
+        float _defense = (_incomingAttack.Base.isMagicalAttack) ? MagicDefense : Defense;
+
+        float _damage = effectivenessModifier * _incomingAttack.Base.Power + (_attack - _defense) + 2;
         if (_damage < 0)
         {
             _damage = 0;
