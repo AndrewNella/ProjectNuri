@@ -201,11 +201,28 @@ public class BattleController : MonoBehaviour
 
         yield return new WaitForSeconds(1f);
 
+        if (_attack.Base.Category == AttackCategory.Status)
+        {
+            var _effectsHolder = _attack.Base.Effects.Modifications;
+            if (_effectsHolder != null)
+                if (_attack.Base.Target == AttackTarget.self) _incomingSourceUnit.entity.ApplyStatModifications(_effectsHolder);
+                else _incomingTargetUnit.entity.ApplyStatModifications(_effectsHolder);
 
-        bool _isDefeated = _incomingTargetUnit.entity.TakeDamage(_attack, _incomingSourceUnit.entity);
-        _incomingTargetUnit.HUD.UpdateHP();
 
-        if (_isDefeated)
+        }
+        else
+        {
+
+
+            //TODO
+            bool _isDefeated = _incomingTargetUnit.entity.TakeDamage(_attack, _incomingSourceUnit.entity);
+            _incomingTargetUnit.HUD.UpdateHP();
+        }
+
+
+
+
+        if (_incomingTargetUnit.entity.currentHP <= 0)
         {
             yield return battleMenuControlSystem.TypeDialogue($"{_incomingTargetUnit.entity.Base.name} was defeated.");
             yield return new WaitForSeconds(2f);

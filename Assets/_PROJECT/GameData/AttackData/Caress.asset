@@ -20,3 +20,7 @@ MonoBehaviour:
   manaCost: 0
   lustCost: 0
   damageType: 7
+  category: 0
+  effects:
+    modifications: []
+  target: 0

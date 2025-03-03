@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "AttackBase", menuName = "Scriptable Objects/AttackBase")]
@@ -12,6 +13,13 @@ public class AttackBase : ScriptableObject
 
     [SerializeField] AttackType damageType;
 
+    [SerializeField] AttackCategory category;
+
+    [SerializeField] AttackEffects effects;
+    [SerializeField] AttackTarget target;
+
+
+
     public string Attackname => attackname;
     public string AttackDescription => attackDescription;
     public float Power => power;
@@ -21,20 +29,48 @@ public class AttackBase : ScriptableObject
     public float ManaCost => manaCost;
     public float LustCost => lustCost;
 
-    public bool isMagicalAttack
+    public AttackCategory Category => category;
+
+    public AttackTarget Target => target;
+
+    public AttackEffects Effects => effects;
+
+
+
+
+
+}
+[System.Serializable]
+public class AttackEffects
+{
+    [SerializeField] List<StatModifications> modifications;
+
+    public List<StatModifications> Modifications
     {
         get
         {
-            if (damageType == AttackType.Fire || damageType == AttackType.Water || damageType == AttackType.Electricity)
-            {
-                return true;
-            }
-            else return false;
+            return modifications;
         }
     }
 }
 
+[System.Serializable]
+public class StatModifications
+{
+    public Stat stat;
+    public float modification;
+}
+public enum AttackCategory
+{
+    Physical,
+    Magical,
+    Status
+}
 
+public enum AttackTarget
+{
+    enemy, self
+}
 public enum AttackType
 {
     None,

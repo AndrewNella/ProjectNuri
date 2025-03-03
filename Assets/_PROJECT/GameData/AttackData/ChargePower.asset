@@ -17,6 +17,14 @@ MonoBehaviour:
     attacks.
   power: 0
   accuracy: 100
-  manaCost: 5
+  manaCost: 25
   lustCost: 0
   damageType: 8
+  category: 2
+  effects:
+    modifications:
+    - stat: 0
+      modification: 1
+    - stat: 2
+      modification: 1
+  target: 1

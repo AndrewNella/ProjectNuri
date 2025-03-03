@@ -77,10 +77,21 @@ public enum EntityType
     Tentacle,
     Beast,
     Human,
+    Merfolk,
+    Dwarf,
+    Elf,
     Beastkin
 
 }
+public enum Stat
+{
+    Attack,
+    Defense,
+    MagicAttack,
+    MagicDefense,
+    Speed
 
+}
 public class TypeChart
 {
     static float[][] chart =
