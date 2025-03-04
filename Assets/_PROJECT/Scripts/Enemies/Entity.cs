@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using UnityEditor.Rendering;
@@ -22,6 +23,8 @@ public class Entity
     public Dictionary<Stat, float> Stats { get; private set; }
     public Dictionary<Stat, int> StatModifications { get; private set; }
 
+    public Queue<String> StatusChanges { get; private set; } = new Queue<string>();
+
     public void Init()
     {
 
@@ -38,6 +41,15 @@ public class Entity
         }
         CalculateStats();
 
+        currentHP = MaxHp;
+        currentMana = MaxMana;
+        currentLust = 0;
+
+        ResetStatModifications();
+    }
+
+    private void ResetStatModifications()
+    {
         StatModifications = new Dictionary<Stat, int>(){
             {Stat.Attack,0},
             {Stat.Defense,0},
@@ -45,11 +57,8 @@ public class Entity
             {Stat.MagicDefense,0},
             {Stat.Speed,0},
         };
-
-        currentHP = MaxHp;
-        currentMana = MaxMana;
-        currentLust = 0;
     }
+
     void CalculateStats()
     {
         Stats = new Dictionary<Stat, float>();
@@ -91,6 +100,16 @@ public class Entity
             var _statModification = _modification.modification;
 
             StatModifications[_stat] = (int)Mathf.Clamp((StatModifications[_stat] + _statModification), -10f, 10f);
+            if (_statModification > 0)
+            {
+                StatusChanges.Enqueue($"{Base.Name}'s {_stat} was increased!");
+            }
+            else
+            {
+                StatusChanges.Enqueue($"{Base.Name}'s {_stat} was decreased!");
+
+            }
+
 
             UnityEngine.Debug.Log($" {_stat} has been modified t0 be {StatModifications[_stat]}");
         }
@@ -124,14 +143,14 @@ public class Entity
 
     public Attack GetRandomAttack()
     {
-        int r = Random.Range(0, knownAttacks.Count);
+        int r = UnityEngine.Random.Range(0, knownAttacks.Count);
         return knownAttacks[r];
     }
 
-    public bool TakeDamage(Attack _incomingAttack, Entity _incomingEntity)
+    public DamageDetails TakeDamage(Attack _incomingAttack, Entity _incomingEntity)
     {
 
-        float effectivenessModifier = TypeChart.GetEffectiveness(_incomingAttack.Base.DamageType1, _incomingEntity.Base.EntityType1) * TypeChart.GetEffectiveness(_incomingAttack.Base.DamageType1, _incomingEntity.Base.EntityType2);
+        float effectivenessModifier = TypeChart.GetEffectiveness(_incomingAttack.Base.DamageType, _incomingEntity.Base.EntityType1) * TypeChart.GetEffectiveness(_incomingAttack.Base.DamageType, _incomingEntity.Base.EntityType2);
         float _attack = 0;
         float _defense = 0;
         switch (_incomingAttack.Base.Category)
@@ -148,6 +167,12 @@ public class Entity
             default:
                 break;
         }
+        var _DamageDetails = new DamageDetails()
+        {
+            Type = effectivenessModifier,
+            Fainted = false,
+            Aroused = false
+        };
 
         float _damage = effectivenessModifier * _incomingAttack.Base.Power + (_attack - _defense) + 2;
         if (_damage < 0)
@@ -155,37 +180,41 @@ public class Entity
             _damage = 0;
         }
 
-        currentHP -= _damage;
-
-        if (currentHP <= 0)
+        if (_incomingAttack.Base.DamageType == AttackType.Arousal)
         {
-            currentHP = 0;
-            return true;
+            currentLust += _damage;
+            if (currentLust >= MaxLust)
+            {
+                currentLust = 0;
+                _DamageDetails.Aroused = true;
+            }
+        }
+        else
+        {
+            currentHP -= _damage;
+
+            if (currentHP <= 0)
+            {
+                currentHP = 0;
+                _DamageDetails.Fainted = true;
+            }
         }
 
 
 
-        return false;
+        return _DamageDetails;
     }
 
-    public bool TakeArousalDamage(Attack _incomingAttack, Entity _incomingEntity)
+    public void OnBattleOver()
     {
-        float effectivenessModifier = TypeChart.GetEffectiveness(_incomingAttack.Base.DamageType1, _incomingEntity.Base.EntityType1) * TypeChart.GetEffectiveness(_incomingAttack.Base.DamageType1, _incomingEntity.Base.EntityType2);
-
-        float _damage = effectivenessModifier * _incomingAttack.Base.Power + (_incomingEntity.Attack - Defense) + 2;
-        if (_damage < 0)
-        {
-            _damage = 0;
-        }
-
-        currentLust += _damage;
-
-        if (currentLust >= MaxLust)
-        {
-            currentLust = MaxLust;
-            return true;
-        }
-
-        return false;
+        ResetStatModifications();
     }
+}
+
+public class DamageDetails
+{
+    public bool Fainted { get; set; }
+    public float Type { get; set; }
+
+    public bool Aroused { get; set; }
 }

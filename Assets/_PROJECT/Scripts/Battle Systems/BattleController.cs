@@ -126,6 +126,7 @@ public class BattleController : MonoBehaviour
     void BattleOver(bool _incomingBool)
     {
         state = BattleState.BattleOver;
+        playerUnit.entity.OnBattleOver();
         OnBattleOver(_incomingBool);
     }
 
@@ -151,6 +152,19 @@ public class BattleController : MonoBehaviour
         }
     }
 
+    void ChooseFirstTurn()
+    {
+
+        if (playerUnit.entity.Speed >= enemyUnit.entity.Speed)
+        {
+            ActionSelection();
+        }
+        else
+        {
+            StartCoroutine(EnemyAttack());
+        }
+    }
+
     #region Coroutines
     public IEnumerator SetupBattle()
     {
@@ -165,7 +179,7 @@ public class BattleController : MonoBehaviour
         yield return StartCoroutine(battleMenuControlSystem.TypeDialogue($"You were spotted by a {enemyUnit.entity.Base.Name}. You cannot avoid a battle."));
         yield return new WaitForSeconds(1f);
 
-        ActionSelection();
+        ChooseFirstTurn();
     }
     public IEnumerator PlayerAttack()
     {
@@ -203,25 +217,14 @@ public class BattleController : MonoBehaviour
 
         if (_attack.Base.Category == AttackCategory.Status)
         {
-            var _effectsHolder = _attack.Base.Effects.Modifications;
-            if (_effectsHolder != null)
-                if (_attack.Base.Target == AttackTarget.self) _incomingSourceUnit.entity.ApplyStatModifications(_effectsHolder);
-                else _incomingTargetUnit.entity.ApplyStatModifications(_effectsHolder);
-
-
+            yield return RunAttackEffects(_attack, _incomingSourceUnit.entity, _incomingTargetUnit.entity);
         }
         else
         {
-
-
             //TODO
-            bool _isDefeated = _incomingTargetUnit.entity.TakeDamage(_attack, _incomingSourceUnit.entity);
+            DamageDetails _damageDetails = _incomingTargetUnit.entity.TakeDamage(_attack, _incomingSourceUnit.entity);
             _incomingTargetUnit.HUD.UpdateHP();
         }
-
-
-
-
         if (_incomingTargetUnit.entity.currentHP <= 0)
         {
             yield return battleMenuControlSystem.TypeDialogue($"{_incomingTargetUnit.entity.Base.name} was defeated.");
@@ -229,8 +232,25 @@ public class BattleController : MonoBehaviour
             CheckForBattleOver(_incomingTargetUnit);
 
         }
-
     }
+    IEnumerator RunAttackEffects(Attack _incomingAttack, Entity _sourceEntity, Entity _targetEntity)
+    {
+        var _effectsHolder = _incomingAttack.Base.Effects.Modifications;
+        if (_effectsHolder != null)
+            if (_incomingAttack.Base.Target == AttackTarget.self) _sourceEntity.ApplyStatModifications(_effectsHolder);
+            else _targetEntity.ApplyStatModifications(_effectsHolder);
+        yield return ShowStatusChanges(_sourceEntity);
+        yield return ShowStatusChanges(_targetEntity);
+    }
+    IEnumerator ShowStatusChanges(Entity _incomingEntity)
+    {
+        while (_incomingEntity.StatusChanges.Count > 0)
+        {
+            var _message = _incomingEntity.StatusChanges.Dequeue();
+            yield return battleMenuControlSystem.TypeDialogue(_message);
+        }
+    }
+    #endregion
     void CheckForBattleOver(BattleUnit _defeatedUnit)
     {
         if (_defeatedUnit.IsPlayerUnit)
@@ -241,6 +261,5 @@ public class BattleController : MonoBehaviour
 
     }
 
-    #endregion
     public enum BattleState { Start, ActionSelection, AttackSelection, PerformAttack, Busy, Inventory, BattleOver }
 }

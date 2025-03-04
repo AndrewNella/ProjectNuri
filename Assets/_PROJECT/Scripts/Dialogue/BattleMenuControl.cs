@@ -99,7 +99,7 @@ public class BattleMenuControl : MonoBehaviour
         manaCostText.text = $"Mana Cost: {_incomingAttack.ManaCost}";
         lustCostText.text = $"Lust Cost:  {_incomingAttack.Base.LustCost}";
 
-        type1Text.text = $"Attack Type - {_incomingAttack.Base.DamageType1}";
+        type1Text.text = $"Attack Type - {_incomingAttack.Base.DamageType}";
 
 
 

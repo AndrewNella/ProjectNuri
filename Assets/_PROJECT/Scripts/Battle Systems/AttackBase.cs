@@ -24,7 +24,7 @@ public class AttackBase : ScriptableObject
     public string AttackDescription => attackDescription;
     public float Power => power;
 
-    public AttackType DamageType1 => damageType;
+    public AttackType DamageType => damageType;
     public float Accuracy => accuracy;
     public float ManaCost => manaCost;
     public float LustCost => lustCost;
