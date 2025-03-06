@@ -77,6 +77,9 @@ public class BattleMenuControl : MonoBehaviour
             yield return new WaitForSeconds(dialogueLetterWaiterTimer);
         }
 
+        yield return new WaitForSeconds(1.5f);
+
+
     }
 
     public void SetAttacknames(List<Attack> attacks)

@@ -10079,6 +10079,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 228961786}
     m_Modifications:
+    - target: {fileID: 1339116776285319220, guid: 16ccc3beb2c80ad48a3863c38e99ad90, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 105833478}
+    - target: {fileID: 1339116776285319220, guid: 16ccc3beb2c80ad48a3863c38e99ad90, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: InitiateAttack
+      objectReference: {fileID: 0}
     - target: {fileID: 2418281277407700026, guid: 16ccc3beb2c80ad48a3863c38e99ad90, type: 3}
       propertyPath: m_Name
       value: BattleSystem
@@ -10094,6 +10102,14 @@ PrefabInstance:
     - target: {fileID: 2567487922817914303, guid: 16ccc3beb2c80ad48a3863c38e99ad90, type: 3}
       propertyPath: m_AnchorMax.y
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2994982968294847327, guid: 16ccc3beb2c80ad48a3863c38e99ad90, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 105833478}
+    - target: {fileID: 2994982968294847327, guid: 16ccc3beb2c80ad48a3863c38e99ad90, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: InitiateAttack
       objectReference: {fileID: 0}
     - target: {fileID: 3050248180990345410, guid: 16ccc3beb2c80ad48a3863c38e99ad90, type: 3}
       propertyPath: hud

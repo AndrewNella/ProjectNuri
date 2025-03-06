@@ -145,10 +145,12 @@ public class BattleController : MonoBehaviour
         if (_incomingAttack.ManaCost > 0)
         {
             _incomingUnit.entity.currentMana -= _incomingAttack.ManaCost;
+            _incomingUnit.entity.manaChanged = true;
         }
         if (_incomingAttack.LustCost > 0)
         {
             _incomingUnit.entity.currentLust += _incomingAttack.LustCost;
+            _incomingUnit.entity.lustChanged = true;
         }
     }
 
@@ -208,6 +210,17 @@ public class BattleController : MonoBehaviour
     }
     IEnumerator PerformAttack(BattleUnit _incomingSourceUnit, BattleUnit _incomingTargetUnit, Attack _attack)
     {
+
+        bool canPerformAttack = _incomingSourceUnit.entity.OnBeforeAttack();
+
+        if (!canPerformAttack)
+        {
+            yield return ShowStatusChanges(_incomingSourceUnit.entity);
+            yield break;
+        }
+        yield return ShowStatusChanges(_incomingSourceUnit.entity);
+
+
         yield return battleMenuControlSystem.TypeDialogue($"{_incomingSourceUnit.entity.Base.name} used {_attack.Base.name}.");
         PayCostsForAttack(_incomingSourceUnit, _attack);
         _incomingSourceUnit.HUD.UpdateMana();
@@ -232,13 +245,45 @@ public class BattleController : MonoBehaviour
             CheckForBattleOver(_incomingTargetUnit);
 
         }
+
+        _incomingSourceUnit.entity.OnAfterTurn();
+
+
+        // Status effects can alter a unit's values, so additional checks are needed for the unit after the turn is done.
+        yield return ShowStatusChanges(_incomingSourceUnit.entity);
+
+        _incomingSourceUnit.HUD.UpdateHP();
+        _incomingSourceUnit.HUD.UpdateLust();
+        _incomingSourceUnit.HUD.UpdateMana();
+
+        if (_incomingSourceUnit.entity.currentHP <= 0)
+        {
+            yield return battleMenuControlSystem.TypeDialogue($"{_incomingTargetUnit.entity.Base.name} was defeated.");
+            yield return new WaitForSeconds(2f);
+            CheckForBattleOver(_incomingTargetUnit);
+
+        }
+
     }
     IEnumerator RunAttackEffects(Attack _incomingAttack, Entity _sourceEntity, Entity _targetEntity)
     {
-        var _effectsHolder = _incomingAttack.Base.Effects.Modifications;
-        if (_effectsHolder != null)
-            if (_incomingAttack.Base.Target == AttackTarget.self) _sourceEntity.ApplyStatModifications(_effectsHolder);
-            else _targetEntity.ApplyStatModifications(_effectsHolder);
+        var _effectsHolder = _incomingAttack.Base.Effects;
+
+        //Stat Modification such as increasing Attack or other values.
+        if (_effectsHolder.Modifications != null)
+        {
+            if (_incomingAttack.Base.Target == AttackTarget.self) _sourceEntity.ApplyStatModifications(_effectsHolder.Modifications);
+            else _targetEntity.ApplyStatModifications(_effectsHolder.Modifications);
+        }
+
+
+        //Status Condition management. 
+        if (_effectsHolder.Status != ConditionID.none)
+        {
+            _targetEntity.SetStatusCondition(_effectsHolder.Status);
+        }
+
+
         yield return ShowStatusChanges(_sourceEntity);
         yield return ShowStatusChanges(_targetEntity);
     }

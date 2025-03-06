@@ -27,14 +27,27 @@ public class BattleHUD : MonoBehaviour
 
     public void UpdateMana()
     {
+        if (currentEntity.manaChanged)
+        {
+
+            currentEntity.manaChanged = false;
         vitals.SetMana(currentEntity.currentMana);
+        }
     }
     public void UpdateHP()
     {
-        vitals.SetHP(currentEntity.currentHP);
+        if (currentEntity.hpChanged)
+        {
+            vitals.SetHP(currentEntity.currentHP);
+            currentEntity.hpChanged = false;
+        }
     }
     public void UpdateLust()
     {
-        vitals.SetLust(currentEntity.currentLust);
+        if (currentEntity.lustChanged)
+        {
+            vitals.SetLust(currentEntity.currentLust);
+            currentEntity.lustChanged = false;
+        }
     }
 }

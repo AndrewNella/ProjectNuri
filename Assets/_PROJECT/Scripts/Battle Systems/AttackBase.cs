@@ -44,14 +44,10 @@ public class AttackBase : ScriptableObject
 public class AttackEffects
 {
     [SerializeField] List<StatModifications> modifications;
+    [SerializeField] ConditionID _status;
 
-    public List<StatModifications> Modifications
-    {
-        get
-        {
-            return modifications;
-        }
-    }
+    public List<StatModifications> Modifications => modifications;
+    public ConditionID Status => _status;
 }
 
 [System.Serializable]
@@ -80,6 +76,7 @@ public enum AttackType
     Water,
     Earth,
     Electricity,
+    MagicalInfliction,
     Arousal,
     SelfBuff,
     Heal,

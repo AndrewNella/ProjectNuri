@@ -23,4 +23,5 @@ MonoBehaviour:
   category: 1
   effects:
     modifications: []
+    _status: 2
   target: 0

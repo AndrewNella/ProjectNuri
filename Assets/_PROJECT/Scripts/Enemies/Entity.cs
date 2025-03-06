@@ -23,7 +23,15 @@ public class Entity
     public Dictionary<Stat, float> Stats { get; private set; }
     public Dictionary<Stat, int> StatModifications { get; private set; }
 
+    public Condition Status { get; set; }
+
     public Queue<String> StatusChanges { get; private set; } = new Queue<string>();
+
+    public bool hpChanged { get; set; }
+    public bool manaChanged { get; set; }
+    public bool lustChanged { get; set; }
+
+    public int StatusTime { get; set; }
 
     public void Init()
     {
@@ -59,6 +67,17 @@ public class Entity
         };
     }
 
+    public void SetStatusCondition(ConditionID _incomingCondition)
+    {
+        Status = ConditionDataBase.Conditions[_incomingCondition];
+        Status?.OnStart?.Invoke(this);
+        StatusChanges.Enqueue($"{Base.name} {Status.StartMessage}");
+    }
+
+    public void CureStatusCondition()
+    {
+        Status = null;
+    }
     void CalculateStats()
     {
         Stats = new Dictionary<Stat, float>();
@@ -180,27 +199,8 @@ public class Entity
             _damage = 0;
         }
 
-        if (_incomingAttack.Base.DamageType == AttackType.Arousal)
-        {
-            currentLust += _damage;
-            if (currentLust >= MaxLust)
-            {
-                currentLust = 0;
-                _DamageDetails.Aroused = true;
-            }
-        }
-        else
-        {
-            currentHP -= _damage;
-
-            if (currentHP <= 0)
-            {
-                currentHP = 0;
-                _DamageDetails.Fainted = true;
-            }
-        }
-
-
+        if (_incomingAttack.Base.DamageType == AttackType.Arousal) InflictLust(_damage);
+        else DamageHP(_damage);
 
         return _DamageDetails;
     }
@@ -208,6 +208,31 @@ public class Entity
     public void OnBattleOver()
     {
         ResetStatModifications();
+    }
+
+    public void DamageHP(float _incomingFloat)
+    {
+        currentHP = Mathf.Clamp(currentHP - _incomingFloat, 0, MaxHp);
+        hpChanged = true;
+    }
+    public void InflictLust(float _incomingFloat)
+    {
+        currentLust = Mathf.Clamp(currentLust + _incomingFloat, 0, MaxHp);
+        lustChanged = true;
+    }
+
+    public void OnAfterTurn()
+    {
+        Status?.OnAfterTurn?.Invoke(this);
+    }
+
+    public bool OnBeforeAttack()
+    {
+        if (Status?.OnBeforeAttack != null)
+        {
+            return Status.OnBeforeAttack(this);
+        }
+        return true;
     }
 }
 
