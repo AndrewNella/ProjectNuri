@@ -27,11 +27,16 @@ public class Entity
 
     public Queue<String> StatusChanges { get; private set; } = new Queue<string>();
 
+    public event Action OnStatusConditionChanged;
+
     public bool hpChanged { get; set; }
     public bool manaChanged { get; set; }
     public bool lustChanged { get; set; }
 
     public int StatusTime { get; set; }
+
+    public Condition VolitileStatus { get; private set; }
+    public int VolitileStatusTime { get; set; }
 
     public void Init()
     {
@@ -54,6 +59,9 @@ public class Entity
         currentLust = 0;
 
         ResetStatModifications();
+
+        Status = null;
+        VolitileStatus = null;
     }
 
     private void ResetStatModifications()
@@ -64,19 +72,43 @@ public class Entity
             {Stat.MagicAttack,0},
             {Stat.MagicDefense,0},
             {Stat.Speed,0},
+            {Stat.Accuracy,0},
+            {Stat.Evasion,0},
         };
     }
 
     public void SetStatusCondition(ConditionID _incomingCondition)
     {
+
+        if (Status != null) return;
+
         Status = ConditionDataBase.Conditions[_incomingCondition];
         Status?.OnStart?.Invoke(this);
         StatusChanges.Enqueue($"{Base.name} {Status.StartMessage}");
+
+        OnStatusConditionChanged?.Invoke();
+    }
+    public void SetVolitileStatusCondition(ConditionID _incomingCondition)
+    {
+
+        if (VolitileStatus != null) return;
+
+        VolitileStatus = ConditionDataBase.Conditions[_incomingCondition];
+        VolitileStatus?.OnStart?.Invoke(this);
+        StatusChanges.Enqueue($"{Base.name} {VolitileStatus.StartMessage}");
+
     }
 
     public void CureStatusCondition()
     {
         Status = null;
+        OnStatusConditionChanged?.Invoke();
+
+    }
+    public void CureVolitileStatusCondition()
+    {
+        VolitileStatus = null;
+
     }
     void CalculateStats()
     {
@@ -207,6 +239,7 @@ public class Entity
 
     public void OnBattleOver()
     {
+        VolitileStatus = null;
         ResetStatModifications();
     }
 
@@ -224,15 +257,24 @@ public class Entity
     public void OnAfterTurn()
     {
         Status?.OnAfterTurn?.Invoke(this);
+        VolitileStatus?.OnAfterTurn?.Invoke(this);
     }
 
     public bool OnBeforeAttack()
     {
+        bool _canPerformMove = true;
         if (Status?.OnBeforeAttack != null)
         {
-            return Status.OnBeforeAttack(this);
+            if (!Status.OnBeforeAttack(this))
+            {
+                _canPerformMove = false;
+            }
+            if (!VolitileStatus.OnBeforeAttack(this))
+            {
+                _canPerformMove = false;
+            }
         }
-        return true;
+        return _canPerformMove;
     }
 }
 

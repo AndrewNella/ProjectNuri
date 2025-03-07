@@ -167,6 +167,34 @@ public class BattleController : MonoBehaviour
         }
     }
 
+    bool CheckIfAttackHits(Attack _attack, Entity _sourceEntity, Entity _targetEntity)
+    {
+        if (_attack.Base.AlwaysHits) return true;
+
+
+
+        float _attackAccuracy = _attack.Base.Accuracy;
+        int _accuracy = _sourceEntity.StatModifications[Stat.Accuracy];
+        int _evasion = _sourceEntity.StatModifications[Stat.Evasion];
+
+        var _modificationValues = new float[] { 1f, 4f / 3f, 5f / 3f, 2f, 7f / 3f, 8f / 3f, 3f };
+
+        //Calculate Accuracy
+        if (_accuracy > 0) _attackAccuracy *= _modificationValues[_accuracy];
+        else _attackAccuracy /= _modificationValues[-_accuracy];
+
+        //Calculate Evasion
+        if (_evasion > 0) _attackAccuracy /= _modificationValues[_evasion];
+        else _attackAccuracy *= _modificationValues[-_evasion];
+
+
+
+        return UnityEngine.Random.Range(1, 100) <= _attackAccuracy;
+
+
+
+
+    }
     #region Coroutines
     public IEnumerator SetupBattle()
     {
@@ -216,6 +244,7 @@ public class BattleController : MonoBehaviour
         if (!canPerformAttack)
         {
             yield return ShowStatusChanges(_incomingSourceUnit.entity);
+            _incomingSourceUnit.HUD.UpdateAll();
             yield break;
         }
         yield return ShowStatusChanges(_incomingSourceUnit.entity);
@@ -226,24 +255,46 @@ public class BattleController : MonoBehaviour
         _incomingSourceUnit.HUD.UpdateMana();
         _incomingSourceUnit.HUD.UpdateLust();
 
-        yield return new WaitForSeconds(1f);
-
-        if (_attack.Base.Category == AttackCategory.Status)
+        if (CheckIfAttackHits(_attack, _incomingSourceUnit.entity, _incomingTargetUnit.entity))
         {
-            yield return RunAttackEffects(_attack, _incomingSourceUnit.entity, _incomingTargetUnit.entity);
+
+
+            yield return new WaitForSeconds(1f);
+
+            if (_attack.Base.Category == AttackCategory.Status)
+            {
+                yield return RunAttackEffects(_attack.Base.Effects, _incomingSourceUnit.entity, _incomingTargetUnit.entity, _attack.Base.Target);
+            }
+            else
+            {
+                //TODO
+                DamageDetails _damageDetails = _incomingTargetUnit.entity.TakeDamage(_attack, _incomingSourceUnit.entity);
+                _incomingTargetUnit.HUD.UpdateHP();
+            }
+
+            if (_attack.Base.SecondaryEffects != null && _attack.Base.SecondaryEffects.Count > 0 && _incomingTargetUnit.entity.currentHP > 0)
+            {
+                foreach (var _secondary in _attack.Base.SecondaryEffects)
+                {
+                    float _rnd = UnityEngine.Random.Range(0, 101);
+                    if (_rnd <= _secondary.Chance)
+                    {
+                        yield return RunAttackEffects(_secondary, _incomingSourceUnit.entity, _incomingTargetUnit.entity, _secondary.Target);
+                    }
+                }
+            }
+
+            if (_incomingTargetUnit.entity.currentHP <= 0)
+            {
+                yield return battleMenuControlSystem.TypeDialogue($"{_incomingTargetUnit.entity.Base.name} was defeated.");
+                yield return new WaitForSeconds(2f);
+                CheckForBattleOver(_incomingTargetUnit);
+
+            }
         }
         else
         {
-            //TODO
-            DamageDetails _damageDetails = _incomingTargetUnit.entity.TakeDamage(_attack, _incomingSourceUnit.entity);
-            _incomingTargetUnit.HUD.UpdateHP();
-        }
-        if (_incomingTargetUnit.entity.currentHP <= 0)
-        {
-            yield return battleMenuControlSystem.TypeDialogue($"{_incomingTargetUnit.entity.Base.name} was defeated.");
-            yield return new WaitForSeconds(2f);
-            CheckForBattleOver(_incomingTargetUnit);
-
+            yield return battleMenuControlSystem.TypeDialogue($"{_incomingSourceUnit}'s attack missed.");
         }
 
         _incomingSourceUnit.entity.OnAfterTurn();
@@ -265,27 +316,36 @@ public class BattleController : MonoBehaviour
         }
 
     }
-    IEnumerator RunAttackEffects(Attack _incomingAttack, Entity _sourceEntity, Entity _targetEntity)
+    IEnumerator RunAttackEffects(AttackEffects _incomingAttackEffect, Entity _sourceEntity, Entity _targetEntity, AttackTarget _attackTarget)
     {
-        var _effectsHolder = _incomingAttack.Base.Effects;
 
         //Stat Modification such as increasing Attack or other values.
-        if (_effectsHolder.Modifications != null)
+        if (_incomingAttackEffect.Modifications != null)
         {
-            if (_incomingAttack.Base.Target == AttackTarget.self) _sourceEntity.ApplyStatModifications(_effectsHolder.Modifications);
-            else _targetEntity.ApplyStatModifications(_effectsHolder.Modifications);
+            if (_attackTarget == AttackTarget.self) _sourceEntity.ApplyStatModifications(_incomingAttackEffect.Modifications);
+            else _targetEntity.ApplyStatModifications(_incomingAttackEffect.Modifications);
         }
 
 
         //Status Condition management. 
-        if (_effectsHolder.Status != ConditionID.none)
+
+        //Normal Status Effect
+        if (_incomingAttackEffect.Status != ConditionID.none)
         {
-            _targetEntity.SetStatusCondition(_effectsHolder.Status);
+            _targetEntity.SetStatusCondition(_incomingAttackEffect.Status);
+        }
+
+        //Volitile Status Effect
+        if (_incomingAttackEffect.VolitileStatus != ConditionID.none)
+        {
+            _targetEntity.SetVolitileStatusCondition(_incomingAttackEffect.VolitileStatus);
         }
 
 
         yield return ShowStatusChanges(_sourceEntity);
         yield return ShowStatusChanges(_targetEntity);
+
+
     }
     IEnumerator ShowStatusChanges(Entity _incomingEntity)
     {

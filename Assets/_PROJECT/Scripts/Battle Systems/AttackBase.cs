@@ -11,11 +11,14 @@ public class AttackBase : ScriptableObject
 
     [SerializeField] float power, accuracy, manaCost, lustCost;
 
+    [SerializeField] bool alwaysHits;
+
     [SerializeField] AttackType damageType;
 
     [SerializeField] AttackCategory category;
 
     [SerializeField] AttackEffects effects;
+    [SerializeField] List<SecondaryEffects> secondaryEffects;
     [SerializeField] AttackTarget target;
 
 
@@ -28,13 +31,14 @@ public class AttackBase : ScriptableObject
     public float Accuracy => accuracy;
     public float ManaCost => manaCost;
     public float LustCost => lustCost;
+    public bool AlwaysHits => alwaysHits;
 
     public AttackCategory Category => category;
 
     public AttackTarget Target => target;
 
     public AttackEffects Effects => effects;
-
+    public List<SecondaryEffects> SecondaryEffects => secondaryEffects;
 
 
 
@@ -45,9 +49,21 @@ public class AttackEffects
 {
     [SerializeField] List<StatModifications> modifications;
     [SerializeField] ConditionID _status;
+    [SerializeField] ConditionID _volitileStatus;
 
     public List<StatModifications> Modifications => modifications;
     public ConditionID Status => _status;
+    public ConditionID VolitileStatus => _volitileStatus;
+}
+
+[System.Serializable]
+public class SecondaryEffects : AttackEffects
+{
+    [SerializeField] float chance;
+    [SerializeField] AttackTarget target;
+
+    public float Chance => chance;
+    public AttackTarget Target => target;
 }
 
 [System.Serializable]

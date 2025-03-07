@@ -89,7 +89,11 @@ public enum Stat
     Defense,
     MagicAttack,
     MagicDefense,
-    Speed
+    Speed,
+
+    //Stats used to boost attack accuracy.
+    Accuracy,
+    Evasion
 
 }
 public class TypeChart

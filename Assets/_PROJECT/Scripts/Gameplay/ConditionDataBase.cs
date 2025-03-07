@@ -1,11 +1,21 @@
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 
 public class ConditionDataBase
 {
 
+    public static void Init()
+    {
+        foreach (var _keyValuePair in Conditions)
+        {
+            var _conditionID = _keyValuePair.Key;
+            var _condition = _keyValuePair.Value;
 
+            _condition.ID = _conditionID;
+        }
+    }
     public static Dictionary<ConditionID, Condition> Conditions { get; set; } = new Dictionary<ConditionID, Condition>(){
         {
         ConditionID.psn, new Condition(){
@@ -101,12 +111,50 @@ public class ConditionDataBase
 
                 }
             }
+        },
+
+        //Volatile Status Conditions
+{
+        ConditionID.iht, new Condition(){
+            Name = "In Heat",
+            StartMessage = " has gone into heat.",
+            OnStart = (Entity _entity) =>{
+                //In heat for 1-3 turns
+                _entity.VolitileStatusTime = Random.Range(1,4);
+            },
+            OnBeforeAttack = (Entity _entity) =>
+                {
+
+                    if (_entity.VolitileStatusTime <= 0)
+                    {
+                        _entity.CureVolitileStatusCondition();
+                        _entity.StatusChanges.Enqueue($"{_entity.Base.Name} has calmed down.");
+                        return true;
+                    }
+                    _entity.VolitileStatusTime--;
+                    _entity.StatusChanges.Enqueue($"{_entity.Base.Name} is still in heat..");
+
+                    //50% chance to do a move
+                    if (Random.Range(1,3) == 1) return true;
+                    
+                    //50% chance to inflict lust damage to self.
+                    _entity.StatusChanges.Enqueue($"{_entity.Base.Name} is mastrubating.");
+                    _entity.InflictLust(_entity.MaxLust/5);
+                    _entity.StatusChanges.Enqueue("They have become more lustfull.");
+                    return false;
+                }
+            }
         }
+
     };
 }
 
 public enum ConditionID
 {
     // Poison, Burning, Sleeping, Paralyzed, Cold, Aroused
-    none, psn, brn, slp, par, cld, ars
+    none, psn, brn, slp, par, cld, ars,
+
+    //Bound, InHeat
+    bnd, iht
+
 }

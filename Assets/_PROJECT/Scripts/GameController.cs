@@ -15,6 +15,7 @@ public class GameController : MonoBehaviour
     private void Awake()
     {
         instance = this;
+        ConditionDataBase.Init();
     }
     void Start()
     {

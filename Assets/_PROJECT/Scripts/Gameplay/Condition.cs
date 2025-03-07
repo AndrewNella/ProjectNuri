@@ -12,5 +12,7 @@ public class Condition
     public Action<Entity> OnStart { get; set; }
     public Func<Entity, bool> OnBeforeAttack { get; set; }
 
+    public ConditionID ID { get; set; }
+
 
 }

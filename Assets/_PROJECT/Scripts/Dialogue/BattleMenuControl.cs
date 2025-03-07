@@ -11,6 +11,7 @@ public class BattleMenuControl : MonoBehaviour
 
     [SerializeField] GameObject actionSelector, attackSelector, moveDetails, inventoryScreen;
 
+
     public List<TMP_Text> actionTexts;
     public List<TMP_Text> attackText;
 

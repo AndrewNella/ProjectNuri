@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class BattleHUD : MonoBehaviour
 {
-    [SerializeField] TMP_Text nameText, levelText;
+    [SerializeField] TMP_Text nameText, levelText, statusText;
     [SerializeField] UnitVitals vitals;
 
     Entity currentEntity;
@@ -22,16 +22,35 @@ public class BattleHUD : MonoBehaviour
 
         vitals.SetMana(_incomingEntity.currentMana);
         vitals.SetLust(_incomingEntity.currentLust);
+
+        SetStatusText();
+
+        currentEntity.OnStatusConditionChanged += SetStatusText;
     }
-
-
+    void SetStatusText()
+    {
+        if (currentEntity.Status == null)
+        {
+            statusText.text = "";
+        }
+        else
+        {
+            statusText.text = $"{currentEntity.Status.ID.ToString().ToUpper()}";
+        }
+    }
+    public void UpdateAll()
+    {
+        UpdateMana();
+        UpdateHP();
+        UpdateLust();
+    }
     public void UpdateMana()
     {
         if (currentEntity.manaChanged)
         {
 
             currentEntity.manaChanged = false;
-        vitals.SetMana(currentEntity.currentMana);
+            vitals.SetMana(currentEntity.currentMana);
         }
     }
     public void UpdateHP()
