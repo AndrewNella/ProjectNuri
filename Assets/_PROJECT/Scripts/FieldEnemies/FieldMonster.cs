@@ -8,7 +8,7 @@ public class FieldMonster : MonoBehaviour
     [SerializeField] LayerMask solidObjectLayer, playerLayer;
     [SerializeField] float solidObjectDetectionRadius;
 
-    [SerializeField] BattleUnit battleUnit;
+    [SerializeField] Entity fieldEntity;
 
     [SerializeField] BattleController battleController;
     [SerializeField] FieldEnemyController fieldEnemyController;
@@ -29,6 +29,8 @@ public class FieldMonster : MonoBehaviour
     private float movingPeroid;
 
     Vector2 randVector;
+    Transform playerTransform;
+    float distanceWithPlayer;
 
     Animator animator;
     GameObject player;
@@ -37,6 +39,7 @@ public class FieldMonster : MonoBehaviour
     {
         movingPeroid = baseWanderingPeriod;
         randVector = Vector2.zero;
+        playerTransform = null;
 
         player = GameObject.FindWithTag("Player");
         animator = GetComponent<Animator>();
@@ -62,6 +65,11 @@ public class FieldMonster : MonoBehaviour
         }
     }
 
+    private void Defeated()
+    {
+        gameObject.SetActive(false);
+    }
+
     void Update()
     {
         if (!isMoving)
@@ -83,7 +91,25 @@ public class FieldMonster : MonoBehaviour
         }
         movingPeroid -= Time.deltaTime;
 
-        if(movingPeroid <= 0)
+        playerTransform = targetScanner.nearestTarget;
+        if (playerTransform != null)
+        {
+            distanceWithPlayer = (playerTransform.position - transform.position).sqrMagnitude;
+        }
+        else
+        {
+            distanceWithPlayer = 100;
+        }
+        if (distanceWithPlayer < 0.1)
+        {
+            if(fieldEnemyController.isBattle == false)
+            {
+                GameController.instance.StartSpesificMonsterBattle(fieldEntity);
+                fieldEnemyController.isBattle = true;
+            }
+        }
+
+        if (movingPeroid <= 0)
         {
             if(isAggressive == false)
             {
@@ -92,10 +118,10 @@ public class FieldMonster : MonoBehaviour
             }
             else
             {
-                Vector3 playerPos = targetScanner.nearestTarget.position;
-                if (playerPos != null)
+                if (playerTransform != null)
                 {
-                    Vector3 dir = playerPos - transform.position;
+
+                    Vector3 dir = playerTransform.position - transform.position;
                     dir = dir.normalized;
                     Debug.Log(dir);
                     if ((Math.Abs(dir.x) >= Math.Abs(dir.y)) && dir.x >= 0)
@@ -119,9 +145,13 @@ public class FieldMonster : MonoBehaviour
                         movingPeroid = baseWanderingPeriod + UnityEngine.Random.Range(0f, 0.2f * baseWanderingPeriod);
                     }
                 }
+                else
+                {
+                    Moving(UnityEngine.Random.Range(0, 4));
+                    movingPeroid = baseWanderingPeriod + UnityEngine.Random.Range(0f, 0.2f * baseWanderingPeriod);
+                }
             }
         }
-
         animator.SetBool("isMoving", isMoving);
     }
     IEnumerator Move(Vector3 _targetPosition)
@@ -140,18 +170,6 @@ public class FieldMonster : MonoBehaviour
         }
         gridparentTransform.position = _targetPosition;
         isMoving = false;
-
-        if(player != null)
-        {
-            Vector3 playerPos = targetScanner.nearestTarget.position;
-            Vector3 dir = playerPos - transform.position;
-            if (dir.sqrMagnitude < 0.1)
-            {
-                //battleController.enemyUnit = battleUnit;
-                player.GetComponent<PlayerController>().CheckForEncounter();
-                fieldEnemyController.isBattle = true;
-            }
-        }
     }
     bool IsWanderable(Vector3 _targetPos)
     {

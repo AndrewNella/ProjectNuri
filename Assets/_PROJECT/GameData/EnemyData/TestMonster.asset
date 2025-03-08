@@ -14,11 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   entityName: 
   entityDescription: 
-  frontSprite: {fileID: 0}
-  backSprite: {fileID: 0}
-  entityType1: 0
+  frontSprite: {fileID: -5910217896133881103, guid: 4187771b93e0ec54ba4553f0a1280b1d, type: 3}
+  backSprite: {fileID: 198528328, guid: 4187771b93e0ec54ba4553f0a1280b1d, type: 3}
+  entityType1: 4
   entityType2: 0
-  maxHP: 0
+  maxHP: 1
   maxMana: 0
   maxLust: 0
   attack: 0
@@ -26,4 +26,6 @@ MonoBehaviour:
   magicAttack: 0
   magicDefense: 0
   speed: 0
-  learnableAttacks: []
+  learnableAttacks:
+  - attackBase: {fileID: 11400000, guid: 570b52db3ac235b4891dd0785e77890e, type: 2}
+    level: 1
