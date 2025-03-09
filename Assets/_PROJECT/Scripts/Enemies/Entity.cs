@@ -19,6 +19,7 @@ public class Entity
     public float currentLust { get; set; }
 
     public List<Attack> knownAttacks { get; set; }
+    public Attack CurrentAttack { get; set; }
 
     public Dictionary<Stat, float> Stats { get; private set; }
     public Dictionary<Stat, int> StatModifications { get; private set; }

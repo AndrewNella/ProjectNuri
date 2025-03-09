@@ -48,12 +48,12 @@ public class AttackBase : ScriptableObject
 public class AttackEffects
 {
     [SerializeField] List<StatModifications> modifications;
-    [SerializeField] ConditionID _status;
-    [SerializeField] ConditionID _volitileStatus;
+    [SerializeField] ConditionID status;
+    [SerializeField] ConditionID volitileStatus;
 
     public List<StatModifications> Modifications => modifications;
-    public ConditionID Status => _status;
-    public ConditionID VolitileStatus => _volitileStatus;
+    public ConditionID Status => status;
+    public ConditionID VolitileStatus => volitileStatus;
 }
 
 [System.Serializable]

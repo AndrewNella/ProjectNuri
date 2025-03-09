@@ -9,6 +9,9 @@ using Unity.VisualScripting;
 using UnityEngine.UI;
 using Unity.Multiplayer.Center.Common;
 
+
+public enum BattleState { Start, ActionSelection, AttackSelection, RunningTurn, Busy, Inventory, BattleOver }
+public enum BattleAction { Attack, UseItem, Run }
 public class BattleController : MonoBehaviour
 {
     [SerializeField] BattleUnit playerUnit, enemyUnit;
@@ -17,8 +20,8 @@ public class BattleController : MonoBehaviour
 
     public event Action<bool> OnBattleOver;
     BattleState state;
+    BattleState preState;
 
-    Attack currentSelectedAttack;
 
 
     Entity enemyEntity;
@@ -35,6 +38,11 @@ public class BattleController : MonoBehaviour
     {
         MainInputActionController.instance.OnPauseTrigger -= ReturnToMainBattleMenu;
 
+    }
+
+    public void SetPreviousState()
+    {
+        preState = state;
     }
     public void StartBattle(Entity _enemyEntity)
     {
@@ -84,7 +92,7 @@ public class BattleController : MonoBehaviour
 
     void UpdateCurrentlySelectedAttack(Attack _incomingAttack)
     {
-        currentSelectedAttack = _incomingAttack;
+        playerUnit.entity.CurrentAttack = _incomingAttack;
     }
     public void ReturnToMainBattleMenu()
     {
@@ -132,11 +140,11 @@ public class BattleController : MonoBehaviour
 
     public void InitiateAttack()
     {
-        if (currentSelectedAttack != null)
+        if (playerUnit.entity.CurrentAttack != null)
         {
             battleMenuControlSystem.EnableAttackSelector(false);
             battleMenuControlSystem.EnableDialogueText(true);
-            StartCoroutine(PlayerAttack());
+            StartCoroutine(RunTurns(BattleAction.Attack));
         }
     }
 
@@ -151,19 +159,6 @@ public class BattleController : MonoBehaviour
         {
             _incomingUnit.entity.currentLust += _incomingAttack.LustCost;
             _incomingUnit.entity.lustChanged = true;
-        }
-    }
-
-    void ChooseFirstTurn()
-    {
-
-        if (playerUnit.entity.Speed >= enemyUnit.entity.Speed)
-        {
-            ActionSelection();
-        }
-        else
-        {
-            StartCoroutine(EnemyAttack());
         }
     }
 
@@ -209,32 +204,43 @@ public class BattleController : MonoBehaviour
         yield return StartCoroutine(battleMenuControlSystem.TypeDialogue($"You were spotted by a {enemyUnit.entity.Base.Name}. You cannot avoid a battle."));
         yield return new WaitForSeconds(1f);
 
-        ChooseFirstTurn();
+        ActionSelection();
     }
-    public IEnumerator PlayerAttack()
+    IEnumerator RunTurns(BattleAction _playerAction)
     {
-        state = BattleState.PerformAttack;
-        yield return PerformAttack(playerUnit, enemyUnit, currentSelectedAttack);
-
-        if (state == BattleState.PerformAttack)
+        state = BattleState.RunningTurn;
+        if (_playerAction == BattleAction.Attack)
         {
-            StartCoroutine(EnemyAttack());
 
+            enemyUnit.entity.CurrentAttack = enemyUnit.entity.GetRandomAttack();
+
+            //Check Who goes first
+            bool _playerGoesFirst = playerUnit.entity.Speed >= enemyUnit.entity.Speed;
+
+            var _firstUnit = _playerGoesFirst ? playerUnit : enemyUnit;
+            var _secondUnit = _playerGoesFirst ? enemyUnit : playerUnit;
+
+            var _secondentity = _secondUnit.entity;
+
+            //First Unit
+            yield return PerformAttack(_firstUnit, _secondUnit, _firstUnit.entity.CurrentAttack);
+            yield return RunAfterTurn(_firstUnit);
+            if (state == BattleState.BattleOver) yield break;
+
+
+            //Second Unit
+            if (_secondentity.currentHP > 0)
+            {
+                yield return PerformAttack(_secondUnit, _firstUnit, _secondUnit.entity.CurrentAttack);
+                yield return RunAfterTurn(_secondUnit);
+                if (state == BattleState.BattleOver) yield break;
+            }
         }
 
-
-    }
-    IEnumerator EnemyAttack()
-    {
-        state = BattleState.PerformAttack;
-        var _attack = enemyUnit.entity.GetRandomAttack();
-
-        yield return PerformAttack(enemyUnit, playerUnit, _attack);
-        if (state == BattleState.PerformAttack)
+        if (state != BattleState.BattleOver)
         {
             ActionSelection();
         }
-
     }
     IEnumerator PerformAttack(BattleUnit _incomingSourceUnit, BattleUnit _incomingTargetUnit, Attack _attack)
     {
@@ -298,23 +304,25 @@ public class BattleController : MonoBehaviour
         }
 
         _incomingSourceUnit.entity.OnAfterTurn();
+    }
 
+    IEnumerator RunAfterTurn(BattleUnit _sourceUnit)
+    {
+
+        if (state == BattleState.BattleOver) yield break;
 
         // Status effects can alter a unit's values, so additional checks are needed for the unit after the turn is done.
-        yield return ShowStatusChanges(_incomingSourceUnit.entity);
+        yield return ShowStatusChanges(_sourceUnit.entity);
 
-        _incomingSourceUnit.HUD.UpdateHP();
-        _incomingSourceUnit.HUD.UpdateLust();
-        _incomingSourceUnit.HUD.UpdateMana();
+        _sourceUnit.HUD.UpdateAll();
 
-        if (_incomingSourceUnit.entity.currentHP <= 0)
+        if (_sourceUnit.entity.currentHP <= 0)
         {
-            yield return battleMenuControlSystem.TypeDialogue($"{_incomingTargetUnit.entity.Base.name} was defeated.");
+            yield return battleMenuControlSystem.TypeDialogue($"{_sourceUnit.entity.Base.name} was defeated.");
             yield return new WaitForSeconds(2f);
-            CheckForBattleOver(_incomingTargetUnit);
+            CheckForBattleOver(_sourceUnit);
 
         }
-
     }
     IEnumerator RunAttackEffects(AttackEffects _incomingAttackEffect, Entity _sourceEntity, Entity _targetEntity, AttackTarget _attackTarget)
     {
@@ -366,5 +374,4 @@ public class BattleController : MonoBehaviour
 
     }
 
-    public enum BattleState { Start, ActionSelection, AttackSelection, PerformAttack, Busy, Inventory, BattleOver }
 }
