@@ -1,7 +1,7 @@
 using UnityEngine;
 
 
-public enum GameState { FreeRoam, Battle }
+public enum GameState { FreeRoam, Battle, Dialogue }
 public class GameController : MonoBehaviour
 {
     public static GameController instance;
@@ -10,7 +10,7 @@ public class GameController : MonoBehaviour
 
     [SerializeField] Camera worldCamera;
 
-    GameState state;
+    public GameState state;
 
     private void Awake()
     {
@@ -21,6 +21,18 @@ public class GameController : MonoBehaviour
     {
         playerController.OnEncounter += StartRandomizedAreaBattle;
         battleController.OnBattleOver += EndBattle;
+
+        DialogueManager.Instance.OnShowDialogue += () =>
+        {
+            state = GameState.Dialogue;
+        };
+        DialogueManager.Instance.OnCloseDialogue += () =>
+        {
+            if (state == GameState.Dialogue)
+            {
+                state = GameState.FreeRoam;
+            }
+        };
     }
 
     public void StartSpesificMonsterBattle(Entity _incomingMonsterEntity)
@@ -52,6 +64,17 @@ public class GameController : MonoBehaviour
     }
     void Update()
     {
+        if (playerController.GetIsInMenu() == false && state != GameState.FreeRoam)
+        {
+            playerController.SetIsInMenu(true);
+        }
+
+        if (state == GameState.FreeRoam && playerController.GetIsInMenu() == true)
+        {
+            playerController.SetIsInMenu(false);
+
+        }
+
         switch (state)
         {
             case GameState.Battle:
@@ -59,6 +82,9 @@ public class GameController : MonoBehaviour
                 break;
             case GameState.FreeRoam:
                 playerController.HandleUpdate();
+                break;
+            case GameState.Dialogue:
+                DialogueManager.Instance.HandleUpdate();
                 break;
             default:
                 break;

@@ -7,12 +7,16 @@ public class PlayerController : MonoBehaviour
 {
     public static PlayerController instance;
 
-    [SerializeField] LayerMask solidObjectLayer, dangerLayer;
+    public LayerMask solidObjectLayer, dangerLayer, interactableLayer;
     [SerializeField] float solidObjectDetectionRadius;
 
     public event Action OnEncounter;
 
     [SerializeField] Entity mainPlayerEntity;
+
+    [SerializeField] float randomEncounterChance;
+    [SerializeField] bool isInMenu { get; set; }
+
 
     [Header("Movement Data")]
 
@@ -38,11 +42,30 @@ public class PlayerController : MonoBehaviour
         MainInputActionController.instance.actionMap.PlayerControllerMap.Movement.canceled += x => OnPlayerMoveInput(x.ReadValue<Vector2>());
 
 
-
         mainPlayerEntity.Init();
+
+
 
     }
 
+    public void SetIsInMenu(bool _incomingBool)
+    {
+        isInMenu = _incomingBool;
+    }
+
+    public bool GetIsInMenu()
+    {
+        return isInMenu;
+    }
+    void OnEnable()
+    {
+        MainInputActionController.instance.OnInteractTrigger += OnInteract;
+    }
+
+    void OnDisable()
+    {
+        MainInputActionController.instance.OnInteractTrigger -= OnInteract;
+    }
 
     public Entity GetPlayerEntity()
     {
@@ -55,10 +78,26 @@ public class PlayerController : MonoBehaviour
         inputVector = _incomingVector2;
     }
 
+    void OnInteract()
+    {
+        if (!isInMenu)
+        {
+            Debug.Log("Interact");
+            var _facingDir = new Vector3(animator.GetFloat("moveX"), animator.GetFloat("moveY"));
+            var _interactPosition = transform.position + _facingDir;
+
+            // Debug.DrawLine(transform.position, _interactPosition, Color.red, 0.5f);
+
+            var _collider = Physics2D.OverlapCircle(_interactPosition, 0.3f, interactableLayer);
+            if (_collider != null)
+            {
+                _collider.GetComponent<Interactable>()?.Interact();
+            }
+        }
+    }
+
     public void HandleUpdate()
     {
-
-
         if (!isMoving)
         {
             //Removes Diagonal Movement
@@ -80,6 +119,8 @@ public class PlayerController : MonoBehaviour
                     StartCoroutine(Move(_targetPos));
                 }
             }
+
+
         }
         animator.SetBool("isMoving", isMoving);
 
@@ -108,7 +149,8 @@ public class PlayerController : MonoBehaviour
 
     public void CheckForEncounter()
     {
-        if (Physics2D.OverlapCircle(gridparentTransform.position, 0.2f, dangerLayer) != null)
+
+        if (Physics2D.OverlapCircle(gridparentTransform.position, 0.2f, dangerLayer) != null && UnityEngine.Random.Range(1, 101) < randomEncounterChance)
         {
             TriggerEncounter();
         }
@@ -124,7 +166,7 @@ public class PlayerController : MonoBehaviour
     bool IsWalkable(Vector3 _targetPos)
     {
 
-        if (Physics2D.OverlapCircle(_targetPos, solidObjectDetectionRadius, solidObjectLayer) != null)
+        if (Physics2D.OverlapCircle(_targetPos, solidObjectDetectionRadius, solidObjectLayer | interactableLayer) != null)
         {
             return false;
         }
