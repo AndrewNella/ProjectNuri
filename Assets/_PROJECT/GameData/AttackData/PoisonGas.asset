@@ -16,11 +16,17 @@ MonoBehaviour:
   attackDescription: The user emits a gas that contains a very potent poison.
   power: 0
   accuracy: 100
-  manaCost: 10
+  manaCost: 8000
   lustCost: 0
+  priority: 0
+  alwaysHits: 0
   damageType: 7
   category: 2
   effects:
-    modifications: []
-    _status: 1
+    modifications:
+    - stat: 1
+      modification: -1
+    status: 0
+    volitileStatus: 1
+  secondaryEffects: []
   target: 0

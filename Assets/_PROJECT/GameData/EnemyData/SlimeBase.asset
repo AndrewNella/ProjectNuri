@@ -29,3 +29,5 @@ MonoBehaviour:
   learnableAttacks:
   - attackBase: {fileID: 11400000, guid: 570b52db3ac235b4891dd0785e77890e, type: 2}
     level: 1
+  - attackBase: {fileID: 11400000, guid: 485bc89b40e86ac498a14afb40d00ba1, type: 2}
+    level: 2

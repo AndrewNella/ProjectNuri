@@ -142,12 +142,38 @@ public class BattleController : MonoBehaviour
     {
         if (playerUnit.entity.CurrentAttack != null)
         {
-            battleMenuControlSystem.EnableAttackSelector(false);
-            battleMenuControlSystem.EnableDialogueText(true);
-            StartCoroutine(RunTurns(BattleAction.Attack));
+            if (!CheckIfAttackCanBeAfforded(playerUnit, playerUnit.entity.CurrentAttack))
+            {
+                Debug.Log("Mana is too low");
+            }
+            else
+            {
+
+                battleMenuControlSystem.EnableAttackSelector(false);
+                battleMenuControlSystem.EnableDialogueText(true);
+                StartCoroutine(RunTurns(BattleAction.Attack));
+                Debug.Log("Attack is succesfull");
+            }
         }
     }
 
+    bool CheckIfAttackCanBeAfforded(BattleUnit _incomingUnit, Attack _incomingAttack)
+    {
+        if (_incomingAttack.ManaCost > 0)
+        {
+            Debug.Log("Payment Cost Check, mana is greater than 0");
+            if (_incomingUnit.entity.currentMana - _incomingAttack.ManaCost <= 0)
+            {
+                Debug.Log("The cost is greater than the character's current mana pool");
+                return false;
+            }
+            else
+                return true;
+
+        }
+        else
+            return true;
+    }
     void PayCostsForAttack(BattleUnit _incomingUnit, Attack _incomingAttack)
     {
         if (_incomingAttack.ManaCost > 0)
@@ -157,8 +183,16 @@ public class BattleController : MonoBehaviour
         }
         if (_incomingAttack.LustCost > 0)
         {
-            _incomingUnit.entity.currentLust += _incomingAttack.LustCost;
-            _incomingUnit.entity.lustChanged = true;
+            if (_incomingUnit.entity.currentLust + _incomingAttack.LustCost >= +_incomingUnit.entity.MaxLust)
+            {
+                _incomingUnit.entity.currentLust += _incomingAttack.LustCost;
+                _incomingUnit.entity.currentLust -= _incomingUnit.entity.MaxLust;
+            }
+            else
+            {
+                _incomingUnit.entity.currentLust += _incomingAttack.LustCost;
+                _incomingUnit.entity.lustChanged = true;
+            }
         }
     }
 
@@ -213,9 +247,18 @@ public class BattleController : MonoBehaviour
         {
 
             enemyUnit.entity.CurrentAttack = enemyUnit.entity.GetRandomAttack();
+            int _playerAttackPriority = playerUnit.entity.CurrentAttack.Base.Priority;
+            int _enemyAttackPriority = enemyUnit.entity.CurrentAttack.Base.Priority;
 
             //Check Who goes first
-            bool _playerGoesFirst = playerUnit.entity.Speed >= enemyUnit.entity.Speed;
+            bool _playerGoesFirst = true;
+
+            if (_enemyAttackPriority > _playerAttackPriority)
+                _playerGoesFirst = false;
+            else if (_enemyAttackPriority == _playerAttackPriority)
+                _playerGoesFirst = playerUnit.entity.Speed >= enemyUnit.entity.Speed;
+
+
 
             var _firstUnit = _playerGoesFirst ? playerUnit : enemyUnit;
             var _secondUnit = _playerGoesFirst ? enemyUnit : playerUnit;
@@ -241,10 +284,12 @@ public class BattleController : MonoBehaviour
         {
             ActionSelection();
         }
+
     }
+
+
     IEnumerator PerformAttack(BattleUnit _incomingSourceUnit, BattleUnit _incomingTargetUnit, Attack _attack)
     {
-
         bool canPerformAttack = _incomingSourceUnit.entity.OnBeforeAttack();
 
         if (!canPerformAttack)
@@ -253,18 +298,21 @@ public class BattleController : MonoBehaviour
             _incomingSourceUnit.HUD.UpdateAll();
             yield break;
         }
+
+
         yield return ShowStatusChanges(_incomingSourceUnit.entity);
 
 
         yield return battleMenuControlSystem.TypeDialogue($"{_incomingSourceUnit.entity.Base.name} used {_attack.Base.name}.");
+
+
+
         PayCostsForAttack(_incomingSourceUnit, _attack);
         _incomingSourceUnit.HUD.UpdateMana();
         _incomingSourceUnit.HUD.UpdateLust();
 
         if (CheckIfAttackHits(_attack, _incomingSourceUnit.entity, _incomingTargetUnit.entity))
         {
-
-
             yield return new WaitForSeconds(1f);
 
             if (_attack.Base.Category == AttackCategory.Status)

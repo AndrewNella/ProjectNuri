@@ -17,8 +17,9 @@ MonoBehaviour:
     is then throw at their enemy.
   power: 90
   accuracy: 80
-  manaCost: 80
+  manaCost: 8000
   lustCost: 0
+  priority: 0
   alwaysHits: 0
   damageType: 3
   category: 1

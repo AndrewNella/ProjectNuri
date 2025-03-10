@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using UnityEditor.Rendering;
 using UnityEngine;
 using UnityEngine.Scripting.APIUpdating;
@@ -120,9 +121,9 @@ public class Entity
         Stats.Add(Stat.MagicDefense, Base.MagicDefense * Level);
         Stats.Add(Stat.Speed, Base.Speed * Level);
 
-        MaxHp = (Base.MaxHp + Level * 50);
-        MaxMana = (Base.MaxMana + Level * 50);
-        MaxLust = (Base.MaxLust + Level * 50);
+        MaxHp = (Base.MaxHp * Level + 10 * Level);
+        MaxMana = (Base.MaxHp * Level + 10 * Level);
+        MaxLust = (Base.MaxHp * Level + 10 * Level);
     }
     float GetStat(Stat _incomingStat)
     {
@@ -193,11 +194,7 @@ public class Entity
         get { return GetStat(Stat.Speed); }
     }
 
-    public Attack GetRandomAttack()
-    {
-        int r = UnityEngine.Random.Range(0, knownAttacks.Count);
-        return knownAttacks[r];
-    }
+
 
     public DamageDetails TakeDamage(Attack _incomingAttack, Entity _incomingEntity)
     {
@@ -276,6 +273,14 @@ public class Entity
             }
         }
         return _canPerformMove;
+    }
+
+    public Attack GetRandomAttack()
+    {
+        var _affordableAttacks = knownAttacks.Where(x => x.ManaCost <= currentMana).ToList();
+        int r = UnityEngine.Random.Range(0, _affordableAttacks.Count);
+        return _affordableAttacks[r];
+
     }
 }
 

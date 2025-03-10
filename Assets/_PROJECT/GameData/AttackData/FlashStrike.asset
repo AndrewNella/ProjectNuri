@@ -10,27 +10,21 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 189ba2e745ab4674d8b5967447a2036a, type: 3}
-  m_Name: Caress
+  m_Name: FlashStrike
   m_EditorClassIdentifier: 
-  attackname: Caress
-  attackDescription: The user touches their foe lewdly, with the intent to arouse
-    them.
+  attackname: Flash Strike
+  attackDescription: A Weak but Quick Attack that always goes first
   power: 40
-  accuracy: 90
+  accuracy: 80
   manaCost: 0
   lustCost: 0
-  priority: 0
+  priority: 10
   alwaysHits: 0
-  damageType: 8
+  damageType: 1
   category: 0
   effects:
     modifications: []
     status: 0
     volitileStatus: 0
-  secondaryEffects:
-  - modifications: []
-    status: 0
-    volitileStatus: 6
-    chance: 20
-    target: 0
+  secondaryEffects: []
   target: 0
