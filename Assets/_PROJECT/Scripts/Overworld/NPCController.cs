@@ -7,4 +7,6 @@ public class NPCController : MonoBehaviour, Interactable
     {
         StartCoroutine(DialogueManager.Instance.ShowDialogue(inputDialogue));
     }
+
+    
 }
