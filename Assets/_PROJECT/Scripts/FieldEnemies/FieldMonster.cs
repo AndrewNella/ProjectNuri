@@ -1,15 +1,37 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
+public enum MonsterState 
+{
+    Wandering, 
+    Attacking,
+    Patroling
+}
+public enum Direction
+{
+    Left,
+    Right,
+    Up,
+    Down
+}
+
+public enum Property
+{
+    Meek,
+    Aggressive,
+    Patrol
+}
 public class FieldMonster : MonoBehaviour
 {
 
     [SerializeField] LayerMask solidObjectLayer, playerLayer;
     [SerializeField] float solidObjectDetectionRadius;
 
-    [SerializeField] GameObject monsterBase;
+    [SerializeField] Entity fieldEntity;
 
+    [SerializeField] BattleController battleController;
     [SerializeField] FieldEnemyController fieldEnemyController;
 
     TargetScanner targetScanner;
@@ -23,42 +45,63 @@ public class FieldMonster : MonoBehaviour
 
     public bool isBattlePhase;
     public bool isMoving;
-    public bool isAggressive;
 
+    public Property property;
+
+    [SerializeField] List<Transform> patrolPositionList;
+
+    private int patrolIndex;
     private float movingPeroid;
 
     Vector2 randVector;
+    Transform playerTransform;
+    Transform targetTransform;
+    float distanceWithPlayer;
+    float distanceWithTargetPosition;
 
     Animator animator;
     GameObject player;
 
+    MonsterState monsterState;
+    Direction direction;
+
     private void Awake()
     {
         movingPeroid = baseWanderingPeriod;
+        patrolIndex = 0;
         randVector = Vector2.zero;
+        playerTransform = null;
+        targetTransform = patrolPositionList[0];
 
         player = GameObject.FindWithTag("Player");
         animator = GetComponent<Animator>();
         targetScanner = GetComponent<TargetScanner>();
+        monsterState = MonsterState.Wandering;
     }
 
-    private void Moving(int randomValue)
+    private void Moving(Enum dir)
     {   
-        switch (randomValue)
+        switch (dir)
         {
-            case 0:
+            case Direction.Left:
                 randVector = new Vector2(1, 0);
                 break;
-            case 1:
+            case Direction.Right:
                 randVector = new Vector2(-1, 0);
                 break;
-            case 2:
+            case Direction.Up:
                 randVector = new Vector2(0, 1);
                 break;
-            case 3:
+            case Direction.Down:
                 randVector = new Vector2(0, -1);
                 break;
         }
+        movingPeroid = baseWanderingPeriod + UnityEngine.Random.Range(0f, 0.2f * baseWanderingPeriod);
+    }
+
+    private void Defeated()
+    {
+        gameObject.SetActive(false);
     }
 
     void Update()
@@ -82,45 +125,100 @@ public class FieldMonster : MonoBehaviour
         }
         movingPeroid -= Time.deltaTime;
 
-        if(movingPeroid <= 0)
+        playerTransform = targetScanner.nearestTarget;
+
+        if (playerTransform != null)
         {
-            if(isAggressive == false)
+            distanceWithPlayer = (playerTransform.position - transform.position).sqrMagnitude;
+            if(property == Property.Aggressive)
             {
-                Moving(UnityEngine.Random.Range(0, 4));
-                movingPeroid = baseWanderingPeriod + UnityEngine.Random.Range(0f, 0.2f * baseWanderingPeriod);
+                monsterState = MonsterState.Attacking;
             }
-            else
+        }
+        if (playerTransform == null)
+        {
+            distanceWithPlayer = 100;
+            monsterState = MonsterState.Wandering;
+        }
+
+        if (property == Property.Patrol)
+        {
+            monsterState = MonsterState.Patroling;
+        }
+        if (targetTransform != null)
+        {
+            distanceWithTargetPosition = (targetTransform.position - transform.position).sqrMagnitude;
+        }
+
+        if (distanceWithPlayer < 0.1)
+        {
+            if(fieldEnemyController.isBattle == false)
             {
-                Vector3 playerPos = targetScanner.nearestTarget.position;
-                if (playerPos != null)
-                {
-                    Vector3 dir = playerPos - transform.position;
+                GameController.instance.StartSpesificMonsterBattle(fieldEntity);
+                fieldEnemyController.isBattle = true;
+            }
+        }
+        if(distanceWithTargetPosition < 0.1)
+        {
+            patrolIndex += 1;
+            if(patrolIndex >= patrolPositionList.Count)
+            {
+                patrolIndex = 0;
+            }
+            targetTransform = patrolPositionList[patrolIndex];
+        }
+
+        if (movingPeroid <= 0)
+        {
+            switch(monsterState)
+            {
+                case MonsterState.Wandering:
+                    Moving((Direction)(UnityEngine.Random.Range(0, Enum.GetNames(typeof(Direction)).Length)));
+                    break;
+
+                case MonsterState.Attacking:
+                    Vector3 dir = playerTransform.position - transform.position;
                     dir = dir.normalized;
-                    Debug.Log(dir);
                     if ((Math.Abs(dir.x) >= Math.Abs(dir.y)) && dir.x >= 0)
                     {
-                        Moving(0);
-                        movingPeroid = baseWanderingPeriod + UnityEngine.Random.Range(0f, 0.2f * baseWanderingPeriod);
+                        Moving(Direction.Left);
                     }
                     if ((Math.Abs(dir.x) >= Math.Abs(dir.y)) && dir.x <= 0)
                     {
-                        Moving(1);
-                        movingPeroid = baseWanderingPeriod + UnityEngine.Random.Range(0f, 0.2f * baseWanderingPeriod);
+                        Moving(Direction.Right);
                     }
                     if ((Math.Abs(dir.x) < Math.Abs(dir.y)) && dir.y >= 0)
                     {
-                        Moving(2);
-                        movingPeroid = baseWanderingPeriod + UnityEngine.Random.Range(0f, 0.2f * baseWanderingPeriod);
+                        Moving(Direction.Up);
                     }
                     if ((Math.Abs(dir.x) < Math.Abs(dir.y)) && dir.y <= 0)
                     {
-                        Moving(3);
-                        movingPeroid = baseWanderingPeriod + UnityEngine.Random.Range(0f, 0.2f * baseWanderingPeriod);
+                        Moving(Direction.Down);
                     }
-                }
+                    break;
+
+                case MonsterState.Patroling:
+                    Vector3 targetDir = targetTransform.position - transform.position;
+                    targetDir = targetDir.normalized;
+                    if ((Math.Abs(targetDir.x) >= Math.Abs(targetDir.y)) && targetDir.x >= 0)
+                    {
+                        Moving(Direction.Left);
+                    }
+                    if ((Math.Abs(targetDir.x) >= Math.Abs(targetDir.y)) && targetDir.x <= 0)
+                    {
+                        Moving(Direction.Right);
+                    }
+                    if ((Math.Abs(targetDir.x) < Math.Abs(targetDir.y)) && targetDir.y >= 0)
+                    {
+                        Moving(Direction.Up);
+                    }
+                    if ((Math.Abs(targetDir.x) < Math.Abs(targetDir.y)) && targetDir.y <= 0)
+                    {
+                        Moving(Direction.Down);
+                    }
+                    break;
             }
         }
-
         animator.SetBool("isMoving", isMoving);
     }
     IEnumerator Move(Vector3 _targetPosition)
@@ -139,17 +237,6 @@ public class FieldMonster : MonoBehaviour
         }
         gridparentTransform.position = _targetPosition;
         isMoving = false;
-
-        if(player != null)
-        {
-            Vector3 playerPos = targetScanner.nearestTarget.position;
-            Vector3 dir = playerPos - transform.position;
-            if (dir.sqrMagnitude < 0.1)
-            {
-                player.GetComponent<PlayerController>().CheckForEncounter();
-                fieldEnemyController.isBattle = true;
-            }
-        }
     }
     bool IsWanderable(Vector3 _targetPos)
     {
