@@ -1,43 +1,94 @@
+using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
+using System.Collections;
+using System;
 
 public class NPCController : MonoBehaviour, Interactable
 {
+    [Header("Character Data")]
+    [SerializeField] bool isInteractableByPlayer = false;
     [SerializeField] Dialogue inputDialogue;
-    [SerializeField] Character character;
+    public Character character;
 
-    NPCState npcState;
+    public NPCState npcState { get; set; }
+    [Header("Idle Settings")]
+    [SerializeField] float maxIdleWaitTime;
 
-    float idleTimer;
+    float idleTimer = 0;
+
+    [Header("Patrol Settings")]
+    [SerializeField] List<Vector2> patrolList;
+    int currentPatrolIndex = 0;
+
 
     private void Awake()
     {
         character = GetComponent<Character>();
         idleTimer = 0;
     }
-    public void Interact()
+
+    public void Interact(Transform _initiator)
     {
-        StartCoroutine(DialogueManager.Instance.ShowDialogue(inputDialogue));
+        if (!isInteractableByPlayer) return;
+        if (npcState == NPCState.Idle)
+        {
+            npcState = NPCState.Dialogue;
+            character.LookTowards(_initiator.position);
+            StartCoroutine(DialogueManager.Instance.ShowDialogue(inputDialogue, () =>
+            {
+                idleTimer = 0;
+                npcState = NPCState.Idle;
+            }));
+        }
     }
     public void Update()
     {
+
         if (npcState == NPCState.Idle)
         {
             idleTimer += Time.deltaTime;
-            if (idleTimer > 2)
+            if (idleTimer > maxIdleWaitTime)
             {
                 idleTimer = 0f;
-                // StartCoroutine(character.Move());
+                if (patrolList.Count > 0)
+                {
+                    StartCoroutine(WalkToPatrolPoint());
+                }
+
             }
         }
         character?.HandleUpdate();
     }
 
+    public IEnumerator WalkToPatrolPoint()
+    {
+        npcState = NPCState.Walking;
+
+        var _oldPosition = transform.position;
+
+        yield return character.Move(patrolList[currentPatrolIndex], character.gridparentTransform);
+
+        if (transform.position != _oldPosition)
+        {
+            Debug.Log("Keep Walking to Patrol Point");
+            currentPatrolIndex = (currentPatrolIndex + 1) % patrolList.Count;
+        }
+
+
+        npcState = NPCState.Idle;
+
+    }
     public enum NPCState
     {
         Idle,
-        Walking
-
+        Walking,
+        Wandering,
+        Patrolling,
+        MoveTowards,
+        Dialogue
     }
+
 }
 
 

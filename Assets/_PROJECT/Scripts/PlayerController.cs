@@ -19,7 +19,6 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField] Character character;
 
-    [SerializeField] Transform gridparentTransform;
 
     Vector2 inputVector;
 
@@ -85,7 +84,7 @@ public class PlayerController : MonoBehaviour
             var _collider = Physics2D.OverlapCircle(_interactPosition, 0.3f, GameLayers.Instance.InteractableLayer);
             if (_collider != null)
             {
-                _collider.GetComponent<Interactable>()?.Interact();
+                _collider.GetComponent<Interactable>()?.Interact(character.gridparentTransform);
             }
         }
     }
@@ -100,7 +99,7 @@ public class PlayerController : MonoBehaviour
 
             if (inputVector != Vector2.zero)
             {
-                StartCoroutine(character.Move(inputVector, gridparentTransform, CheckForEncounter));
+                StartCoroutine(character.Move(inputVector, character.gridparentTransform, CheckForEncounter));
             }
 
             character.HandleUpdate();
@@ -111,7 +110,7 @@ public class PlayerController : MonoBehaviour
     public void CheckForEncounter()
     {
 
-        if (Physics2D.OverlapCircle(gridparentTransform.position, 0.2f, GameLayers.Instance.DangerLayer) != null && UnityEngine.Random.Range(1, 101) < randomEncounterChance)
+        if (Physics2D.OverlapCircle(character.gridparentTransform.position, 0.2f, GameLayers.Instance.DangerLayer) != null && UnityEngine.Random.Range(1, 101) < randomEncounterChance)
         {
             TriggerEncounter();
         }

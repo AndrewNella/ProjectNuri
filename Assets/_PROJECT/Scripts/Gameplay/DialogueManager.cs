@@ -17,6 +17,10 @@ public class DialogueManager : MonoBehaviour
     public event Action OnShowDialogue, OnCloseDialogue;
 
     bool isTyping;
+
+    Action onDialogueFinished;
+
+    public bool isShowing { get; private set; }
     private void Awake()
     {
         Instance = this;
@@ -32,8 +36,10 @@ public class DialogueManager : MonoBehaviour
     {
         currentDialogueLine = 0;
         dialogueBox.SetActive(false);
+        isShowing = false;
         MainInputActionController.instance.OnInteractTrigger -= UpdateDialogue;
         MainInputActionController.instance.OnPauseTrigger -= UpdateDialogue;
+        onDialogueFinished?.Invoke();
         OnCloseDialogue?.Invoke();
 
     }
@@ -56,12 +62,12 @@ public class DialogueManager : MonoBehaviour
     }
 
 
-    public IEnumerator ShowDialogue(Dialogue _dialogue)
+    public IEnumerator ShowDialogue(Dialogue _dialogue, Action _onFinishedDialogue = null)
     {
-
         yield return new WaitForEndOfFrame();
+        isShowing = true;
         OnShowDialogue.Invoke();
-
+        onDialogueFinished = _onFinishedDialogue;
         dialogue = _dialogue;
         EnableDialogueBox();
 
