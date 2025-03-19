@@ -1,7 +1,7 @@
 using UnityEngine;
 
 
-public enum GameState { FreeRoam, Battle, Dialogue }
+public enum GameState { FreeRoam, Battle, Dialogue, CutScene }
 public class GameController : MonoBehaviour
 {
     public static GameController instance;
@@ -22,6 +22,7 @@ public class GameController : MonoBehaviour
         playerController.OnEncounter += StartRandomizedAreaBattle;
         battleController.OnBattleOver += EndBattle;
 
+
         DialogueManager.Instance.OnShowDialogue += () =>
         {
             state = GameState.Dialogue;
@@ -34,12 +35,17 @@ public class GameController : MonoBehaviour
             }
         };
     }
+    public void StartCutsceneState()
+    {
+        state = GameState.CutScene;
+    }
 
     public void StartSpesificMonsterBattle(Entity _incomingMonsterEntity)
     {
         state = GameState.Battle;
         battleController.gameObject.SetActive(true);
         worldCamera.gameObject.SetActive(false);
+        _incomingMonsterEntity.Init();
         battleController.StartBattle(_incomingMonsterEntity);
 
     }

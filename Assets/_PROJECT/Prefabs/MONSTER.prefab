@@ -48,6 +48,7 @@ GameObject:
   - component: {fileID: 6601700548505765873}
   - component: {fileID: 3305638934756732154}
   - component: {fileID: 7862476319389023315}
+  - component: {fileID: 7704827942977108108}
   m_Layer: 8
   m_Name: Monster
   m_TagString: Untagged
@@ -159,9 +160,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f6cf7ecded2dce14fa176f2f53e5b051, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fieldEntity:
-    BaseContainer: {fileID: 11400000, guid: 16e9afefa30d1f3429a04e9009837fa9, type: 2}
-    LevelContainer: 2
+  fieldbase: {fileID: 0}
   battleController: {fileID: 0}
   gridparentTransform: {fileID: 6012955297701175552}
   isMoving: 0
@@ -263,11 +262,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29e26d4a721295542b5ac348ae2dc411, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isPlayerCharacter: 0
   animator: {fileID: 2133385039835719918}
   isMoving: 0
   moveSpeed: 4
+  gridparentTransform: {fileID: 0}
   movementMagnitudeLimit: 0.001
   solidObjectDetectionRadius: 0.2
+--- !u!114 &7704827942977108108
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 602792349158072224}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cea102009ab3801449ed670615a53762, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fieldEntity:
+    BaseContainer: {fileID: 11400000, guid: 2c5db2e1c0a693e45963a2a6c3fb493a, type: 2}
+    LevelContainer: 2
 --- !u!1 &7744412365728884264
 GameObject:
   m_ObjectHideFlags: 0

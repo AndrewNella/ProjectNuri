@@ -5,8 +5,7 @@ using Unity.VisualScripting;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
-//The character Script MUST have access to an animator
-[RequireComponent(typeof(Animator))]
+
 public class Character : MonoBehaviour
 {
     [SerializeField] bool isPlayerCharacter = false;

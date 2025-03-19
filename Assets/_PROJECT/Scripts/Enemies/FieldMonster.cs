@@ -32,13 +32,11 @@ public class FieldMonster : MonoBehaviour
     // [SerializeField] LayerMask solidObjectLayer, playerLayer;
     // [SerializeField] float solidObjectDetectionRadius;
 
-    [SerializeField] Entity fieldEntity;
-
+    [SerializeField] FieldMonsterBase fieldbase;
     [SerializeField] BattleController battleController;
     // [SerializeField] FieldEnemyController fieldEnemyController;
 
     TargetScanner targetScanner;
-    Character character;
 
     [Header("Movement Data")]
 
@@ -74,6 +72,8 @@ public class FieldMonster : MonoBehaviour
 
     private void Awake()
     {
+        fieldbase = GetComponent<FieldMonsterBase>();
+
         // movingPeroidTimer = baseWanderingPeriod;
         patrolIndex = 0;
         randVector = Vector2.zero;
@@ -86,7 +86,6 @@ public class FieldMonster : MonoBehaviour
             patrolTargetTransform = patrolPositionList[0];
         }
 
-        character = GetComponent<Character>();
         // player = GameObject.FindWithTag("Player");
         animator = GetComponent<Animator>();
         targetScanner = GetComponent<TargetScanner>();
@@ -144,9 +143,9 @@ public class FieldMonster : MonoBehaviour
         {
             UpdatePatrol();
         }
-        character.HandleUpdate();
+        fieldbase.Character.HandleUpdate();
 
-        animator.SetBool("isMoving", character.isMoving);
+        animator.SetBool("isMoving", fieldbase.Character.isMoving);
     }
 
     void UpdatePatrol()
@@ -173,7 +172,7 @@ public class FieldMonster : MonoBehaviour
         {
             if (GameController.instance.state != GameState.Battle)
             {
-                GameController.instance.StartSpesificMonsterBattle(fieldEntity);
+                fieldbase.TriggerAttackFromThisEntity();
                 return;
             }
         }
@@ -234,11 +233,11 @@ public class FieldMonster : MonoBehaviour
         //If the monster is aggressive, it will battle the player.
         if (monsterPersonality == MonsterPersonality.Aggressive)
         {
-            StartCoroutine(character.Move(randVector, gridparentTransform, CheckIfPlayerIsWithinRangeForBattle));
+            StartCoroutine(fieldbase.Character.Move(randVector, gridparentTransform, CheckIfPlayerIsWithinRangeForBattle));
         }
         else
         {
-            StartCoroutine(character.Move(randVector, gridparentTransform));
+            StartCoroutine(fieldbase.Character.Move(randVector, gridparentTransform));
         }
 
 

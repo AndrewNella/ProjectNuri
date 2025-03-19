@@ -118,9 +118,14 @@ public class PlayerController : MonoBehaviour
 
     public void TriggerEncounter()
     {
-        character.MainAnimator.SetBool("isMoving", false);
-
+        StopPlayerAnimator();
         OnEncounter();
+    }
+
+    public void StopPlayerAnimator()
+    {
+
+        character.MainAnimator.SetBool("isMoving", false);
     }
 
 }
