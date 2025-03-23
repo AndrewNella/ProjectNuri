@@ -15,16 +15,17 @@ public enum BattleAction { Attack, UseItem, Run }
 public class BattleController : MonoBehaviour
 {
     [SerializeField] BattleUnit playerUnit, enemyUnit;
-
     [SerializeField] BattleMenuControl battleMenuControlSystem;
 
     public event Action<bool> OnBattleOver;
     BattleState state;
     BattleState preState;
-
+    int escapeAttempts;
 
 
     Entity enemyEntity;
+
+    FieldMonsterBase fieldMonster;
 
 
     public BattleState GetCurrentBattleState => state;
@@ -50,6 +51,15 @@ public class BattleController : MonoBehaviour
         Debug.Log($"Current Player Mana is {PlayerController.instance.GetPlayerEntity().currentMana}");
         Debug.Log($"Current Player Lust is {PlayerController.instance.GetPlayerEntity().currentLust}");
         enemyEntity = _enemyEntity;
+        StartCoroutine(SetupBattle());
+    }
+    public void StartBattle(Entity _enemyEntity, FieldMonsterBase _enemyFieldBase)
+    {
+        Debug.Log($"Current Player HP is {PlayerController.instance.GetPlayerEntity().currentHP}");
+        Debug.Log($"Current Player Mana is {PlayerController.instance.GetPlayerEntity().currentMana}");
+        Debug.Log($"Current Player Lust is {PlayerController.instance.GetPlayerEntity().currentLust}");
+        enemyEntity = _enemyEntity;
+        fieldMonster = _enemyFieldBase;
         StartCoroutine(SetupBattle());
     }
     public void HandleUpdate()
@@ -135,6 +145,7 @@ public class BattleController : MonoBehaviour
     {
         state = BattleState.BattleOver;
         playerUnit.entity.OnBattleOver();
+        fieldMonster = null;
         OnBattleOver(_incomingBool);
     }
 
@@ -156,7 +167,10 @@ public class BattleController : MonoBehaviour
             }
         }
     }
-
+    public void InitiateEscapeAttempt()
+    {
+        StartCoroutine(TryToEscape());
+    }
     bool CheckIfAttackCanBeAfforded(BattleUnit _incomingUnit, Attack _incomingAttack)
     {
         if (_incomingAttack.ManaCost > 0)
@@ -224,6 +238,8 @@ public class BattleController : MonoBehaviour
 
 
     }
+
+
     #region Coroutines
     public IEnumerator SetupBattle()
     {
@@ -282,6 +298,7 @@ public class BattleController : MonoBehaviour
 
         if (state != BattleState.BattleOver)
         {
+            escapeAttempts = 0;
             ActionSelection();
         }
 
@@ -409,6 +426,45 @@ public class BattleController : MonoBehaviour
         {
             var _message = _incomingEntity.StatusChanges.Dequeue();
             yield return battleMenuControlSystem.TypeDialogue(_message);
+        }
+    }
+
+    IEnumerator TryToEscape()
+    {
+        state = BattleState.Busy;
+
+
+        escapeAttempts++;
+        float _playerSpeed = playerUnit.entity.Speed;
+        float _enemySpeed = enemyUnit.entity.Speed;
+
+        if (_playerSpeed > _enemySpeed)
+        {
+            yield return battleMenuControlSystem.TypeDialogue($"You escaped safely.");
+
+            if (GameController.instance.currentFieldMonsterBase != null)
+
+                GameController.instance.currentFieldMonsterBase.EscapeStun();
+
+
+            BattleOver(true);
+        }
+        else
+        {
+            float f = (_playerSpeed * 128) / _enemySpeed + 30 * escapeAttempts;
+            f %= 256;
+
+            if (UnityEngine.Random.Range(0, 256) < f)
+            {
+                yield return battleMenuControlSystem.TypeDialogue($"You escaped safely.");
+
+                BattleOver(true);
+            }
+            else
+            {
+                yield return battleMenuControlSystem.TypeDialogue($"You could not escape!");
+                state = BattleState.RunningTurn;
+            }
         }
     }
     #endregion

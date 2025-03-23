@@ -12,6 +12,8 @@ public class GameController : MonoBehaviour
 
     public GameState state;
 
+    public FieldMonsterBase currentFieldMonsterBase { get; private set; }
+
     private void Awake()
     {
         instance = this;
@@ -50,6 +52,19 @@ public class GameController : MonoBehaviour
 
     }
 
+    public void StartSpesificMonsterBattle(Entity _incomingMonsterEntity, FieldMonsterBase _incomingFieldMonsterBase)
+    {
+        currentFieldMonsterBase = _incomingFieldMonsterBase;
+
+
+        state = GameState.Battle;
+        battleController.gameObject.SetActive(true);
+        worldCamera.gameObject.SetActive(false);
+        _incomingMonsterEntity.Init();
+        battleController.StartBattle(_incomingMonsterEntity);
+
+    }
+
     void StartRandomizedAreaBattle()
     {
         state = GameState.Battle;
@@ -64,10 +79,20 @@ public class GameController : MonoBehaviour
 
     void EndBattle(bool _isBattleWon)
     {
+        if (currentFieldMonsterBase != null && _isBattleWon)
+        {
+            currentFieldMonsterBase.OnDefeated();
+        }
         state = GameState.FreeRoam;
         battleController.gameObject.SetActive(false);
         worldCamera.gameObject.SetActive(true);
+
+        if (currentFieldMonsterBase != null) currentFieldMonsterBase = null;
+
+
+
     }
+
     void Update()
     {
         if (playerController.GetIsInMenu() == false && state != GameState.FreeRoam)

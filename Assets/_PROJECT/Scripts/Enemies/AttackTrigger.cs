@@ -20,11 +20,13 @@ public class AttackTrigger : MonoBehaviour
     }
     void OnTriggerEnter2D(Collider2D other)
     {
-
-        if (((1 << other.gameObject.layer) & GameLayers.Instance.PlayerLayer) != 0)
+        if (!fieldBase.GetIsBattleDisabled())
         {
-            isTrapTriggered = true;
-            fieldBase.TriggerAttackFromThisEntity();
+            if (((1 << other.gameObject.layer) & GameLayers.Instance.PlayerLayer) != 0)
+            {
+                isTrapTriggered = true;
+                fieldBase.TriggerAttackFromThisEntity();
+            }
         }
     }
 }

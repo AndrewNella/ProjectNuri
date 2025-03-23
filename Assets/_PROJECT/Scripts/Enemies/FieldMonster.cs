@@ -29,20 +29,14 @@ public enum MonsterMovementDirection
 public class FieldMonster : MonoBehaviour
 {
 
-    // [SerializeField] LayerMask solidObjectLayer, playerLayer;
-    // [SerializeField] float solidObjectDetectionRadius;
-
     [SerializeField] FieldMonsterBase fieldbase;
     [SerializeField] BattleController battleController;
-    // [SerializeField] FieldEnemyController fieldEnemyController;
 
     TargetScanner targetScanner;
 
     [Header("Movement Data")]
 
     [SerializeField] Transform gridparentTransform;
-    // public float baseWanderingPeriod;
-    // public bool isBattlePhase;
     public bool isMoving;
 
     [SerializeField] float minimumDistanceToTriggerBattle;
@@ -52,7 +46,6 @@ public class FieldMonster : MonoBehaviour
     [SerializeField] List<Transform> patrolPositionList;
 
     int patrolIndex;
-    // float movingPeroidTimer;
 
     Vector2 randVector;
     Transform playerTransform;
@@ -61,7 +54,6 @@ public class FieldMonster : MonoBehaviour
     float currentDistanceWithPatrolTarget;
 
     Animator animator;
-    // GameObject player;
 
     Coroutine currentMovementCoroutine;
 
@@ -74,7 +66,6 @@ public class FieldMonster : MonoBehaviour
     {
         fieldbase = GetComponent<FieldMonsterBase>();
 
-        // movingPeroidTimer = baseWanderingPeriod;
         patrolIndex = 0;
         randVector = Vector2.zero;
         playerTransform = null;
@@ -86,7 +77,6 @@ public class FieldMonster : MonoBehaviour
             patrolTargetTransform = patrolPositionList[0];
         }
 
-        // player = GameObject.FindWithTag("Player");
         animator = GetComponent<Animator>();
         targetScanner = GetComponent<TargetScanner>();
         monsterState = MonsterState.Wandering;
@@ -101,51 +91,54 @@ public class FieldMonster : MonoBehaviour
 
     void Update()
     {
-
-        ScanForPlayer();
-        if (currentMovementCoroutine == null)
+        //If the monster is stunned, then no movement actions will happen.
+        if (!fieldbase.GetIsMonsterStunned())
         {
-            switch (monsterState)
+            ScanForPlayer();
+            if (currentMovementCoroutine == null)
             {
-                case MonsterState.Wandering:
-                    currentMovementCoroutine = StartCoroutine(MoveInRandomDirection());
-                    break;
-                case MonsterState.Hunting:
-                    currentMovementCoroutine = StartCoroutine(MoveTowardsPlayer());
-                    break;
-                case MonsterState.Patroling:
-                    currentMovementCoroutine = StartCoroutine(MoveInPatrolRoute());
-                    break;
-                default:
-                    break;
+                switch (monsterState)
+                {
+                    case MonsterState.Wandering:
+                        currentMovementCoroutine = StartCoroutine(MoveInRandomDirection());
+                        break;
+                    case MonsterState.Hunting:
+                        currentMovementCoroutine = StartCoroutine(MoveTowardsPlayer());
+                        break;
+                    case MonsterState.Patroling:
+                        currentMovementCoroutine = StartCoroutine(MoveInPatrolRoute());
+                        break;
+                    default:
+                        break;
+                }
             }
-        }
 
 
-        //If the player does exist.
-        if (playerTransform != null)
-        {
-            currentDistanceWithPlayer = (playerTransform.position - transform.position).sqrMagnitude;
-            if (monsterPersonality == MonsterPersonality.Aggressive && monsterState != MonsterState.Hunting)
+            //If the player does exist.
+            if (playerTransform != null)
             {
-                monsterState = MonsterState.Hunting;
+                currentDistanceWithPlayer = (playerTransform.position - transform.position).sqrMagnitude;
+                if (monsterPersonality == MonsterPersonality.Aggressive && monsterState != MonsterState.Hunting)
+                {
+                    monsterState = MonsterState.Hunting;
+                }
             }
-        }
 
-        //If the Player does not Exist.
-        if (playerTransform == null)
-        {
-            currentDistanceWithPlayer = 100;
-            monsterState = MonsterState.Wandering;
-        }
+            //If the Player does not Exist.
+            if (playerTransform == null)
+            {
+                currentDistanceWithPlayer = 100;
+                monsterState = MonsterState.Wandering;
+            }
 
-        if (monsterState == MonsterState.Patroling)
-        {
-            UpdatePatrol();
-        }
-        fieldbase.Character.HandleUpdate();
+            if (monsterState == MonsterState.Patroling)
+            {
+                UpdatePatrol();
+            }
+            fieldbase.Character.HandleUpdate();
 
-        animator.SetBool("isMoving", fieldbase.Character.isMoving);
+            animator.SetBool("isMoving", fieldbase.Character.isMoving);
+        }
     }
 
     void UpdatePatrol()
@@ -168,7 +161,7 @@ public class FieldMonster : MonoBehaviour
 
     void CheckIfPlayerIsWithinRangeForBattle()
     {
-        if (currentDistanceWithPlayer < minimumDistanceToTriggerBattle)
+        if (currentDistanceWithPlayer < minimumDistanceToTriggerBattle && !fieldbase.GetIsBattleDisabled())
         {
             if (GameController.instance.state != GameState.Battle)
             {
