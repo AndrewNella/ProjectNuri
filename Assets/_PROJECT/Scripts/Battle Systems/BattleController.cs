@@ -18,6 +18,7 @@ public class BattleController : MonoBehaviour
     [SerializeField] BattleMenuControl battleMenuControlSystem;
 
     public event Action<bool> OnBattleOver;
+    public event Action OnBattleEscape;
     BattleState state;
     BattleState preState;
     int escapeAttempts;
@@ -147,6 +148,14 @@ public class BattleController : MonoBehaviour
         playerUnit.entity.OnBattleOver();
         fieldMonster = null;
         OnBattleOver(_incomingBool);
+    }
+
+    void EscapeBattle()
+    {
+        state = BattleState.BattleOver;
+        playerUnit.entity.OnBattleOver();
+        fieldMonster = null;
+        OnBattleEscape();
     }
 
     public void InitiateAttack()
@@ -441,13 +450,7 @@ public class BattleController : MonoBehaviour
         if (_playerSpeed > _enemySpeed)
         {
             yield return battleMenuControlSystem.TypeDialogue($"You escaped safely.");
-
-            if (GameController.instance.currentFieldMonsterBase != null)
-
-                GameController.instance.currentFieldMonsterBase.EscapeStun();
-
-
-            BattleOver(true);
+            EscapeBattle();
         }
         else
         {
@@ -458,7 +461,7 @@ public class BattleController : MonoBehaviour
             {
                 yield return battleMenuControlSystem.TypeDialogue($"You escaped safely.");
 
-                BattleOver(true);
+                EscapeBattle();
             }
             else
             {

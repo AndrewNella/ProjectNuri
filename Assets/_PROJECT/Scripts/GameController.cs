@@ -23,6 +23,7 @@ public class GameController : MonoBehaviour
     {
         playerController.OnEncounter += StartRandomizedAreaBattle;
         battleController.OnBattleOver += EndBattle;
+        battleController.OnBattleEscape += EscapeBattle;
 
 
         DialogueManager.Instance.OnShowDialogue += () =>
@@ -88,9 +89,16 @@ public class GameController : MonoBehaviour
         worldCamera.gameObject.SetActive(true);
 
         if (currentFieldMonsterBase != null) currentFieldMonsterBase = null;
+    }
 
+    void EscapeBattle()
+    {
+        currentFieldMonsterBase?.EscapeStun();
+        state = GameState.FreeRoam;
+        battleController.gameObject.SetActive(false);
+        worldCamera.gameObject.SetActive(true);
 
-
+        if (currentFieldMonsterBase != null) currentFieldMonsterBase = null;
     }
 
     void Update()

@@ -11,7 +11,7 @@ public class AttackTrigger : MonoBehaviour
     private void Awake()
     {
         ResetTrap();
-        fieldBase = GetComponent<FieldMonsterBase>();
+        // fieldBase = GetComponent<FieldMonsterBase>();
     }
 
     public void ResetTrap()

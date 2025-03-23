@@ -8,6 +8,7 @@ public class FieldMonsterBase : MonoBehaviour
     [SerializeField] Entity fieldEntity;
     [SerializeField] GameObject exclamationSprite;
     [SerializeField] GameObject enemySprite;
+    [SerializeField] GameObject TriggerArea;
 
     Character character;
     public FieldMonsterType FieldBattleType => fieldBattleType;
@@ -90,11 +91,11 @@ public class FieldMonsterBase : MonoBehaviour
                 break;
             case FieldMonsterType.BattleOnceThenDisable:
                 isBattlingDisabled = true;
+                TriggerArea.SetActive(false);
+
                 break;
             case FieldMonsterType.StunnedAfterBattle:
-                isBattlingDisabled = true;
-                isMonsterStunned = true;
-                StartCoroutine(WaitForBattleStunTimer());
+                EscapeStun();
                 break;
             default:
                 break;
