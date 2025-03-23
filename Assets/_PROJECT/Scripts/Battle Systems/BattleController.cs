@@ -393,10 +393,8 @@ public class BattleController : MonoBehaviour
 
             if (_incomingTargetUnit.entity.currentHP <= 0)
             {
-                yield return battleMenuControlSystem.TypeDialogue($"{_incomingTargetUnit.entity.Base.name} was defeated.");
-                yield return new WaitForSeconds(2f);
-                CheckForBattleOver(_incomingTargetUnit);
 
+                yield return HandleDefeatedEntity(_incomingTargetUnit);
             }
         }
         else
@@ -406,7 +404,28 @@ public class BattleController : MonoBehaviour
 
         _incomingSourceUnit.entity.OnAfterTurn();
     }
+    IEnumerator HandleDefeatedEntity(BattleUnit _defeatedUnit)
+    {
+        yield return battleMenuControlSystem.TypeDialogue($"{_defeatedUnit.entity.Base.name} was defeated.");
+        yield return new WaitForSeconds(2f);
 
+        if (!_defeatedUnit.IsPlayerUnit)
+        {
+            // Gain Exp
+            float _gainedEXP = _defeatedUnit.entity.Base.EXPYield;
+            int _enemyLevel = _defeatedUnit.entity.Level;
+
+            _gainedEXP *= _enemyLevel;
+
+            playerUnit.entity.exp += _gainedEXP;
+            yield return battleMenuControlSystem.TypeDialogue($"{playerUnit.entity.Base.name} gained {_gainedEXP} exp.");
+
+
+            //Check if Player has enough EXP to Level up.
+        }
+
+        CheckForBattleOver(_defeatedUnit);
+    }
     IEnumerator RunAfterTurn(BattleUnit _sourceUnit)
     {
 
@@ -419,10 +438,7 @@ public class BattleController : MonoBehaviour
 
         if (_sourceUnit.entity.currentHP <= 0)
         {
-            yield return battleMenuControlSystem.TypeDialogue($"{_sourceUnit.entity.Base.name} was defeated.");
-            yield return new WaitForSeconds(2f);
-            CheckForBattleOver(_sourceUnit);
-
+            yield return HandleDefeatedEntity(_sourceUnit);
         }
     }
     IEnumerator RunAttackEffects(AttackEffects _incomingAttackEffect, Entity _sourceEntity, Entity _targetEntity, AttackTarget _attackTarget)
@@ -507,19 +523,6 @@ public class BattleController : MonoBehaviour
 
     }
 
-    // IEnumerator EnableButtons(bool _incomingBool)
-    // {
-    //     foreach (Button _button in attackSelector.GetComponentsInChildren<Button>())
-    //     {
-    //         _button.interactable = _incomingBool;
-    //         yield return null;
-    //     }
-    //     foreach (Button _button in actionSelector.GetComponentsInChildren<Button>())
-    //     {
-    //         _button.interactable = _incomingBool;
-    //         yield return null;
-    //     }
-    // }
     #endregion
     void CheckForBattleOver(BattleUnit _defeatedUnit)
     {

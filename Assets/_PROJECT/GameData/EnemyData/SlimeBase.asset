@@ -26,6 +26,7 @@ MonoBehaviour:
   magicAttack: 2
   magicDefense: 2
   speed: 50
+  expYield: 20
   learnableAttacks:
   - attackBase: {fileID: 11400000, guid: 570b52db3ac235b4891dd0785e77890e, type: 2}
     level: 1

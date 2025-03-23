@@ -15,6 +15,8 @@ public class Entity
     public EntityBase Base { get { return BaseContainer; } }
     public int Level { get { return LevelContainer; } }
 
+    public float exp { get; set; }
+
     public float currentHP { get; set; }
     public float currentMana { get; set; }
     public float currentLust { get; set; }
@@ -44,7 +46,7 @@ public class Entity
     {
 
 
-
+        //Generate Moves
         knownAttacks = new List<Attack>();
 
         foreach (var _attack in Base.LearnableAttacks)
@@ -54,6 +56,8 @@ public class Entity
                 knownAttacks.Add(new Attack(_attack.Base));
             }
         }
+        exp = Base.GetExpForLevel(Level);
+
         CalculateStats();
 
         currentHP = MaxHp;

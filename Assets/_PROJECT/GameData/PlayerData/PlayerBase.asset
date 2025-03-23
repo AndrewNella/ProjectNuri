@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e40e8c39b307d9240be0758bc289be0a, type: 3}
   m_Name: PlayerBase
   m_EditorClassIdentifier: 
-  entityName: PlayerBase
+  entityName: Player Character
   entityDescription: The hero of the story.
   frontSprite: {fileID: -2939353528859623479, guid: f11d06369c63cb5439c32fa14a926e6f, type: 3}
   backSprite: {fileID: -4479705087183946875, guid: f11d06369c63cb5439c32fa14a926e6f, type: 3}
@@ -26,6 +26,7 @@ MonoBehaviour:
   magicAttack: 25
   magicDefense: 10
   speed: 75
+  expYield: 0
   learnableAttacks:
   - attackBase: {fileID: 11400000, guid: 1c01479088c80aa4d98e012f47ffbc22, type: 2}
     level: 1

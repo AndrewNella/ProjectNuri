@@ -14,9 +14,15 @@ public class EntityBase : ScriptableObject
     [SerializeField] EntityType entityType1, entityType2;
 
     //Basic Data
-    [SerializeField] float maxHP, maxMana, maxLust, attack, defense, magicAttack, magicDefense, speed;
+    [SerializeField] float maxHP, maxMana, maxLust, attack, defense, magicAttack, magicDefense, speed, expYield;
 
     [SerializeField] List<LearnableAttacks> learnableAttacks;
+
+
+    public float GetExpForLevel(int _level)
+    {
+        return _level * _level * _level;
+    }
 
     public string Name => name;
 
@@ -45,6 +51,7 @@ public class EntityBase : ScriptableObject
     public float MagicDefense => magicDefense;
 
     public float Speed => speed;
+    public float EXPYield => expYield;
 
     public List<LearnableAttacks> LearnableAttacks
     {

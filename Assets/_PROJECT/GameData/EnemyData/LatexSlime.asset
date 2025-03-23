@@ -26,10 +26,11 @@ MonoBehaviour:
   maxMana: 50
   maxLust: 100
   attack: 50
-  defense: 100
+  defense: 50
   magicAttack: 20
   magicDefense: 20
   speed: 60
+  expYield: 50
   learnableAttacks:
   - attackBase: {fileID: 11400000, guid: 570b52db3ac235b4891dd0785e77890e, type: 2}
     level: 2
