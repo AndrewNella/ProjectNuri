@@ -23,7 +23,6 @@ public class GameController : MonoBehaviour
     {
         playerController.OnEncounter += StartRandomizedAreaBattle;
         battleController.OnBattleOver += EndBattle;
-        battleController.OnBattleEscape += EscapeBattle;
 
 
         DialogueManager.Instance.OnShowDialogue += () =>
@@ -78,22 +77,14 @@ public class GameController : MonoBehaviour
 
 
 
-    void EndBattle(bool _isBattleWon)
+    void EndBattle(bool _isBattleWon, bool _isEscape)
     {
         if (currentFieldMonsterBase != null && _isBattleWon)
         {
-            currentFieldMonsterBase.OnDefeated();
+            if (_isEscape) currentFieldMonsterBase.EscapeStun();
+            else currentFieldMonsterBase.OnDefeated();
+
         }
-        state = GameState.FreeRoam;
-        battleController.gameObject.SetActive(false);
-        worldCamera.gameObject.SetActive(true);
-
-        if (currentFieldMonsterBase != null) currentFieldMonsterBase = null;
-    }
-
-    void EscapeBattle()
-    {
-        currentFieldMonsterBase?.EscapeStun();
         state = GameState.FreeRoam;
         battleController.gameObject.SetActive(false);
         worldCamera.gameObject.SetActive(true);

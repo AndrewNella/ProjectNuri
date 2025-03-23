@@ -77,7 +77,6 @@ public class FieldMonsterBase : MonoBehaviour
 
     public void EscapeStun()
     {
-        Debug.Log("Escape Stun is triggered");
         isBattlingDisabled = true;
         isMonsterStunned = true;
         StartCoroutine(WaitForBattleStunTimer());

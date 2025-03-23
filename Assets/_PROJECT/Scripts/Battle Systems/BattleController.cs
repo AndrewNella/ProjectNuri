@@ -14,18 +14,17 @@ public enum BattleState { Start, ActionSelection, AttackSelection, RunningTurn, 
 public enum BattleAction { Attack, UseItem, Run }
 public class BattleController : MonoBehaviour
 {
+    [SerializeField] GameObject actionSelector, attackSelector;
     [SerializeField] BattleUnit playerUnit, enemyUnit;
     [SerializeField] BattleMenuControl battleMenuControlSystem;
 
-    public event Action<bool> OnBattleOver;
-    public event Action OnBattleEscape;
+    public event Action<bool, bool> OnBattleOver;
     BattleState state;
     BattleState preState;
-    int escapeAttempts;
 
-
+    public bool isImportantBattle = false;
     Entity enemyEntity;
-
+    int escapeAttempts;
     FieldMonsterBase fieldMonster;
 
 
@@ -48,17 +47,17 @@ public class BattleController : MonoBehaviour
     }
     public void StartBattle(Entity _enemyEntity)
     {
-        Debug.Log($"Current Player HP is {PlayerController.instance.GetPlayerEntity().currentHP}");
-        Debug.Log($"Current Player Mana is {PlayerController.instance.GetPlayerEntity().currentMana}");
-        Debug.Log($"Current Player Lust is {PlayerController.instance.GetPlayerEntity().currentLust}");
+        // Debug.Log($"Current Player HP is {PlayerController.instance.GetPlayerEntity().currentHP}");
+        // Debug.Log($"Current Player Mana is {PlayerController.instance.GetPlayerEntity().currentMana}");
+        // Debug.Log($"Current Player Lust is {PlayerController.instance.GetPlayerEntity().currentLust}");
         enemyEntity = _enemyEntity;
         StartCoroutine(SetupBattle());
     }
     public void StartBattle(Entity _enemyEntity, FieldMonsterBase _enemyFieldBase)
     {
-        Debug.Log($"Current Player HP is {PlayerController.instance.GetPlayerEntity().currentHP}");
-        Debug.Log($"Current Player Mana is {PlayerController.instance.GetPlayerEntity().currentMana}");
-        Debug.Log($"Current Player Lust is {PlayerController.instance.GetPlayerEntity().currentLust}");
+        // Debug.Log($"Current Player HP is {PlayerController.instance.GetPlayerEntity().currentHP}");
+        // Debug.Log($"Current Player Mana is {PlayerController.instance.GetPlayerEntity().currentMana}");
+        // Debug.Log($"Current Player Lust is {PlayerController.instance.GetPlayerEntity().currentLust}");
         enemyEntity = _enemyEntity;
         fieldMonster = _enemyFieldBase;
         StartCoroutine(SetupBattle());
@@ -69,9 +68,7 @@ public class BattleController : MonoBehaviour
         {
             if (EventSystem.current.currentSelectedGameObject != battleMenuControlSystem.currentlySelectedGameObjectByEventSystem)
             {
-
                 TMP_Text _textHolder = null;
-
                 foreach (var text in battleMenuControlSystem.attackText)
                 {
                     if (EventSystem.current.currentSelectedGameObject != null && EventSystem.current.currentSelectedGameObject.TryGetComponent<Button>(out Button _button))
@@ -80,10 +77,8 @@ public class BattleController : MonoBehaviour
                         if (_button.GetComponentInChildren<TextMeshProUGUI>() == text && _textHolder == null)
                         {
                             _textHolder = EventSystem.current.currentSelectedGameObject.GetComponentInChildren<TMP_Text>();
-
                         }
                     }
-
                 }
                 if (_textHolder != null)
                 {
@@ -100,7 +95,6 @@ public class BattleController : MonoBehaviour
             }
         }
     }
-
     void UpdateCurrentlySelectedAttack(Attack _incomingAttack)
     {
         playerUnit.entity.CurrentAttack = _incomingAttack;
@@ -118,44 +112,16 @@ public class BattleController : MonoBehaviour
         battleMenuControlSystem.EnableDialogueText(true);
         ActionSelection();
     }
-    public void OpenInventoryScreen()
+    #region Button Commands
+    public void TryEscapeAttempt()
     {
-
-        UpdateCurrentlySelectedAttack(null);
-        state = BattleState.Inventory;
-        battleMenuControlSystem.EnableInventoryScreen(true);
-    }
-
-
-    private void ActionSelection()
-    {
-        UpdateCurrentlySelectedAttack(null);
-        state = BattleState.ActionSelection;
-        battleMenuControlSystem.SetDialogue("Choose an Action.");
-        battleMenuControlSystem.EnableActionSelector(true);
-    }
-    public void AttackSelection()
-    {
-        state = BattleState.AttackSelection;
         battleMenuControlSystem.EnableActionSelector(false);
-        battleMenuControlSystem.EnableDialogueText(false);
-        battleMenuControlSystem.EnableAttackSelector(true);
+        battleMenuControlSystem.EnableDialogueText(true);
+        StartCoroutine(RunTurns(BattleAction.Run));
     }
-
-    void BattleOver(bool _incomingBool)
+    public void UseItem()
     {
-        state = BattleState.BattleOver;
-        playerUnit.entity.OnBattleOver();
-        fieldMonster = null;
-        OnBattleOver(_incomingBool);
-    }
-
-    void EscapeBattle()
-    {
-        state = BattleState.BattleOver;
-        playerUnit.entity.OnBattleOver();
-        fieldMonster = null;
-        OnBattleEscape();
+        StartCoroutine(RunTurns(BattleAction.UseItem));
     }
 
     public void InitiateAttack()
@@ -176,10 +142,43 @@ public class BattleController : MonoBehaviour
             }
         }
     }
-    public void InitiateEscapeAttempt()
+    public void OpenInventoryScreen()
     {
-        StartCoroutine(TryToEscape());
+
+        UpdateCurrentlySelectedAttack(null);
+        state = BattleState.Inventory;
+        battleMenuControlSystem.EnableInventoryScreen(true);
     }
+    #endregion
+
+
+    private void ActionSelection()
+    {
+
+        UpdateCurrentlySelectedAttack(null);
+        state = BattleState.ActionSelection;
+        battleMenuControlSystem.SetDialogue("Choose an Action.");
+        battleMenuControlSystem.EnableActionSelector(true);
+    }
+    public void AttackSelection()
+    {
+        state = BattleState.AttackSelection;
+        battleMenuControlSystem.EnableActionSelector(false);
+        battleMenuControlSystem.EnableDialogueText(false);
+        battleMenuControlSystem.EnableAttackSelector(true);
+    }
+
+    void BattleOver(bool _didThePlayerWin, bool _isThisAnEscape)
+    {
+        state = BattleState.BattleOver;
+        playerUnit.entity.OnBattleOver();
+        fieldMonster = null;
+        OnBattleOver(_didThePlayerWin, _isThisAnEscape);
+    }
+
+
+
+
     bool CheckIfAttackCanBeAfforded(BattleUnit _incomingUnit, Attack _incomingAttack)
     {
         if (_incomingAttack.ManaCost > 0)
@@ -242,16 +241,13 @@ public class BattleController : MonoBehaviour
 
 
         return UnityEngine.Random.Range(1, 100) <= _attackAccuracy;
-
-
-
-
     }
 
 
     #region Coroutines
     public IEnumerator SetupBattle()
     {
+        escapeAttempts = 0;
         playerUnit.Setup(PlayerController.instance.GetPlayerEntity());
         enemyUnit.Setup(enemyEntity);
 
@@ -259,6 +255,7 @@ public class BattleController : MonoBehaviour
 
         battleMenuControlSystem.SetAttacknames(playerUnit.entity.knownAttacks);
 
+        // yield return EnableButtons(true);
 
         yield return StartCoroutine(battleMenuControlSystem.TypeDialogue($"You were spotted by a {enemyUnit.entity.Base.Name}. You cannot avoid a battle."));
         yield return new WaitForSeconds(1f);
@@ -268,46 +265,76 @@ public class BattleController : MonoBehaviour
     IEnumerator RunTurns(BattleAction _playerAction)
     {
         state = BattleState.RunningTurn;
-        if (_playerAction == BattleAction.Attack)
+
+
+        switch (_playerAction)
         {
+            case BattleAction.Attack:
+                enemyUnit.entity.CurrentAttack = enemyUnit.entity.GetRandomAttack();
+                int _playerAttackPriority = playerUnit.entity.CurrentAttack.Base.Priority;
+                int _enemyAttackPriority = enemyUnit.entity.CurrentAttack.Base.Priority;
 
-            enemyUnit.entity.CurrentAttack = enemyUnit.entity.GetRandomAttack();
-            int _playerAttackPriority = playerUnit.entity.CurrentAttack.Base.Priority;
-            int _enemyAttackPriority = enemyUnit.entity.CurrentAttack.Base.Priority;
+                //Check Who goes first
+                bool _playerGoesFirst = true;
 
-            //Check Who goes first
-            bool _playerGoesFirst = true;
-
-            if (_enemyAttackPriority > _playerAttackPriority)
-                _playerGoesFirst = false;
-            else if (_enemyAttackPriority == _playerAttackPriority)
-                _playerGoesFirst = playerUnit.entity.Speed >= enemyUnit.entity.Speed;
-
-
-
-            var _firstUnit = _playerGoesFirst ? playerUnit : enemyUnit;
-            var _secondUnit = _playerGoesFirst ? enemyUnit : playerUnit;
-
-            var _secondentity = _secondUnit.entity;
-
-            //First Unit
-            yield return PerformAttack(_firstUnit, _secondUnit, _firstUnit.entity.CurrentAttack);
-            yield return RunAfterTurn(_firstUnit);
-            if (state == BattleState.BattleOver) yield break;
+                if (_enemyAttackPriority > _playerAttackPriority)
+                    _playerGoesFirst = false;
+                else if (_enemyAttackPriority == _playerAttackPriority)
+                    _playerGoesFirst = playerUnit.entity.Speed >= enemyUnit.entity.Speed;
 
 
-            //Second Unit
-            if (_secondentity.currentHP > 0)
-            {
-                yield return PerformAttack(_secondUnit, _firstUnit, _secondUnit.entity.CurrentAttack);
-                yield return RunAfterTurn(_secondUnit);
+
+                var _firstUnit = _playerGoesFirst ? playerUnit : enemyUnit;
+                var _secondUnit = _playerGoesFirst ? enemyUnit : playerUnit;
+
+                var _secondentity = _secondUnit.entity;
+
+                //First Unit
+                yield return PerformAttack(_firstUnit, _secondUnit, _firstUnit.entity.CurrentAttack);
+                yield return RunAfterTurn(_firstUnit);
                 if (state == BattleState.BattleOver) yield break;
-            }
+
+
+                //Second Unit
+                if (_secondentity.currentHP > 0)
+                {
+                    yield return PerformAttack(_secondUnit, _firstUnit, _secondUnit.entity.CurrentAttack);
+                    yield return RunAfterTurn(_secondUnit);
+                    if (state == BattleState.BattleOver) yield break;
+                }
+                break;
+
+            case BattleAction.UseItem:
+                state = BattleState.Busy;
+                yield return battleMenuControlSystem.TypeDialogue("You used an item");
+                state = BattleState.RunningTurn;
+
+                //EnemyTurn
+                enemyUnit.entity.CurrentAttack = enemyUnit.entity.GetRandomAttack();
+                yield return PerformAttack(enemyUnit, playerUnit, enemyUnit.entity.CurrentAttack);
+                yield return RunAfterTurn(enemyUnit);
+                if (state == BattleState.BattleOver) yield break;
+
+                break;
+
+            case BattleAction.Run:
+                // yield return EnableButtons(false);
+                yield return TryToEscape();
+
+                //EnemyTurn
+                // enemyUnit.entity.CurrentAttack = enemyUnit.entity.GetRandomAttack();
+                // yield return PerformAttack(enemyUnit, playerUnit, enemyUnit.entity.CurrentAttack);
+                // yield return RunAfterTurn(enemyUnit);
+                // if (state == BattleState.BattleOver) yield break;
+
+                break;
+            default:
+                break;
         }
+
 
         if (state != BattleState.BattleOver)
         {
-            escapeAttempts = 0;
             ActionSelection();
         }
 
@@ -374,7 +401,7 @@ public class BattleController : MonoBehaviour
         }
         else
         {
-            yield return battleMenuControlSystem.TypeDialogue($"{_incomingSourceUnit}'s attack missed.");
+            yield return battleMenuControlSystem.TypeDialogue($"{_incomingSourceUnit.entity.Base.name}'s attack missed.");
         }
 
         _incomingSourceUnit.entity.OnAfterTurn();
@@ -442,15 +469,22 @@ public class BattleController : MonoBehaviour
     {
         state = BattleState.Busy;
 
+        if (isImportantBattle)
+        {
+            //Skip func
+            yield return battleMenuControlSystem.TypeDialogue($"You cannot escape from this battle. You must fight it.");
+            state = BattleState.RunningTurn;
+            yield break;
+        }
 
         escapeAttempts++;
         float _playerSpeed = playerUnit.entity.Speed;
         float _enemySpeed = enemyUnit.entity.Speed;
 
-        if (_playerSpeed > _enemySpeed)
+        if (_enemySpeed < _playerSpeed)
         {
             yield return battleMenuControlSystem.TypeDialogue($"You escaped safely.");
-            EscapeBattle();
+            BattleOver(true, true);
         }
         else
         {
@@ -460,8 +494,8 @@ public class BattleController : MonoBehaviour
             if (UnityEngine.Random.Range(0, 256) < f)
             {
                 yield return battleMenuControlSystem.TypeDialogue($"You escaped safely.");
+                BattleOver(true, true);
 
-                EscapeBattle();
             }
             else
             {
@@ -469,15 +503,31 @@ public class BattleController : MonoBehaviour
                 state = BattleState.RunningTurn;
             }
         }
+
+
     }
+
+    // IEnumerator EnableButtons(bool _incomingBool)
+    // {
+    //     foreach (Button _button in attackSelector.GetComponentsInChildren<Button>())
+    //     {
+    //         _button.interactable = _incomingBool;
+    //         yield return null;
+    //     }
+    //     foreach (Button _button in actionSelector.GetComponentsInChildren<Button>())
+    //     {
+    //         _button.interactable = _incomingBool;
+    //         yield return null;
+    //     }
+    // }
     #endregion
     void CheckForBattleOver(BattleUnit _defeatedUnit)
     {
         if (_defeatedUnit.IsPlayerUnit)
         {
-            BattleOver(false);
+            BattleOver(false, false);
         }
-        else BattleOver(true);
+        else BattleOver(true, false);
 
     }
 
