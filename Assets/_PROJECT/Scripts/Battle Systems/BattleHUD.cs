@@ -14,8 +14,8 @@ public class BattleHUD : MonoBehaviour
 
         currentEntity = _incomingEntity;
         nameText.text = _incomingEntity.Base.Name;
-        levelText.text = "Lvl " + _incomingEntity.Level;
-
+        SetLevel();
+        
         vitals.SetMaximums(_incomingEntity);
 
         vitals.SetHP(_incomingEntity.currentHP);
@@ -26,6 +26,12 @@ public class BattleHUD : MonoBehaviour
         SetStatusText();
 
         currentEntity.OnStatusConditionChanged += SetStatusText;
+    }
+
+    public void SetLevel()
+    {
+        levelText.text = "Lvl " + currentEntity.Level;
+
     }
     void SetStatusText()
     {

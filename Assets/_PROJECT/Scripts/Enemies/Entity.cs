@@ -11,9 +11,9 @@ public class Entity
 {
 
     [SerializeField] EntityBase BaseContainer;
-    [SerializeField] int LevelContainer;
+    [SerializeField] int level;
     public EntityBase Base { get { return BaseContainer; } }
-    public int Level { get { return LevelContainer; } }
+    public int Level { get { return level; } }
 
     public float exp { get; set; }
 
@@ -44,8 +44,6 @@ public class Entity
 
     public void Init()
     {
-
-
         //Generate Moves
         knownAttacks = new List<Attack>();
 
@@ -56,6 +54,7 @@ public class Entity
                 knownAttacks.Add(new Attack(_attack.Base));
             }
         }
+        
         exp = Base.GetExpForLevel(Level);
 
         CalculateStats();
@@ -70,6 +69,15 @@ public class Entity
         VolitileStatus = null;
     }
 
+    public bool CheckForLevelUp()
+    {
+        if (exp > Base.GetExpForLevel(level + 1))
+        {
+            ++level;
+            return true;
+        }
+        return false;
+    }
     private void ResetStatModifications()
     {
         StatModifications = new Dictionary<Stat, int>(){

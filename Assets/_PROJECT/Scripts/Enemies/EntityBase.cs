@@ -85,8 +85,6 @@ public enum EntityType
     Beast,
     Human,
     Merfolk,
-    Dwarf,
-    Elf,
     Beastkin
 
 }
@@ -113,6 +111,7 @@ public class TypeChart
      /*TTL*/   new float[] {1.5f,   1f,     0.5f,   0.5f,   0.5f,   0.5f,   1.5f},
      /*BST*/   new float[] {1f,     1f,     1f,     1f,     1f,     1f,     1.5f},
      /*HMN*/   new float[] {1f,     1f,     1f,     1f,     1f,     1f,     1f},
+     /*MFK*/   new float[] {1f,     1f,     2f,     0.5f,     1f,     2f,     0.5f},
      /*BSK*/   new float[] {0.5f,   1f,     1f,     1f,     1f,     1f,     1.5f}
     };
 

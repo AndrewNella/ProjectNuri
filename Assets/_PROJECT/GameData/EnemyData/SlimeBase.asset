@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e40e8c39b307d9240be0758bc289be0a, type: 3}
   m_Name: SlimeBase
   m_EditorClassIdentifier: 
-  entityName: 
+  entityName: Slime Blob
   entityDescription: 
   frontSprite: {fileID: 368543389579951487, guid: e27efea9929ba75448bd9eccc1a44990, type: 3}
   backSprite: {fileID: 2542698315722941828, guid: e27efea9929ba75448bd9eccc1a44990, type: 3}
@@ -26,7 +26,7 @@ MonoBehaviour:
   magicAttack: 2
   magicDefense: 2
   speed: 50
-  expYield: 20
+  expYield: 50
   learnableAttacks:
   - attackBase: {fileID: 11400000, guid: 570b52db3ac235b4891dd0785e77890e, type: 2}
     level: 1

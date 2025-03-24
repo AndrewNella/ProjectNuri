@@ -8,6 +8,10 @@ public class GameController : MonoBehaviour
     [SerializeField] PlayerController playerController;
     [SerializeField] BattleController battleController;
 
+    OverworldUI overWorldUISystem;
+    [SerializeField] GameObject overWorldUIParent;
+
+
     [SerializeField] Camera worldCamera;
 
     public GameState state;
@@ -18,6 +22,7 @@ public class GameController : MonoBehaviour
     {
         instance = this;
         ConditionDataBase.Init();
+        overWorldUISystem = overWorldUIParent.GetComponent<OverworldUI>();
     }
     void Start()
     {
@@ -36,6 +41,11 @@ public class GameController : MonoBehaviour
                 state = GameState.FreeRoam;
             }
         };
+    }
+
+    public void EnableOrDisableOverworldHUD(bool _incomingBool)
+    {
+        overWorldUIParent.SetActive(_incomingBool);
     }
     public void StartCutsceneState()
     {
@@ -56,7 +66,7 @@ public class GameController : MonoBehaviour
     {
         currentFieldMonsterBase = _incomingFieldMonsterBase;
 
-
+        EnableOrDisableOverworldHUD(false);
         state = GameState.Battle;
         battleController.gameObject.SetActive(true);
         worldCamera.gameObject.SetActive(false);
@@ -67,6 +77,7 @@ public class GameController : MonoBehaviour
 
     void StartRandomizedAreaBattle()
     {
+        EnableOrDisableOverworldHUD(false);
         state = GameState.Battle;
         battleController.gameObject.SetActive(true);
         worldCamera.gameObject.SetActive(false);
@@ -85,6 +96,8 @@ public class GameController : MonoBehaviour
             else currentFieldMonsterBase.OnDefeated();
 
         }
+        overWorldUISystem.UpdateHUDPlayerStats();
+        EnableOrDisableOverworldHUD(true);
         state = GameState.FreeRoam;
         battleController.gameObject.SetActive(false);
         worldCamera.gameObject.SetActive(true);

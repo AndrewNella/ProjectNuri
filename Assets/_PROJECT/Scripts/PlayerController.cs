@@ -11,6 +11,8 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField] Entity mainPlayerEntity;
 
+    public Entity PlayerEntity => mainPlayerEntity;
+
     [SerializeField] float randomEncounterChance;
     [SerializeField] bool isInMenu { get; set; }
 

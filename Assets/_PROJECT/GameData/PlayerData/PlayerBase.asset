@@ -16,7 +16,7 @@ MonoBehaviour:
   entityDescription: The hero of the story.
   frontSprite: {fileID: -2939353528859623479, guid: f11d06369c63cb5439c32fa14a926e6f, type: 3}
   backSprite: {fileID: -4479705087183946875, guid: f11d06369c63cb5439c32fa14a926e6f, type: 3}
-  entityType1: 6
+  entityType1: 7
   entityType2: 0
   maxHP: 100
   maxMana: 100
@@ -35,6 +35,6 @@ MonoBehaviour:
   - attackBase: {fileID: 11400000, guid: e3635754386df5445803350a0cc1bf3e, type: 2}
     level: 3
   - attackBase: {fileID: 11400000, guid: a2fd0c541d9a8fb41b7f48641d3560f7, type: 2}
-    level: 3
+    level: 2
   - attackBase: {fileID: 11400000, guid: 7244836881baf854f89f1d2d9f2210d5, type: 2}
-    level: 4
+    level: 2

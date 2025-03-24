@@ -14,9 +14,9 @@ public enum BattleState { Start, ActionSelection, AttackSelection, RunningTurn, 
 public enum BattleAction { Attack, UseItem, Run }
 public class BattleController : MonoBehaviour
 {
-    [SerializeField] GameObject actionSelector, attackSelector;
     [SerializeField] BattleUnit playerUnit, enemyUnit;
     [SerializeField] BattleMenuControl battleMenuControlSystem;
+
 
     public event Action<bool, bool> OnBattleOver;
     BattleState state;
@@ -47,17 +47,13 @@ public class BattleController : MonoBehaviour
     }
     public void StartBattle(Entity _enemyEntity)
     {
-        // Debug.Log($"Current Player HP is {PlayerController.instance.GetPlayerEntity().currentHP}");
-        // Debug.Log($"Current Player Mana is {PlayerController.instance.GetPlayerEntity().currentMana}");
-        // Debug.Log($"Current Player Lust is {PlayerController.instance.GetPlayerEntity().currentLust}");
+
         enemyEntity = _enemyEntity;
         StartCoroutine(SetupBattle());
     }
     public void StartBattle(Entity _enemyEntity, FieldMonsterBase _enemyFieldBase)
     {
-        // Debug.Log($"Current Player HP is {PlayerController.instance.GetPlayerEntity().currentHP}");
-        // Debug.Log($"Current Player Mana is {PlayerController.instance.GetPlayerEntity().currentMana}");
-        // Debug.Log($"Current Player Lust is {PlayerController.instance.GetPlayerEntity().currentLust}");
+
         enemyEntity = _enemyEntity;
         fieldMonster = _enemyFieldBase;
         StartCoroutine(SetupBattle());
@@ -173,6 +169,7 @@ public class BattleController : MonoBehaviour
         state = BattleState.BattleOver;
         playerUnit.entity.OnBattleOver();
         fieldMonster = null;
+
         OnBattleOver(_didThePlayerWin, _isThisAnEscape);
     }
 
@@ -422,6 +419,17 @@ public class BattleController : MonoBehaviour
 
 
             //Check if Player has enough EXP to Level up.
+
+            while (playerUnit.entity.CheckForLevelUp())
+            {
+                playerUnit.HUD.SetLevel();
+                yield return battleMenuControlSystem.TypeDialogue($"{playerUnit.entity.Base.name} became Level {playerUnit.entity.Level}.");
+
+
+            }
+
+
+            yield return new WaitForSeconds(1f);
         }
 
         CheckForBattleOver(_defeatedUnit);

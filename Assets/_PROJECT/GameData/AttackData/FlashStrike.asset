@@ -15,7 +15,7 @@ MonoBehaviour:
   attackname: Flash Strike
   attackDescription: A Weak but Quick Attack that always goes first
   power: 40
-  accuracy: 80
+  accuracy: 90
   manaCost: 0
   lustCost: 0
   priority: 10
