@@ -1,8 +1,7 @@
 using UnityEngine;
 
-public class AttackTrigger : MonoBehaviour
+public class AttackTrigger : MonoBehaviour, IPlayerTriggerable
 {
-    bool isTrapTriggered = false;
     [SerializeField] FieldMonsterBase fieldBase;
 
 
@@ -10,23 +9,16 @@ public class AttackTrigger : MonoBehaviour
 
     private void Awake()
     {
-        ResetTrap();
-        // fieldBase = GetComponent<FieldMonsterBase>();
+
     }
 
-    public void ResetTrap()
-    {
-        isTrapTriggered = false;
-    }
-    void OnTriggerEnter2D(Collider2D other)
+
+
+    public void OnPlayerTrigger(PlayerController _player)
     {
         if (!fieldBase.GetIsBattleDisabled())
         {
-            if (((1 << other.gameObject.layer) & GameLayers.Instance.PlayerLayer) != 0)
-            {
-                isTrapTriggered = true;
-                fieldBase.TriggerAttackFromThisEntity();
-            }
+            fieldBase.TriggerAttackFromThisEntity();
         }
     }
 }

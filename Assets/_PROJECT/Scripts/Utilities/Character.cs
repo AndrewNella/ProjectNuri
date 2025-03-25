@@ -23,15 +23,20 @@ public class Character : MonoBehaviour
         if (TryGetComponent<Animator>(out Animator _foundAnimator))
         {
             animator = _foundAnimator;
-
         }
+
+        SetPositionAndSnapToTile(gridparentTransform.position);
+
 
     }
 
     public Animator MainAnimator => animator;
     public IEnumerator Move(Vector2 _moveVector, Transform _parentTransform, Action OnMoveOver = null)
     {
-
+        if (GameController.instance.state == GameState.Pause)
+        {
+            yield break;
+        }
         animator?.SetFloat("moveX", Mathf.Clamp(_moveVector.x, -1, 1));
         animator?.SetFloat("moveY", Mathf.Clamp(_moveVector.y, -1, 1));
 
@@ -63,7 +68,12 @@ public class Character : MonoBehaviour
 
         OnMoveOver?.Invoke();
     }
-
+    public void SetPositionAndSnapToTile(Vector2 _pos)
+    {
+        _pos.x = Mathf.Floor(_pos.x) + 0.5f;
+        _pos.y = Mathf.Floor(_pos.y) + 0.5f;
+        gridparentTransform.position = _pos;
+    }
     public void HandleUpdate()
     {
         animator.SetBool("isMoving", isMoving);

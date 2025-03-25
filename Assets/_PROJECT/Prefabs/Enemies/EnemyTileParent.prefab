@@ -129,7 +129,7 @@ MonoBehaviour:
     lines: []
   fieldEntity:
     BaseContainer: {fileID: 11400000, guid: 16e9afefa30d1f3429a04e9009837fa9, type: 2}
-    LevelContainer: 3
+    level: 0
   exclamationSprite: {fileID: 5885733390967104253}
   enemySprite: {fileID: 1471790381148292198}
   TriggerArea: {fileID: 7942214917305805263}
@@ -365,4 +365,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29dfbdb19b3765042a6896cc20e53fe2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fieldBase: {fileID: 0}
+  fieldBase: {fileID: 1020316933788977341}

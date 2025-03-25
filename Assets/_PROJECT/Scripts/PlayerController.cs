@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.ComponentModel;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -7,7 +8,6 @@ public class PlayerController : MonoBehaviour
 {
     public static PlayerController instance;
 
-    public event Action OnEncounter;
 
     [SerializeField] Entity mainPlayerEntity;
 
@@ -19,7 +19,10 @@ public class PlayerController : MonoBehaviour
 
     [Header("Movement Data")]
 
+
     [SerializeField] Character character;
+
+    public Character PlayerCharacter => character;
 
 
     Vector2 inputVector;
@@ -32,17 +35,17 @@ public class PlayerController : MonoBehaviour
         inputVector = Vector2.zero;
 
         character = GetComponent<Character>();
-
+    }
+    private void Start()
+    {
         MainInputActionController.instance.actionMap.PlayerControllerMap.Movement.performed += x => OnPlayerMoveInput(x.ReadValue<Vector2>());
         MainInputActionController.instance.actionMap.PlayerControllerMap.Movement.canceled += x => OnPlayerMoveInput(x.ReadValue<Vector2>());
 
+        MainInputActionController.instance.OnInteractTrigger += OnInteract;
+
 
         mainPlayerEntity.Init();
-
-
-
     }
-
     public void SetIsInMenu(bool _incomingBool)
     {
         isInMenu = _incomingBool;
@@ -54,7 +57,6 @@ public class PlayerController : MonoBehaviour
     }
     void OnEnable()
     {
-        MainInputActionController.instance.OnInteractTrigger += OnInteract;
     }
 
     void OnDisable()
@@ -101,27 +103,26 @@ public class PlayerController : MonoBehaviour
 
             if (inputVector != Vector2.zero)
             {
-                StartCoroutine(character.Move(inputVector, character.gridparentTransform, CheckForEncounter));
+                StartCoroutine(character.Move(inputVector, character.gridparentTransform, OnMoveOver));
             }
 
             character.HandleUpdate();
         }
     }
-
-
-    public void CheckForEncounter()
+    void OnMoveOver()
     {
+        var _colliders = Physics2D.OverlapCircleAll(character.gridparentTransform.position, 0.2f, GameLayers.Instance.TriggerableLayer);
 
-        if (Physics2D.OverlapCircle(character.gridparentTransform.position, 0.2f, GameLayers.Instance.DangerLayer) != null && UnityEngine.Random.Range(1, 101) < randomEncounterChance)
+        foreach (var _collider in _colliders)
         {
-            TriggerEncounter();
+            var _trigger = _collider.GetComponent<IPlayerTriggerable>();
+            if (_trigger != null)
+            {
+                StopPlayerAnimator();
+                _trigger.OnPlayerTrigger(this);
+                break;
+            }
         }
-    }
-
-    public void TriggerEncounter()
-    {
-        StopPlayerAnimator();
-        OnEncounter();
     }
 
     public void StopPlayerAnimator()

@@ -9,9 +9,11 @@ public class NPCController : MonoBehaviour, Interactable
     [Header("Character Data")]
     [SerializeField] bool isInteractableByPlayer = false;
     [SerializeField] Dialogue inputDialogue;
-    public Character character;
+    [SerializeField] Character character;
 
-    public NPCState npcState { get; set; }
+    public Character NPCCharacter => character;
+
+    public NPCState npcState;
     [Header("Idle Settings")]
     [SerializeField] float maxIdleWaitTime;
 
@@ -31,21 +33,34 @@ public class NPCController : MonoBehaviour, Interactable
     public void Interact(Transform _initiator)
     {
         if (!isInteractableByPlayer) return;
-        if (npcState == NPCState.Idle)
+
+        switch (npcState)
         {
-            npcState = NPCState.Dialogue;
-            character.LookTowards(_initiator.position);
-            StartCoroutine(DialogueManager.Instance.ShowDialogue(inputDialogue, () =>
-            {
-                idleTimer = 0;
-                npcState = NPCState.Idle;
-            }));
+
+            case NPCState.WalkWaiting:
+                npcState = NPCState.Dialogue;
+                character.LookTowards(_initiator.position);
+                StartCoroutine(DialogueManager.Instance.ShowDialogue(inputDialogue, () =>
+                {
+                    idleTimer = 0;
+                    npcState = NPCState.WalkWaiting;
+                }));
+                break;
+            case NPCState.Idle:
+                npcState = NPCState.Dialogue;
+                character.LookTowards(_initiator.position);
+                StartCoroutine(DialogueManager.Instance.ShowDialogue(inputDialogue));
+                break;
+            default:
+                break;
         }
+
+
     }
     public void Update()
     {
 
-        if (npcState == NPCState.Idle)
+        if (npcState == NPCState.WalkWaiting)
         {
             idleTimer += Time.deltaTime;
             if (idleTimer > maxIdleWaitTime)
@@ -76,12 +91,13 @@ public class NPCController : MonoBehaviour, Interactable
         }
 
 
-        npcState = NPCState.Idle;
+        npcState = NPCState.WalkWaiting;
 
     }
     public enum NPCState
     {
         Idle,
+        WalkWaiting,
         Walking,
         Wandering,
         Patrolling,

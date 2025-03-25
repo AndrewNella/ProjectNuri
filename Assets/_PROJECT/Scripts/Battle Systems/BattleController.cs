@@ -14,6 +14,7 @@ public enum BattleState { Start, ActionSelection, AttackSelection, RunningTurn, 
 public enum BattleAction { Attack, UseItem, Run }
 public class BattleController : MonoBehaviour
 {
+    public static BattleController instance;
     [SerializeField] BattleUnit playerUnit, enemyUnit;
     [SerializeField] BattleMenuControl battleMenuControlSystem;
 
@@ -29,7 +30,10 @@ public class BattleController : MonoBehaviour
 
 
     public BattleState GetCurrentBattleState => state;
-
+    private void Awake()
+    {
+        instance = this;
+    }
     private void OnEnable()
     {
         MainInputActionController.instance.OnPauseTrigger += ReturnToMainBattleMenu;
@@ -58,36 +62,23 @@ public class BattleController : MonoBehaviour
         fieldMonster = _enemyFieldBase;
         StartCoroutine(SetupBattle());
     }
+
+
     public void HandleUpdate()
     {
         if (state == BattleState.AttackSelection)
         {
-            if (EventSystem.current.currentSelectedGameObject != battleMenuControlSystem.currentlySelectedGameObjectByEventSystem)
+            if (EventSystem.current.currentSelectedGameObject.TryGetComponent<Button>(out Button _button))
             {
-                TMP_Text _textHolder = null;
-                foreach (var text in battleMenuControlSystem.attackText)
+                TMP_Text _textHolder = _button.GetComponentInChildren<TextMeshProUGUI>();
+                foreach (var knownAttack in playerUnit.entity.knownAttacks)
                 {
-                    if (EventSystem.current.currentSelectedGameObject != null && EventSystem.current.currentSelectedGameObject.TryGetComponent<Button>(out Button _button))
+                    if (_textHolder.text == knownAttack.Base.Attackname)
                     {
-
-                        if (_button.GetComponentInChildren<TextMeshProUGUI>() == text && _textHolder == null)
-                        {
-                            _textHolder = EventSystem.current.currentSelectedGameObject.GetComponentInChildren<TMP_Text>();
-                        }
+                        battleMenuControlSystem.UpdateAttackDetails(knownAttack);
+                        UpdateCurrentlySelectedAttack(knownAttack);
                     }
                 }
-                if (_textHolder != null)
-                {
-                    foreach (var knownAttack in playerUnit.entity.knownAttacks)
-                    {
-                        if (_textHolder.text == knownAttack.Base.Attackname)
-                        {
-                            battleMenuControlSystem.UpdateAttackDetails(knownAttack);
-                            UpdateCurrentlySelectedAttack(knownAttack);
-                        }
-                    }
-                }
-
             }
         }
     }
@@ -97,16 +88,20 @@ public class BattleController : MonoBehaviour
     }
     public void ReturnToMainBattleMenu()
     {
-        if (battleMenuControlSystem.AttackSelector.activeSelf)
+        if (state == BattleState.ActionSelection || state == BattleState.AttackSelection || state == BattleState.Inventory)
         {
-            battleMenuControlSystem.EnableAttackSelector(false);
+
+            if (battleMenuControlSystem.AttackSelector.activeSelf)
+            {
+                battleMenuControlSystem.EnableAttackSelector(false);
+            }
+            if (battleMenuControlSystem.InventoryMenu.activeSelf)
+            {
+                battleMenuControlSystem.EnableInventoryScreen(false);
+            }
+            battleMenuControlSystem.EnableDialogueText(true);
+            ActionSelection();
         }
-        if (battleMenuControlSystem.InventoryMenu.activeSelf)
-        {
-            battleMenuControlSystem.EnableInventoryScreen(false);
-        }
-        battleMenuControlSystem.EnableDialogueText(true);
-        ActionSelection();
     }
     #region Button Commands
     public void TryEscapeAttempt()
@@ -126,7 +121,7 @@ public class BattleController : MonoBehaviour
         {
             if (!CheckIfAttackCanBeAfforded(playerUnit, playerUnit.entity.CurrentAttack))
             {
-                Debug.Log("Mana is too low");
+                // Debug.Log("Mana is too low");
             }
             else
             {
@@ -134,7 +129,7 @@ public class BattleController : MonoBehaviour
                 battleMenuControlSystem.EnableAttackSelector(false);
                 battleMenuControlSystem.EnableDialogueText(true);
                 StartCoroutine(RunTurns(BattleAction.Attack));
-                Debug.Log("Attack is succesfull");
+                // Debug.Log("Attack is succesfull");
             }
         }
     }
@@ -169,6 +164,8 @@ public class BattleController : MonoBehaviour
         state = BattleState.BattleOver;
         playerUnit.entity.OnBattleOver();
         fieldMonster = null;
+
+        battleMenuControlSystem.DestroyAttackButtons();
 
         OnBattleOver(_didThePlayerWin, _isThisAnEscape);
     }
@@ -248,9 +245,11 @@ public class BattleController : MonoBehaviour
         playerUnit.Setup(PlayerController.instance.GetPlayerEntity());
         enemyUnit.Setup(enemyEntity);
 
+
+
         battleMenuControlSystem.SetDialogue($"You were spotted by a {enemyUnit.entity.Base.Name}. You cannot avoid a battle.");
 
-        battleMenuControlSystem.SetAttacknames(playerUnit.entity.knownAttacks);
+        battleMenuControlSystem.PopulateAttackButtons(playerUnit.entity.knownAttacks);
 
         // yield return EnableButtons(true);
 
@@ -353,7 +352,7 @@ public class BattleController : MonoBehaviour
         yield return ShowStatusChanges(_incomingSourceUnit.entity);
 
 
-        yield return battleMenuControlSystem.TypeDialogue($"{_incomingSourceUnit.entity.Base.name} used {_attack.Base.name}.");
+        yield return battleMenuControlSystem.TypeDialogue($"{_incomingSourceUnit.entity.Base.Name} used {_attack.Base.Attackname}.");
 
 
 
@@ -396,14 +395,14 @@ public class BattleController : MonoBehaviour
         }
         else
         {
-            yield return battleMenuControlSystem.TypeDialogue($"{_incomingSourceUnit.entity.Base.name}'s attack missed.");
+            yield return battleMenuControlSystem.TypeDialogue($"{_incomingSourceUnit.entity.Base.Name}'s attack missed.");
         }
 
         _incomingSourceUnit.entity.OnAfterTurn();
     }
     IEnumerator HandleDefeatedEntity(BattleUnit _defeatedUnit)
     {
-        yield return battleMenuControlSystem.TypeDialogue($"{_defeatedUnit.entity.Base.name} was defeated.");
+        yield return battleMenuControlSystem.TypeDialogue($"{_defeatedUnit.entity.Base.Name} was defeated.");
         yield return new WaitForSeconds(2f);
 
         if (!_defeatedUnit.IsPlayerUnit)
@@ -415,7 +414,7 @@ public class BattleController : MonoBehaviour
             _gainedEXP *= _enemyLevel;
 
             playerUnit.entity.exp += _gainedEXP;
-            yield return battleMenuControlSystem.TypeDialogue($"{playerUnit.entity.Base.name} gained {_gainedEXP} exp.");
+            yield return battleMenuControlSystem.TypeDialogue($"{playerUnit.entity.Base.Name} gained {_gainedEXP} exp.");
 
 
             //Check if Player has enough EXP to Level up.
@@ -423,8 +422,18 @@ public class BattleController : MonoBehaviour
             while (playerUnit.entity.CheckForLevelUp())
             {
                 playerUnit.HUD.SetLevel();
-                yield return battleMenuControlSystem.TypeDialogue($"{playerUnit.entity.Base.name} became Level {playerUnit.entity.Level}.");
+                yield return battleMenuControlSystem.TypeDialogue($"{playerUnit.entity.Base.Name} become Level {playerUnit.entity.Level}.");
 
+                //Check for new move to learn, if possible
+                var _newAttack = playerUnit.entity.GetLearnableAttackeAtCurrentLevel();
+
+                if (_newAttack != null)
+                {
+                    playerUnit.entity.LearnNewAttack(_newAttack);
+                    yield return battleMenuControlSystem.TypeDialogue($"You have unlocked a new move!.");
+                    yield return battleMenuControlSystem.TypeDialogue($"You can now use  {_newAttack.Base.Attackname}.");
+
+                }
 
             }
 

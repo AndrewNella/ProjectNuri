@@ -1,22 +1,29 @@
 using UnityEngine;
+using Cinemachine;
 
 
-public enum GameState { FreeRoam, Battle, Dialogue, CutScene }
+public enum GameState { FreeRoam, Battle, Dialogue, CutScene, Pause }
 public class GameController : MonoBehaviour
 {
+    [Header("Camera Data")]
+    [SerializeField] CinemachineVirtualCamera overworldPlayerCamera, battleCamera;
     public static GameController instance;
+
+    [Header("System Controller Data")]
     [SerializeField] PlayerController playerController;
     [SerializeField] BattleController battleController;
 
-    OverworldUI overWorldUISystem;
+    public FieldMonsterBase currentFieldMonsterBase { get; private set; }
+
+    [Header("UI Data")]
     [SerializeField] GameObject overWorldUIParent;
+    OverworldUI overWorldUISystem;
 
 
-    [SerializeField] Camera worldCamera;
 
     public GameState state;
+    GameState stateBeforePause;
 
-    public FieldMonsterBase currentFieldMonsterBase { get; private set; }
 
     private void Awake()
     {
@@ -26,7 +33,6 @@ public class GameController : MonoBehaviour
     }
     void Start()
     {
-        playerController.OnEncounter += StartRandomizedAreaBattle;
         battleController.OnBattleOver += EndBattle;
 
 
@@ -42,7 +48,18 @@ public class GameController : MonoBehaviour
             }
         };
     }
-
+    public void PauseGame(bool _isPaused)
+    {
+        if (_isPaused)
+        {
+            stateBeforePause = state;
+            state = GameState.Pause;
+        }
+        else
+        {
+            state = stateBeforePause;
+        }
+    }
     public void EnableOrDisableOverworldHUD(bool _incomingBool)
     {
         overWorldUIParent.SetActive(_incomingBool);
@@ -56,7 +73,7 @@ public class GameController : MonoBehaviour
     {
         state = GameState.Battle;
         battleController.gameObject.SetActive(true);
-        worldCamera.gameObject.SetActive(false);
+        battleCamera.Priority = 6;
         _incomingMonsterEntity.Init();
         battleController.StartBattle(_incomingMonsterEntity);
 
@@ -69,18 +86,18 @@ public class GameController : MonoBehaviour
         EnableOrDisableOverworldHUD(false);
         state = GameState.Battle;
         battleController.gameObject.SetActive(true);
-        worldCamera.gameObject.SetActive(false);
+        battleCamera.Priority = 6;
         _incomingMonsterEntity.Init();
         battleController.StartBattle(_incomingMonsterEntity);
 
     }
 
-    void StartRandomizedAreaBattle()
+    public void StartRandomizedAreaBattle()
     {
         EnableOrDisableOverworldHUD(false);
         state = GameState.Battle;
         battleController.gameObject.SetActive(true);
-        worldCamera.gameObject.SetActive(false);
+        battleCamera.Priority = 6;
         Entity areaEnemy = FindFirstObjectByType<MapArea>().GetComponent<MapArea>().GetRandomAreaEnemy();
 
         battleController.StartBattle(areaEnemy);
@@ -100,7 +117,7 @@ public class GameController : MonoBehaviour
         EnableOrDisableOverworldHUD(true);
         state = GameState.FreeRoam;
         battleController.gameObject.SetActive(false);
-        worldCamera.gameObject.SetActive(true);
+        battleCamera.Priority = 1;
 
         if (currentFieldMonsterBase != null) currentFieldMonsterBase = null;
     }

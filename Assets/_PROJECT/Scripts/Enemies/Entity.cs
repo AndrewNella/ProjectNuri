@@ -42,6 +42,27 @@ public class Entity
     public Condition VolitileStatus { get; private set; }
     public int VolitileStatusTime { get; set; }
 
+
+    public LearnableAttacks GetLearnableAttackeAtCurrentLevel()
+    {
+        return Base.LearnableAttacks.Where(x => x.Level == level).FirstOrDefault();
+    }
+
+    public void LearnNewAttack(LearnableAttacks _attackToLearn)
+    {
+        knownAttacks.Add(new Attack(_attackToLearn.Base));
+    }
+
+    public void ForgetAttack(Attack _attackToForget)
+    {
+        foreach (var _attack in knownAttacks)
+        {
+            if (_attack.Base.Attackname == _attackToForget.Base.Attackname)
+            {
+                knownAttacks.Remove(_attack);
+            }
+        }
+    }
     public void Init()
     {
         //Generate Moves
@@ -54,7 +75,7 @@ public class Entity
                 knownAttacks.Add(new Attack(_attack.Base));
             }
         }
-        
+
         exp = Base.GetExpForLevel(Level);
 
         CalculateStats();
@@ -98,7 +119,7 @@ public class Entity
 
         Status = ConditionDataBase.Conditions[_incomingCondition];
         Status?.OnStart?.Invoke(this);
-        StatusChanges.Enqueue($"{Base.name} {Status.StartMessage}");
+        StatusChanges.Enqueue($"{Base.Name} {Status.StartMessage}");
 
         OnStatusConditionChanged?.Invoke();
     }
@@ -109,7 +130,7 @@ public class Entity
 
         VolitileStatus = ConditionDataBase.Conditions[_incomingCondition];
         VolitileStatus?.OnStart?.Invoke(this);
-        StatusChanges.Enqueue($"{Base.name} {VolitileStatus.StartMessage}");
+        StatusChanges.Enqueue($"{Base.Name} {VolitileStatus.StartMessage}");
 
     }
 

@@ -3,19 +3,21 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class BattleMenuControl : MonoBehaviour
 {
     [SerializeField] TMP_Text dialogText;
     [SerializeField] float dialogueLetterWaiterTimer;
 
-    [SerializeField] GameObject actionSelector, attackSelector, moveDetails, inventoryScreen;
+    [SerializeField] GameObject actionSelector, attackSelector, attackSelectorParent, moveDetails, inventoryScreen;
 
 
     public List<TMP_Text> actionTexts;
-    public List<TMP_Text> attackText;
+    public List<GameObject> listOfInstantiatedButtons;
+    [SerializeField] GameObject attackButtonPrefab;
 
-    public TMP_Text type1Text, type2Text, manaCostText, lustCostText, attackDescriptionText;
+    public TMP_Text type1Text, manaCostText, lustCostText, attackDescriptionText;
 
     [Header("First Selected Action")]
     [SerializeField] GameObject actionMenuFirst;
@@ -83,18 +85,30 @@ public class BattleMenuControl : MonoBehaviour
 
     }
 
-    public void SetAttacknames(List<Attack> attacks)
+    public void PopulateAttackButtons(List<Attack> attacks)
     {
-        for (int i = 0; i < attacks.Count; i++)
+        for (int i = 1; i < attacks.Count; i++)
         {
-            if (i < attacks.Count)
+            GameObject _newAttackButtonHolder = Instantiate(attackButtonPrefab, attackSelectorParent.transform);
+            TMP_Text _text = _newAttackButtonHolder.GetComponentInChildren<TextMeshProUGUI>();
+
+            _newAttackButtonHolder.GetComponent<Button>().onClick.AddListener(BattleController.instance.InitiateAttack);
+
+            _text.text = attacks[i].Base.Attackname;
+            listOfInstantiatedButtons.Add(_newAttackButtonHolder);
+        }
+    }
+
+    public void DestroyAttackButtons()
+    {
+        if (listOfInstantiatedButtons.Count > 0)
+        {
+            foreach (GameObject _instantiatedButton in listOfInstantiatedButtons)
             {
-                attackText[i].text = attacks[i].Base.Attackname;
+                _instantiatedButton.GetComponent<Button>().onClick.RemoveAllListeners();
+                Destroy(_instantiatedButton);
             }
-            else
-            {
-                attackText[i].text = "-";
-            }
+            listOfInstantiatedButtons.Clear();
         }
     }
 
