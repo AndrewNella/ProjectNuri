@@ -3,46 +3,50 @@ using UnityEngine.UI;
 using DG.Tweening;
 using TMPro;
 using System;
+using System.Collections;
 public class OverworldUI : MonoBehaviour
 {
     [SerializeField] Slider healthBar, manaBar, lustBar;
 
     [SerializeField] TMP_Text healthText, manaText, lustText;
-    [SerializeField] PlayerController playerController;
     [SerializeField] Slider expBar;
     [SerializeField] TMP_Text expText, levelText, nameText;
 
-    private void Start()
+    private void Awake()
     {
 
+        StartCoroutine(LoadData());
+    }
 
+    IEnumerator LoadData()
+    {
+        yield return new WaitForEndOfFrame();
         UpdateHUDPlayerStats();
-
     }
 
     public void UpdateExpBar()
     {
-        expText.text = $"{playerController.PlayerEntity.exp} / {playerController.PlayerEntity.Base.GetExpForLevel(playerController.PlayerEntity.Level + 1)}";
-        expBar.maxValue = playerController.PlayerEntity.Base.GetExpForLevel(playerController.PlayerEntity.Level + 1);
-        expBar.value = playerController.PlayerEntity.exp;
+        expText.text = $"{PlayerController.instance.PlayerEntity.exp} / {PlayerController.instance.PlayerEntity.Base.GetExpForLevel(PlayerController.instance.PlayerEntity.Level + 1)}";
+        expBar.maxValue = PlayerController.instance.PlayerEntity.Base.GetExpForLevel(PlayerController.instance.PlayerEntity.Level + 1);
+        expBar.value = PlayerController.instance.PlayerEntity.exp;
 
     }
     public void UpdateHUDPlayerStats()
     {
-        nameText.text = playerController.PlayerEntity.Base.Name;
-        levelText.text = $"LVL {playerController.PlayerEntity.Level}";
+        nameText.text = PlayerController.instance.PlayerEntity.Base.Name;
+        levelText.text = $"LVL {PlayerController.instance.PlayerEntity.Level}";
 
-        healthText.text = $"{playerController.PlayerEntity.currentHP}/{playerController.PlayerEntity.MaxHp}";
-        manaText.text = $"{playerController.PlayerEntity.currentMana}/{playerController.PlayerEntity.MaxMana}";
-        lustText.text = $"{playerController.PlayerEntity.currentLust}/{playerController.PlayerEntity.MaxLust}";
+        healthText.text = $"{PlayerController.instance.PlayerEntity.currentHP}/{PlayerController.instance.PlayerEntity.MaxHp}";
+        manaText.text = $"{PlayerController.instance.PlayerEntity.currentMana}/{PlayerController.instance.PlayerEntity.MaxMana}";
+        lustText.text = $"{PlayerController.instance.PlayerEntity.currentLust}/{PlayerController.instance.PlayerEntity.MaxLust}";
 
-        healthBar.maxValue = playerController.PlayerEntity.Base.MaxHp;
-        manaBar.maxValue = playerController.PlayerEntity.Base.MaxMana;
-        lustBar.maxValue = playerController.PlayerEntity.Base.MaxLust;
+        healthBar.maxValue = PlayerController.instance.PlayerEntity.Base.MaxHp;
+        manaBar.maxValue = PlayerController.instance.PlayerEntity.Base.MaxMana;
+        lustBar.maxValue = PlayerController.instance.PlayerEntity.Base.MaxLust;
 
-        healthBar.value = playerController.PlayerEntity.currentHP;
-        manaBar.value = playerController.PlayerEntity.currentMana;
-        lustBar.value = playerController.PlayerEntity.currentLust;
+        healthBar.value = PlayerController.instance.PlayerEntity.currentHP;
+        manaBar.value = PlayerController.instance.PlayerEntity.currentMana;
+        lustBar.value = PlayerController.instance.PlayerEntity.currentLust;
 
 
 

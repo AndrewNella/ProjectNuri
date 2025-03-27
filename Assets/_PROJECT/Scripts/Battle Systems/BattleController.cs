@@ -34,16 +34,7 @@ public class BattleController : MonoBehaviour
     {
         instance = this;
     }
-    private void OnEnable()
-    {
-        MainInputActionController.instance.OnPauseTrigger += ReturnToMainBattleMenu;
-    }
 
-    private void OnDisable()
-    {
-        MainInputActionController.instance.OnPauseTrigger -= ReturnToMainBattleMenu;
-
-    }
 
     public void SetPreviousState()
     {

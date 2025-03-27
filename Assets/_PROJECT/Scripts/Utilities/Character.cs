@@ -33,7 +33,7 @@ public class Character : MonoBehaviour
     public Animator MainAnimator => animator;
     public IEnumerator Move(Vector2 _moveVector, Transform _parentTransform, Action OnMoveOver = null)
     {
-        if (GameController.instance.state == GameState.Pause)
+        if (GameController.instance.state == GameState.Pause || GameController.instance.state == GameState.Busy)
         {
             yield break;
         }

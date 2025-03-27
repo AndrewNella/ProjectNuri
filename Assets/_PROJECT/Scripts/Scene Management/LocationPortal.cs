@@ -19,7 +19,7 @@ public class LocationPortal : MonoBehaviour, IPlayerTriggerable
 
     public void OnPlayerTrigger(PlayerController _player)
     {
-        GameController.instance.PauseGame(true);
+        GameController.instance.GameisBusy(true);
         PlayerController.instance.StopPlayerAnimator();
         StartCoroutine(TeleportPlayer());
     }
@@ -43,7 +43,7 @@ public class LocationPortal : MonoBehaviour, IPlayerTriggerable
 
 
         yield return sceneFader?.FadeRoutine(false);
-        GameController.instance.PauseGame(false);
+        GameController.instance.GameisBusy(false);
 
     }
 

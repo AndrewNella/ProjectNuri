@@ -2,7 +2,7 @@ using UnityEngine;
 using Cinemachine;
 
 
-public enum GameState { FreeRoam, Battle, Dialogue, CutScene, Pause }
+public enum GameState { FreeRoam, Battle, Dialogue, CutScene, Pause, Busy }
 public class GameController : MonoBehaviour
 {
     [Header("Camera Data")]
@@ -17,6 +17,8 @@ public class GameController : MonoBehaviour
 
     [Header("UI Data")]
     [SerializeField] GameObject overWorldUIParent;
+
+    [SerializeField] PauseMenu pauseMenu;
     OverworldUI overWorldUISystem;
 
     [Header("Area Map Data")]
@@ -53,6 +55,47 @@ public class GameController : MonoBehaviour
             }
         };
     }
+    private void OnEnable()
+    {
+        MainInputActionController.instance.OnPauseTrigger += TriggerGamePause;
+    }
+
+    private void OnDisable()
+    {
+        MainInputActionController.instance.OnPauseTrigger -= TriggerGamePause;
+    }
+
+    public void TriggerGamePause()
+    {
+        switch (state)
+        {
+            case GameState.Battle:
+                battleController.ReturnToMainBattleMenu();
+                break;
+
+            case GameState.Dialogue:
+                DialogueManager.Instance.UpdateDialogue();
+                break;
+
+            case GameState.FreeRoam:
+
+                PauseGame(true);
+                pauseMenu.TogglePauseMenu(true);
+                break;
+
+            case GameState.Pause:
+                if (pauseMenu.isPauseMenuActive)
+                {
+                    PauseGame(false);
+                    pauseMenu.TogglePauseMenu(false);
+                }
+                break;
+
+            default:
+                break;
+        }
+    }
+
 
     public void SetCurrentMapAreaToDefault()
     {
@@ -66,6 +109,19 @@ public class GameController : MonoBehaviour
     public void UpdateCurrentMapArea(MapArea _newMapArea)
     {
         mapArea = _newMapArea;
+    }
+
+    public void GameisBusy(bool _isBusy)
+    {
+        if (_isBusy)
+        {
+            stateBeforePause = state;
+            state = GameState.Busy;
+        }
+        else
+        {
+            state = stateBeforePause;
+        }
     }
     public void PauseGame(bool _isPaused)
     {
@@ -88,6 +144,27 @@ public class GameController : MonoBehaviour
         state = GameState.CutScene;
     }
 
+    #region Save and Load Data Functions
+    public void SaveGame()
+    {
+        TriggerGamePause();
+        SavingSystem.i.Save("saveFile1");
+    }
+    public void LoadGame()
+    {
+
+        TriggerGamePause();
+        SavingSystem.i.Load("saveFile1");
+    }
+    public void LoadGame(string _fileName)
+    {
+        SavingSystem.i.Load($"{_fileName}");
+    }
+
+
+    #endregion
+
+    #region Battle Start and End Functions
     public void StartSpesificMonsterBattle(Entity _incomingMonsterEntity)
     {
         state = GameState.Battle;
@@ -140,7 +217,7 @@ public class GameController : MonoBehaviour
 
         if (currentFieldMonsterBase != null) currentFieldMonsterBase = null;
     }
-
+    #endregion
     void Update()
     {
         if (playerController.GetIsInMenu() == false && state != GameState.FreeRoam)

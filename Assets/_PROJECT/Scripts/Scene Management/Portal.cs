@@ -22,7 +22,7 @@ public class Portal : MonoBehaviour, IPlayerTriggerable
     public void OnPlayerTrigger(PlayerController _player)
     {
         PlayerController.instance.StopPlayerAnimator();
-        GameController.instance.PauseGame(true);
+        GameController.instance.GameisBusy(true);
         StartCoroutine(SwitchScene());
     }
 
@@ -47,7 +47,7 @@ public class Portal : MonoBehaviour, IPlayerTriggerable
 
 
         yield return sceneFader?.FadeRoutine(false);
-        GameController.instance.PauseGame(false);
+        GameController.instance.GameisBusy(false);
 
         Destroy(gameObject);
     }

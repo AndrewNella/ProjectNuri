@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class BattleMenuControl : MonoBehaviour
+public class BattleMenuControl : MonoBehaviour, UIEventSelection
 {
     [SerializeField] TMP_Text dialogText;
     [SerializeField] float dialogueLetterWaiterTimer;
@@ -24,9 +24,6 @@ public class BattleMenuControl : MonoBehaviour
     [SerializeField] GameObject attackMenuFirst;
     [SerializeField] GameObject inventoryMenuFirst;
 
-    public GameObject currentlySelectedGameObjectByEventSystem;
-
-
     public GameObject ActionSelection => actionSelector;
     public GameObject AttackSelector => attackSelector;
     public GameObject InventoryMenu => inventoryScreen;
@@ -40,15 +37,24 @@ public class BattleMenuControl : MonoBehaviour
         dialogText.enabled = _incomingBool;
         if (_incomingBool)
         {
-            EventSystem.current.SetSelectedGameObject(null);
+            ClearCurrentlySelectedObject();
         }
+    }
+
+    public void SetCurrentlySelectedObject(GameObject _incomingGameObject)
+    {
+        EventSystem.current.SetSelectedGameObject(_incomingGameObject);
+    }
+    public void ClearCurrentlySelectedObject()
+    {
+        EventSystem.current.SetSelectedGameObject(null);
+
     }
     public void EnableInventoryScreen(bool _incomingBool)
     {
         inventoryScreen.SetActive(_incomingBool);
         if (_incomingBool)
         {
-
             EventSystem.current.SetSelectedGameObject(inventoryMenuFirst);
         }
 
@@ -58,7 +64,7 @@ public class BattleMenuControl : MonoBehaviour
         actionSelector.SetActive(_incomingBool);
         if (_incomingBool)
         {
-            EventSystem.current.SetSelectedGameObject(actionMenuFirst);
+            SetCurrentlySelectedObject(actionMenuFirst);
         }
     }
     public void EnableAttackSelector(bool _incomingBool)
@@ -66,8 +72,7 @@ public class BattleMenuControl : MonoBehaviour
         attackSelector.SetActive(_incomingBool);
         if (_incomingBool)
         {
-            EventSystem.current.SetSelectedGameObject(attackMenuFirst);
-
+            SetCurrentlySelectedObject(attackMenuFirst);
         }
     }
 

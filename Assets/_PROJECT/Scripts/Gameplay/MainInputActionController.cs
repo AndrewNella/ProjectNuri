@@ -22,6 +22,7 @@ public class MainInputActionController : MonoBehaviour
 
         actionMap.PlayerControllerMap.Pause.performed += OnPauseInput;
         actionMap.PlayerControllerMap.Pause.canceled -= OnPauseInput;
+        
         actionMap.PlayerControllerMap.Interact.performed += OnInteractInput;
         actionMap.PlayerControllerMap.Interact.canceled -= OnInteractInput;
 

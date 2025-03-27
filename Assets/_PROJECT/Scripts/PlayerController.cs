@@ -4,7 +4,7 @@ using System.ComponentModel;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : MonoBehaviour, ISavable
 {
     public static PlayerController instance;
 
@@ -19,7 +19,7 @@ public class PlayerController : MonoBehaviour
 
     [Header("Movement Data")]
 
-
+    [SerializeField] GameObject headPlayerControllerParent;
     [SerializeField] Character character;
 
     public Character PlayerCharacter => character;
@@ -130,4 +130,19 @@ public class PlayerController : MonoBehaviour
         character.MainAnimator.SetBool("isMoving", false);
     }
 
+    public object CaptureState()
+    {
+        //Save Position
+        float[] _position = new float[] { PlayerCharacter.gridparentTransform.position.x, PlayerCharacter.gridparentTransform.position.y };
+
+        Debug.Log($"Save array of {_position}");
+        return _position;
+    }
+
+    public void RestoreState(object state)
+    {
+        var _position = (float[])state;
+        Debug.Log($"Load array of {_position}");
+        character.gridparentTransform.position = new Vector3(_position[0], _position[1]);
+    }
 }

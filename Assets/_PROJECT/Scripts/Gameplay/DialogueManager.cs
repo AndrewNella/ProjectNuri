@@ -30,7 +30,6 @@ public class DialogueManager : MonoBehaviour
         currentDialogueLine = 0;
         dialogueBox.SetActive(true);
         MainInputActionController.instance.OnInteractTrigger += UpdateDialogue;
-        // MainInputActionController.instance.OnPauseTrigger += UpdateDialogue;
     }
     public void DisableDialogueBox()
     {
@@ -38,13 +37,12 @@ public class DialogueManager : MonoBehaviour
         dialogueBox.SetActive(false);
         isShowing = false;
         MainInputActionController.instance.OnInteractTrigger -= UpdateDialogue;
-        // MainInputActionController.instance.OnPauseTrigger -= UpdateDialogue;
         onDialogueFinished?.Invoke();
         OnCloseDialogue?.Invoke();
 
     }
 
-    void UpdateDialogue()
+    public void UpdateDialogue()
     {
         if (!isTyping)
         {
