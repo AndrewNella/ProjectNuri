@@ -5,6 +5,8 @@ using Cinemachine;
 public enum GameState { FreeRoam, Battle, Dialogue, CutScene, Pause, Busy }
 public class GameController : MonoBehaviour
 {
+
+    public bool isDataLoaded { get; private set; } = false;
     [Header("Camera Data")]
     [SerializeField] CinemachineVirtualCamera overworldPlayerCamera, battleCamera;
     public static GameController instance;
@@ -54,11 +56,10 @@ public class GameController : MonoBehaviour
                 state = GameState.FreeRoam;
             }
         };
-    }
-    private void OnEnable()
-    {
         MainInputActionController.instance.OnPauseTrigger += TriggerGamePause;
+
     }
+
 
     private void OnDisable()
     {
@@ -96,7 +97,10 @@ public class GameController : MonoBehaviour
         }
     }
 
-
+    public void SetIsDataLoaded()
+    {
+        isDataLoaded = true;
+    }
     public void SetCurrentMapAreaToDefault()
     {
         if (defaultMapArea == null)

@@ -1,23 +1,27 @@
 using System;
 using System.Collections;
 using UnityEngine;
-
-public class FieldMonsterBase : MonoBehaviour
+/// <summary>
+/// Base Controller for Monsters
+/// </summary>
+public class FieldMonsterBase : MonoBehaviour, ISavable
 {
     [SerializeField] Dialogue dialogue;
     [SerializeField] Entity fieldEntity;
     [SerializeField] GameObject exclamationSprite;
     [SerializeField] GameObject enemySprite;
-    [SerializeField] GameObject TriggerArea;
+    [SerializeField] GameObject triggerArea;
 
-    Character character;
+    public GameObject TriggerAreaObject => triggerArea;
+    FieldMonster fieldMonster = null;
+
+    public Character character;
     public FieldMonsterType FieldBattleType => fieldBattleType;
     public Entity FieldEntity => fieldEntity;
-    public Character Character => character;
 
     [Header("Battle Behaviour Settings")]
     [SerializeField] FieldMonsterType fieldBattleType;
-    bool isBattlingDisabled = false;
+    public bool isBattlingDisabled = false;
     bool isMonsterStunned = false;
     [SerializeField] float stunTimeWhenDefeated;
 
@@ -32,6 +36,7 @@ public class FieldMonsterBase : MonoBehaviour
     private void Awake()
     {
         character = GetComponent<Character>();
+        fieldMonster = GetComponent<FieldMonster>();
     }
 
     public void TriggerAttackFromThisEntity()
@@ -86,11 +91,13 @@ public class FieldMonsterBase : MonoBehaviour
         switch (fieldBattleType)
         {
             case FieldMonsterType.BattleOnceThenDead:
-                Destroy(this.gameObject);
+                StopAllCoroutines();
+                fieldMonster?.StopAllCoroutines();
+                Destroy(character.gridparentTransform.gameObject);
                 break;
             case FieldMonsterType.BattleOnceThenDisable:
                 isBattlingDisabled = true;
-                TriggerArea.SetActive(false);
+                TriggerAreaObject.SetActive(false);
 
                 break;
             case FieldMonsterType.StunnedAfterBattle:
@@ -100,6 +107,17 @@ public class FieldMonsterBase : MonoBehaviour
                 break;
         }
     }
+    public object CaptureState()
+    {
+
+        return isBattlingDisabled;
+    }
+
+    public void RestoreState(object state)
+    {
+        isBattlingDisabled = (bool)state;
+    }
+
     IEnumerator WaitForBattleStunTimer()
     {
         Debug.Log("Monster is stunned");

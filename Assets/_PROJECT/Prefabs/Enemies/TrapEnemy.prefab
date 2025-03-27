@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 7841025229133694703}
   - component: {fileID: 1020316933788977341}
   - component: {fileID: 550160509746899636}
+  - component: {fileID: 7158325900452953615}
   m_Layer: 0
   m_Name: EnemySprite
   m_TagString: Untagged
@@ -29,7 +30,7 @@ Transform:
   m_GameObject: {fileID: 1471790381148292198}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.3096966, y: 0.85523915, z: 0.040083878}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 2.5, y: 2.5, z: 2.5}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -129,11 +130,12 @@ MonoBehaviour:
     lines: []
   fieldEntity:
     BaseContainer: {fileID: 11400000, guid: 16e9afefa30d1f3429a04e9009837fa9, type: 2}
-    level: 0
+    level: 1
   exclamationSprite: {fileID: 5885733390967104253}
   enemySprite: {fileID: 1471790381148292198}
-  TriggerArea: {fileID: 7942214917305805263}
+  triggerArea: {fileID: 0}
   fieldBattleType: 1
+  isBattlingDisabled: 0
   stunTimeWhenDefeated: 10
 --- !u!114 &550160509746899636
 MonoBehaviour:
@@ -154,6 +156,19 @@ MonoBehaviour:
   gridparentTransform: {fileID: 3871296460774992005}
   movementMagnitudeLimit: 0.001
   solidObjectDetectionRadius: 0.2
+--- !u!114 &7158325900452953615
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1471790381148292198}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4881f89f8b930e34489bbb86116ccd4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  uniqueId: 81cf1684-afdb-4000-b911-bb9e548e69a7
 --- !u!1 &2985736703361626378
 GameObject:
   m_ObjectHideFlags: 0
@@ -164,7 +179,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3871296460774992005}
   m_Layer: 0
-  m_Name: EnemyTileParent
+  m_Name: TrapEnemy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -300,8 +315,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7942214917305805263}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.3096966, y: -1.6447608, z: 0.040083878}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -341,7 +356,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 0, y: -2.5}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}

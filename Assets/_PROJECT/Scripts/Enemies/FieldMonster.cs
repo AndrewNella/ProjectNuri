@@ -1,16 +1,20 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using Unity.VisualScripting;
 using UnityEngine;
+using DG.Tweening;
 
+/// <summary>
+/// System that controls the movement of monsters
+/// </summary>
 public enum MonsterState
 {
     Idle,
     Wandering,
     Hunting,
-    Patroling
+    WalkingPatroling,
+    IdlePatrolling
 }
 public enum MonsterPersonality
 {
@@ -19,10 +23,10 @@ public enum MonsterPersonality
 }
 public enum MonsterMovementDirection
 {
-    Left,
-    Right,
     Up,
-    Down
+    Right,
+    Down,
+    Left
 }
 
 
@@ -30,14 +34,17 @@ public class FieldMonster : MonoBehaviour
 {
 
     [SerializeField] FieldMonsterBase fieldbase;
-    [SerializeField] BattleController battleController;
 
     TargetScanner targetScanner;
 
     [Header("Movement Data")]
 
-    [SerializeField] Transform gridparentTransform;
+    [SerializeField] MonsterMovementDirection currentDirection;
     public bool isMoving;
+
+    public bool rotatesClockwise = true;
+
+    [SerializeField] float rotationSpeedForIdlePatrol;
 
     [SerializeField] float minimumDistanceToTriggerBattle;
     [SerializeField] float minimumDistanceToPatrolTarget;
@@ -53,8 +60,6 @@ public class FieldMonster : MonoBehaviour
     float currentDistanceWithPlayer;
     float currentDistanceWithPatrolTarget;
 
-    Animator animator;
-
     Coroutine currentMovementCoroutine;
 
     [Header("Monster Behaviour Settings")]
@@ -64,7 +69,14 @@ public class FieldMonster : MonoBehaviour
 
     private void Awake()
     {
+        StartCoroutine(DelayedLoadData());
+    }
+
+    IEnumerator DelayedLoadData()
+    {
+        yield return new WaitForEndOfFrame();
         fieldbase = GetComponent<FieldMonsterBase>();
+        targetScanner = GetComponent<TargetScanner>();
 
         patrolIndex = 0;
         randVector = Vector2.zero;
@@ -77,68 +89,76 @@ public class FieldMonster : MonoBehaviour
             patrolTargetTransform = patrolPositionList[0];
         }
 
-        animator = GetComponent<Animator>();
-        targetScanner = GetComponent<TargetScanner>();
         monsterState = MonsterState.Wandering;
     }
 
 
-
-    private void Defeated()
-    {
-        gameObject.SetActive(false);
-    }
-
     void Update()
     {
-        //If the monster is stunned, then no movement actions will happen.
-        if (!fieldbase.GetIsMonsterStunned())
+        //If the game is not yet loaded, then nothing must happen
+        if (!GameController.instance.isDataLoaded && fieldbase == null)
         {
-            ScanForPlayer();
-            if (currentMovementCoroutine == null)
-            {
-                switch (monsterState)
-                {
-                    case MonsterState.Wandering:
-                        currentMovementCoroutine = StartCoroutine(MoveInRandomDirection());
-                        break;
-                    case MonsterState.Hunting:
-                        currentMovementCoroutine = StartCoroutine(MoveTowardsPlayer());
-                        break;
-                    case MonsterState.Patroling:
-                        currentMovementCoroutine = StartCoroutine(MoveInPatrolRoute());
-                        break;
-                    default:
-                        break;
-                }
-            }
-
-
-            //If the player does exist.
-            if (playerTransform != null)
-            {
-                currentDistanceWithPlayer = (playerTransform.position - transform.position).sqrMagnitude;
-                if (monsterPersonality == MonsterPersonality.Aggressive && monsterState != MonsterState.Hunting)
-                {
-                    monsterState = MonsterState.Hunting;
-                }
-            }
-
-            //If the Player does not Exist.
-            if (playerTransform == null)
-            {
-                currentDistanceWithPlayer = 100;
-                monsterState = MonsterState.Wandering;
-            }
-
-            if (monsterState == MonsterState.Patroling)
-            {
-                UpdatePatrol();
-            }
-            fieldbase.Character.HandleUpdate();
-
-            animator.SetBool("isMoving", fieldbase.Character.isMoving);
+            Debug.Log("Monster cannot be activated");
+            return;
         }
+
+        //The monster will check for a few situations, and if any are true, then it cannot move.
+        //   If the monster is stunned.     OR        If the game is not in Free Roam Mode.
+        if (fieldbase != null && fieldbase.GetIsMonsterStunned() && GameController.instance != null && GameController.instance.state != GameState.FreeRoam)
+        {
+            //Return will simply stop the rest of the code from executing
+            return;
+        }
+
+        // ScanForPlayer();
+
+
+        //If the player does exist.
+        if (playerTransform != null)
+        {
+            currentDistanceWithPlayer = (playerTransform.position - transform.position).sqrMagnitude;
+            if (monsterPersonality == MonsterPersonality.Aggressive && monsterState != MonsterState.Hunting)
+            {
+                monsterState = MonsterState.Hunting;
+            }
+        }
+
+        //If the Player does not Exist.
+        if (playerTransform == null)
+        {
+            currentDistanceWithPlayer = 100;
+        }
+
+
+        if (currentMovementCoroutine == null)
+        {
+
+            switch (monsterState)
+            {
+                case MonsterState.Wandering:
+                    currentMovementCoroutine = StartCoroutine(MoveInRandomDirection());
+                    break;
+                case MonsterState.Hunting:
+                    currentMovementCoroutine = StartCoroutine(MoveTowardsPlayer());
+                    break;
+                case MonsterState.WalkingPatroling:
+                    UpdatePatrol();
+                    currentMovementCoroutine = StartCoroutine(MoveInPatrolRoute());
+                    break;
+                case MonsterState.Idle:
+                    break;
+                case MonsterState.IdlePatrolling:
+                    if (fieldbase.TriggerAreaObject == null) break;
+
+                    currentMovementCoroutine = StartCoroutine(RotateTrigger());
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        fieldbase.character.HandleUpdate();
+
     }
 
     void UpdatePatrol()
@@ -153,11 +173,7 @@ public class FieldMonster : MonoBehaviour
             patrolTargetTransform = patrolPositionList[patrolIndex];
         }
     }
-    void ScanForPlayer()
-    {
-        playerTransform = targetScanner.nearestTarget;
 
-    }
 
     void CheckIfPlayerIsWithinRangeForBattle()
     {
@@ -166,9 +182,47 @@ public class FieldMonster : MonoBehaviour
             if (GameController.instance.state != GameState.Battle)
             {
                 fieldbase.TriggerAttackFromThisEntity();
-                return;
             }
         }
+    }
+
+    IEnumerator RotateTrigger()
+    {
+        var _fieldTransform = fieldbase.TriggerAreaObject.gameObject.transform;
+        Vector3 _newRotationVector;
+        if (rotatesClockwise)
+        {
+            _newRotationVector = new Vector3(_fieldTransform.rotation.x, _fieldTransform.rotation.y, _fieldTransform.rotation.z - 90);
+            currentDirection++;
+        }
+        else
+        {
+            _newRotationVector = new Vector3(_fieldTransform.rotation.x, _fieldTransform.rotation.y, _fieldTransform.rotation.z + 90);
+            currentDirection--;
+        }
+        switch (currentDirection)
+        {
+            case MonsterMovementDirection.Up:
+                fieldbase.character.MainAnimator.SetFloat("moveX", 0);
+                fieldbase.character.MainAnimator.SetFloat("moveY", 1);
+                break;
+            case MonsterMovementDirection.Down:
+                fieldbase.character.MainAnimator.SetFloat("moveX", 0);
+                fieldbase.character.MainAnimator.SetFloat("moveY", -1);
+                break;
+            case MonsterMovementDirection.Left:
+                fieldbase.character.MainAnimator.SetFloat("moveX", -1);
+                fieldbase.character.MainAnimator.SetFloat("moveY", 0);
+                break;
+            case MonsterMovementDirection.Right:
+                fieldbase.character.MainAnimator.SetFloat("moveX", 1);
+                fieldbase.character.MainAnimator.SetFloat("moveY", 0);
+                break;
+        }
+
+        yield return fieldbase.TriggerAreaObject.gameObject.transform.DORotate(_newRotationVector, rotationSpeedForIdlePatrol);
+        yield return new WaitForSeconds(movementWaitTimer);
+
     }
 
     IEnumerator MoveInRandomDirection()
@@ -226,11 +280,11 @@ public class FieldMonster : MonoBehaviour
         //If the monster is aggressive, it will battle the player.
         if (monsterPersonality == MonsterPersonality.Aggressive)
         {
-            StartCoroutine(fieldbase.Character.Move(randVector, gridparentTransform, CheckIfPlayerIsWithinRangeForBattle));
+            StartCoroutine(fieldbase.character.Move(randVector, fieldbase.character.gridparentTransform, CheckIfPlayerIsWithinRangeForBattle));
         }
         else
         {
-            StartCoroutine(fieldbase.Character.Move(randVector, gridparentTransform));
+            StartCoroutine(fieldbase.character.Move(randVector, fieldbase.character.gridparentTransform));
         }
 
 

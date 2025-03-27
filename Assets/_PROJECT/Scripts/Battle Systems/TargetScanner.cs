@@ -10,26 +10,28 @@ public class TargetScanner : MonoBehaviour
     void FixedUpdate()
     {
         targets = Physics2D.CircleCastAll(transform.position, scanRange, Vector2.zero, 0, targetLayer);
-        nearestTarget = GetNearest();
+        nearestTarget = GetNearestTarget();
     }
 
-    Transform GetNearest()
+    Transform GetNearestTarget()
     {
-        Transform result = null;
-        float diff = 100f;
-        foreach (RaycastHit2D target in targets)
+        Transform _result = null;
+        float _diff = 100f;
+
+        foreach (RaycastHit2D _target in targets)
         {
             Vector3 myPos = transform.position;
-            Vector3 targetPos = target.transform.position;
+            Vector3 targetPos = _target.transform.position;
+
             float currentDiff = Vector3.Distance(myPos, targetPos);
 
-            if(currentDiff < diff)
+            if(currentDiff < _diff)
             {
-                diff = currentDiff;
-                result = target.transform;
+                _diff = currentDiff;
+                _result = _target.transform;
             }
         }
 
-        return result;
+        return _result;
     }
 }

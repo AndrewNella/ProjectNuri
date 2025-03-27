@@ -23,6 +23,9 @@ public class PersistantObjectSpawner : MonoBehaviour
             }
 
             GameController.instance.SetCurrentMapAreaToDefault();
+            GameController.instance.SetIsDataLoaded();
+
+           
 
         }
 
