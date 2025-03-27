@@ -4,7 +4,7 @@ public class PersistantObjectSpawner : MonoBehaviour
 {
     [SerializeField] GameObject persistantObjectPrefab;
 
-    [SerializeField] bool useSpesificSpawnPointForPlayer;
+    [SerializeField] bool useSpesificSpawnPointForPlayer, useDefaultAreaMap;
 
     [SerializeField] Transform customPlayerTransform;
 
@@ -21,6 +21,9 @@ public class PersistantObjectSpawner : MonoBehaviour
 
                 PlayerController.instance.PlayerCharacter.gridparentTransform.position = customPlayerTransform.position;
             }
+
+            GameController.instance.SetCurrentMapAreaToDefault();
+
         }
 
 

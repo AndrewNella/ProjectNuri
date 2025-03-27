@@ -172,14 +172,49 @@ PrefabInstance:
       value: EssentialObjectLoader
       objectReference: {fileID: 0}
     - target: {fileID: 5400405470491960134, guid: 87c8653da27650d4a98691e8563a94d6, type: 3}
+      propertyPath: customPlayerTransform
+      value: 
+      objectReference: {fileID: 188939497}
+    - target: {fileID: 5400405470491960134, guid: 87c8653da27650d4a98691e8563a94d6, type: 3}
       propertyPath: useSpesificSpawnPointForPlayer
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 87c8653da27650d4a98691e8563a94d6, type: 3}
+--- !u!1 &188939496
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 188939497}
+  m_Layer: 0
+  m_Name: PlayerCustomTransform
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &188939497
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 188939496}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 17, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2072649708}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1273037501
 GameObject:
   m_ObjectHideFlags: 0
@@ -214,6 +249,7 @@ MonoBehaviour:
   connectedScenes:
   - {fileID: 1914148753}
   isLoaded: 0
+  sceneMapArea: {fileID: 0}
   thisSceneIndex: 2
 --- !u!61 &1273037503
 BoxCollider2D:
@@ -271,6 +307,103 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 27, y: 22, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1402972957
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1402972960}
+  - component: {fileID: 1402972959}
+  - component: {fileID: 1402972958}
+  m_Layer: 0
+  m_Name: CNPrototype Indoor Area 1
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1402972958
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1402972957}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 08589cfdfe90f00489ca03ae5396140b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  levelDetails: {fileID: 2072649707}
+  connectedScenes:
+  - {fileID: 1681998155}
+  isLoaded: 0
+  sceneMapArea: {fileID: 0}
+  thisSceneIndex: 3
+--- !u!61 &1402972959
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1402972957}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0.25, y: -0.6}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  m_Size: {x: 12, y: 11}
+  m_EdgeRadius: 0
+--- !u!4 &1402972960
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1402972957}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.75, y: -29.77, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -370,7 +503,9 @@ MonoBehaviour:
   levelDetails: {fileID: 2072649707}
   connectedScenes:
   - {fileID: 1914148753}
+  - {fileID: 1402972958}
   isLoaded: 0
+  sceneMapArea: {fileID: 0}
   thisSceneIndex: 0
 --- !u!1 &1914148749
 GameObject:
@@ -383,6 +518,7 @@ GameObject:
   - component: {fileID: 1914148752}
   - component: {fileID: 1914148751}
   - component: {fileID: 1914148753}
+  - component: {fileID: 1914148754}
   m_Layer: 0
   m_Name: CNPrototype Area 2
   m_TagString: Untagged
@@ -468,7 +604,27 @@ MonoBehaviour:
   - {fileID: 1681998155}
   - {fileID: 1273037502}
   isLoaded: 0
+  sceneMapArea: {fileID: 0}
   thisSceneIndex: 1
+--- !u!114 &1914148754
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1914148749}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8fe1038a2ab9b44f89eb6a3a75ba97e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  areaEnemies:
+  - BaseContainer: {fileID: 11400000, guid: 16e9afefa30d1f3429a04e9009837fa9, type: 2}
+    level: 1
+  - BaseContainer: {fileID: 11400000, guid: 16e9afefa30d1f3429a04e9009837fa9, type: 2}
+    level: 2
+  - BaseContainer: {fileID: 11400000, guid: 2c5db2e1c0a693e45963a2a6c3fb493a, type: 2}
+    level: 4
 --- !u!1 &2072649706
 GameObject:
   m_ObjectHideFlags: 0
@@ -502,6 +658,7 @@ MonoBehaviour:
   - CNPrototype Area 1
   - CNPrototype Area 2
   - CNPrototype Area 3
+  - CNPrototype Indoor 1
   currentlyLoadedMainScene: {fileID: 0}
   previouslyLoadedMainScene: {fileID: 0}
 --- !u!4 &2072649708
@@ -516,7 +673,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 188939497}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1660057539 &9223372036854775807
@@ -526,5 +684,6 @@ SceneRoots:
   - {fileID: 178653371}
   - {fileID: 2072649708}
   - {fileID: 1681998154}
+  - {fileID: 1402972960}
   - {fileID: 1914148752}
   - {fileID: 1273037504}

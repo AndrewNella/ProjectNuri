@@ -18,6 +18,8 @@ public class AttackTrigger : MonoBehaviour, IPlayerTriggerable
     {
         if (!fieldBase.GetIsBattleDisabled())
         {
+            PlayerController.instance.StopPlayerAnimator();
+
             fieldBase.TriggerAttackFromThisEntity();
         }
     }

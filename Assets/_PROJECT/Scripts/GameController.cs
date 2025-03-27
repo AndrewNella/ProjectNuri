@@ -19,6 +19,11 @@ public class GameController : MonoBehaviour
     [SerializeField] GameObject overWorldUIParent;
     OverworldUI overWorldUISystem;
 
+    [Header("Area Map Data")]
+
+
+    [SerializeField] MapArea mapArea, defaultMapArea;
+
 
 
     public GameState state;
@@ -47,6 +52,20 @@ public class GameController : MonoBehaviour
                 state = GameState.FreeRoam;
             }
         };
+    }
+
+    public void SetCurrentMapAreaToDefault()
+    {
+        if (defaultMapArea == null)
+        {
+            defaultMapArea = gameObject.GetComponent<MapArea>();
+        }
+
+        mapArea = defaultMapArea;
+    }
+    public void UpdateCurrentMapArea(MapArea _newMapArea)
+    {
+        mapArea = _newMapArea;
     }
     public void PauseGame(bool _isPaused)
     {
@@ -98,7 +117,7 @@ public class GameController : MonoBehaviour
         state = GameState.Battle;
         battleController.gameObject.SetActive(true);
         battleCamera.Priority = 6;
-        Entity areaEnemy = FindFirstObjectByType<MapArea>().GetComponent<MapArea>().GetRandomAreaEnemy();
+        Entity areaEnemy = mapArea.GetRandomAreaEnemy();
 
         battleController.StartBattle(areaEnemy);
     }

@@ -6,7 +6,9 @@ using UnityEngine.SceneManagement;
 using System.Linq;
 using Unity.VisualScripting;
 
-
+/// <summary>
+/// Portal System that swaps between scenes
+/// </summary>
 public class Portal : MonoBehaviour, IPlayerTriggerable
 {
     [SerializeField] int sceneToLoad = -1;
@@ -19,8 +21,8 @@ public class Portal : MonoBehaviour, IPlayerTriggerable
     public Transform SpawnPoint => spawnpoint;
     public void OnPlayerTrigger(PlayerController _player)
     {
+        PlayerController.instance.StopPlayerAnimator();
         GameController.instance.PauseGame(true);
-
         StartCoroutine(SwitchScene());
     }
 

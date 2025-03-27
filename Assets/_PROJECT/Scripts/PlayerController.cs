@@ -118,7 +118,6 @@ public class PlayerController : MonoBehaviour
             var _trigger = _collider.GetComponent<IPlayerTriggerable>();
             if (_trigger != null)
             {
-                StopPlayerAnimator();
                 _trigger.OnPlayerTrigger(this);
                 break;
             }

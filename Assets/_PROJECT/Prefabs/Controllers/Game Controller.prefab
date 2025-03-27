@@ -10,8 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 677164215204928392}
   - component: {fileID: 1434967369909984429}
-  - component: {fileID: 8983130345048920178}
   - component: {fileID: 16973127935778790}
+  - component: {fileID: 8538151531356815120}
+  - component: {fileID: 8388283989780145881}
   m_Layer: 0
   m_Name: Game Controller
   m_TagString: Untagged
@@ -46,26 +47,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 627efb0e418389f45908bc5a9b888323, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  overworldPlayerCamera: {fileID: 0}
+  battleCamera: {fileID: 0}
   playerController: {fileID: 0}
   battleController: {fileID: 0}
-  worldCamera: {fileID: 0}
---- !u!114 &8983130345048920178
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1906024688747426129}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f8fe1038a2ab9b44f89eb6a3a75ba97e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  areaEnemies:
-  - BaseContainer: {fileID: 11400000, guid: 16e9afefa30d1f3429a04e9009837fa9, type: 2}
-    LevelContainer: 2
-  - BaseContainer: {fileID: 11400000, guid: 2c5db2e1c0a693e45963a2a6c3fb493a, type: 2}
-    LevelContainer: 2
+  overWorldUIParent: {fileID: 0}
+  state: 0
 --- !u!114 &16973127935778790
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -78,3 +65,48 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9dfff677aaa4ec84a9a50a5fea2b31fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &8538151531356815120
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1906024688747426129}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c355d21b7161e304b9b8ced7e7b8eac1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dialogueBox: {fileID: 0}
+  dialogueText: {fileID: 0}
+  dialogueLetterWaiterTimer: 0.05
+--- !u!114 &8388283989780145881
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1906024688747426129}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c715f23134315fa41a09feffb31512c7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  solidObjectLayer:
+    serializedVersion: 2
+    m_Bits: 64
+  dangerLayer:
+    serializedVersion: 2
+    m_Bits: 128
+  interactableLayer:
+    serializedVersion: 2
+    m_Bits: 1024
+  playerLayer:
+    serializedVersion: 2
+    m_Bits: 512
+  monsterFieldOfViewlayer:
+    serializedVersion: 2
+    m_Bits: 2048
+  portalLayer:
+    serializedVersion: 2
+    m_Bits: 4096

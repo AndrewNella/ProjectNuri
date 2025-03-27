@@ -8,11 +8,22 @@ public class AdditiveSceneTrigger : MonoBehaviour
     [SerializeField] List<AdditiveSceneTrigger> connectedScenes;
     public bool isLoaded;
 
+    [SerializeField] MapArea sceneMapArea;
+
     public int thisSceneIndex;
+
+    private void Awake()
+    {
+        if (sceneMapArea == null)
+        {
+            sceneMapArea = gameObject.GetComponent<MapArea>();
+        }
+    }
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.tag == "Player")
         {
+            Debug.Log("Player entered New Area");
             levelDetails.SetCurrentScene(this);
 
             //Load the Current Scene that was entered
@@ -48,6 +59,11 @@ public class AdditiveSceneTrigger : MonoBehaviour
                     }
                 }
             }
+
+            //Assigns a new map area for the currently loaded Scene, if this area has a MapArea
+            if (sceneMapArea == null) GameController.instance.SetCurrentMapAreaToDefault();
+            else GameController.instance.UpdateCurrentMapArea(sceneMapArea);
+
         }
     }
 }

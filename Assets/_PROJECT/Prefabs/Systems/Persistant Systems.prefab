@@ -135,7 +135,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 2
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_BackGroundColor: {r: 0, g: 0, b: 0, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -987,13 +987,13 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1434967369909984429, guid: c909327521769874e90d85422bee1bd3, type: 3}
-      propertyPath: worldCamera
-      value: 
-      objectReference: {fileID: 5345211805660001930}
-    - target: {fileID: 1434967369909984429, guid: c909327521769874e90d85422bee1bd3, type: 3}
       propertyPath: battleCamera
       value: 
       objectReference: {fileID: 7760166057104744467}
+    - target: {fileID: 1434967369909984429, guid: c909327521769874e90d85422bee1bd3, type: 3}
+      propertyPath: defaultMapArea
+      value: 
+      objectReference: {fileID: 2782031699879774730}
     - target: {fileID: 1434967369909984429, guid: c909327521769874e90d85422bee1bd3, type: 3}
       propertyPath: battleController
       value: 
@@ -1014,24 +1014,21 @@ PrefabInstance:
       propertyPath: m_Name
       value: Game Controller
       objectReference: {fileID: 0}
-    - target: {fileID: 8983130345048920178, guid: c909327521769874e90d85422bee1bd3, type: 3}
-      propertyPath: areaEnemies.Array.data[0].level
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8983130345048920178, guid: c909327521769874e90d85422bee1bd3, type: 3}
-      propertyPath: areaEnemies.Array.data[1].level
-      value: 2
-      objectReference: {fileID: 0}
+    - target: {fileID: 8538151531356815120, guid: c909327521769874e90d85422bee1bd3, type: 3}
+      propertyPath: dialogueBox
+      value: 
+      objectReference: {fileID: 7050081773314241511}
+    - target: {fileID: 8538151531356815120, guid: c909327521769874e90d85422bee1bd3, type: 3}
+      propertyPath: dialogueText
+      value: 
+      objectReference: {fileID: 6394044070825527713}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 1906024688747426129, guid: c909327521769874e90d85422bee1bd3, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 599663383363408723}
-    - targetCorrespondingSourceObject: {fileID: 1906024688747426129, guid: c909327521769874e90d85422bee1bd3, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 223551772233692573}
+      addedObject: {fileID: 2782031699879774730}
   m_SourcePrefab: {fileID: 100100000, guid: c909327521769874e90d85422bee1bd3, type: 3}
 --- !u!4 &1087848126743109328 stripped
 Transform:
@@ -1043,7 +1040,7 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 1906024688747426129, guid: c909327521769874e90d85422bee1bd3, type: 3}
   m_PrefabInstance: {fileID: 467553436666004824}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &599663383363408723
+--- !u!114 &2782031699879774730
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1052,42 +1049,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 2021722626855515145}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c355d21b7161e304b9b8ced7e7b8eac1, type: 3}
+  m_Script: {fileID: 11500000, guid: f8fe1038a2ab9b44f89eb6a3a75ba97e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dialogueBox: {fileID: 7050081773314241511}
-  dialogueText: {fileID: 6394044070825527713}
-  dialogueLetterWaiterTimer: 0.05
---- !u!114 &223551772233692573
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2021722626855515145}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c715f23134315fa41a09feffb31512c7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  solidObjectLayer:
-    serializedVersion: 2
-    m_Bits: 64
-  dangerLayer:
-    serializedVersion: 2
-    m_Bits: 128
-  interactableLayer:
-    serializedVersion: 2
-    m_Bits: 1024
-  playerLayer:
-    serializedVersion: 2
-    m_Bits: 512
-  monsterFieldOfViewlayer:
-    serializedVersion: 2
-    m_Bits: 2048
-  portalLayer:
-    serializedVersion: 2
-    m_Bits: 4096
+  areaEnemies:
+  - BaseContainer: {fileID: 11400000, guid: 16e9afefa30d1f3429a04e9009837fa9, type: 2}
+    level: 2
 --- !u!1001 &1297784618220904290
 PrefabInstance:
   m_ObjectHideFlags: 0

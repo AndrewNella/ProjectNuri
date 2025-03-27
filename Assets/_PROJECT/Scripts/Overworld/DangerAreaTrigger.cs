@@ -7,6 +7,7 @@ public class DangerAreaTrigger : MonoBehaviour, IPlayerTriggerable
     {
         if (UnityEngine.Random.Range(1, 101) < randomEncounterChance)
         {
+            PlayerController.instance.StopPlayerAnimator();
             GameController.instance.StartRandomizedAreaBattle();
         }
     }

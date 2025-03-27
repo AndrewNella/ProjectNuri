@@ -62,7 +62,7 @@ public class Character : MonoBehaviour
         _holdPosition.x = Mathf.Floor(_parentTransform.position.x) + 0.5f;
         _parentTransform.position = _holdPosition;
 
-        Debug.Log(isMoving);
+        // Debug.Log(isMoving);
 
         isMoving = false;
 
@@ -86,7 +86,7 @@ public class Character : MonoBehaviour
         Debug.DrawLine(_parentTransform.position + _direction, _parentTransform.position + _direction * _difference.magnitude, Color.red, 4);
         if (_BoxHit)
         {
-            Debug.Log("Path is not clear");
+            // Debug.Log("Path is not clear");
             return false;
         }
         //The Path is clear
