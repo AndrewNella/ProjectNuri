@@ -419,7 +419,8 @@ MonoBehaviour:
   - {fileID: 1914148753}
   isLoaded: 0
   sceneMapArea: {fileID: 0}
-  thisSceneIndex: 2
+  sceneIndex: 2
+  savableEntitiesWithinthisScene: []
 --- !u!61 &1273037503
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -516,7 +517,8 @@ MonoBehaviour:
   - {fileID: 1681998155}
   isLoaded: 0
   sceneMapArea: {fileID: 0}
-  thisSceneIndex: 3
+  sceneIndex: 3
+  savableEntitiesWithinthisScene: []
 --- !u!61 &1402972959
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -675,7 +677,8 @@ MonoBehaviour:
   - {fileID: 1402972958}
   isLoaded: 0
   sceneMapArea: {fileID: 0}
-  thisSceneIndex: 0
+  sceneIndex: 0
+  savableEntitiesWithinthisScene: []
 --- !u!1 &1914148749
 GameObject:
   m_ObjectHideFlags: 0
@@ -773,8 +776,9 @@ MonoBehaviour:
   - {fileID: 1681998155}
   - {fileID: 1273037502}
   isLoaded: 0
-  sceneMapArea: {fileID: 0}
-  thisSceneIndex: 1
+  sceneMapArea: {fileID: 1914148754}
+  sceneIndex: 1
+  savableEntitiesWithinthisScene: []
 --- !u!114 &1914148754
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -858,6 +862,8 @@ MonoBehaviour:
   - CNPrototype Indoor 1
   currentlyLoadedMainScene: {fileID: 0}
   previouslyLoadedMainScene: {fileID: 0}
+  currentActiveScene:
+    m_Handle: 0
 --- !u!4 &2072649708
 Transform:
   m_ObjectHideFlags: 0
@@ -880,7 +886,7 @@ SceneRoots:
   m_Roots:
   - {fileID: 2072649708}
   - {fileID: 1681998154}
-  - {fileID: 1402972960}
   - {fileID: 1914148752}
   - {fileID: 1273037504}
+  - {fileID: 1402972960}
   - {fileID: 608094471}

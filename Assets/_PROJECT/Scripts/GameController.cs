@@ -23,12 +23,14 @@ public class GameController : MonoBehaviour
     [SerializeField] PauseMenu pauseMenu;
     OverworldUI overWorldUISystem;
 
+    public OverworldUI OverWorldHUD => overWorldUISystem;
+
     [Header("Area Map Data")]
 
-
+    [SerializeField] LevelDetails currentMainLevelInfo;
     [SerializeField] MapArea mapArea, defaultMapArea;
 
-
+    public LevelDetails CurrentMainLevelInfo => currentMainLevelInfo;
 
     public GameState state;
     GameState stateBeforePause;
@@ -37,7 +39,11 @@ public class GameController : MonoBehaviour
     private void Awake()
     {
         instance = this;
+
+        EntityDataBase.Init();
+        AttackDataBase.Init();
         ConditionDataBase.Init();
+
         overWorldUISystem = overWorldUIParent.GetComponent<OverworldUI>();
     }
     void Start()
@@ -163,6 +169,8 @@ public class GameController : MonoBehaviour
     public void LoadGame(string _fileName)
     {
         SavingSystem.i.Load($"{_fileName}");
+
+        overWorldUISystem.UpdateHUDPlayerStats();
     }
 
 

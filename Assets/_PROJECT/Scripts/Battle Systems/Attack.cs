@@ -14,4 +14,26 @@ public class Attack
         ManaCost = aBase.ManaCost;
         LustCost = aBase.LustCost;
     }
+
+    public Attack(AttackSaveData _saveData)
+    {
+        Base = AttackDataBase.GetAttackbyName(_saveData.attackName);
+    }
+
+    public AttackSaveData GetAttackSaveData()
+    {
+        var _saveData = new AttackSaveData()
+        {
+            attackName = Base.Attackname,
+
+        };
+        return _saveData;
+    }
+}
+
+[System.Serializable]
+public class AttackSaveData
+{
+    public string attackName;
+
 }

@@ -18,9 +18,11 @@ public class OverworldUI : MonoBehaviour
         StartCoroutine(LoadData());
     }
 
+ 
     IEnumerator LoadData()
     {
         yield return new WaitForEndOfFrame();
+
         UpdateHUDPlayerStats();
     }
 
@@ -33,7 +35,7 @@ public class OverworldUI : MonoBehaviour
     }
     public void UpdateHUDPlayerStats()
     {
-        nameText.text = PlayerController.instance.PlayerEntity.Base.Name;
+        nameText.text = PlayerController.instance.PlayerEntity.Base.EntityName;
         levelText.text = $"LVL {PlayerController.instance.PlayerEntity.Level}";
 
         healthText.text = $"{PlayerController.instance.PlayerEntity.currentHP}/{PlayerController.instance.PlayerEntity.MaxHp}";

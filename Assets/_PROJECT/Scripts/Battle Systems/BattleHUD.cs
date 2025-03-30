@@ -13,7 +13,7 @@ public class BattleHUD : MonoBehaviour
     {
 
         currentEntity = _incomingEntity;
-        nameText.text = _incomingEntity.Base.Name;
+        nameText.text = _incomingEntity.Base.EntityName;
         SetLevel();
         
         vitals.SetMaximums(_incomingEntity);

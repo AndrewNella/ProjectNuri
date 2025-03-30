@@ -17,22 +17,46 @@ public class LevelDetails : MonoBehaviour
     public List<string> ListOfScenesConnectedToThisWorld => listOfScenesConnectedToThisWorld;
 
 
+
     public void SetCurrentScene(AdditiveSceneTrigger _incomingScene)
     {
         previouslyLoadedMainScene = currentlyLoadedMainScene;
         currentlyLoadedMainScene = _incomingScene;
+
     }
+    public void SetPreviousScene(AdditiveSceneTrigger _incomingScene)
+    {
+        previouslyLoadedMainScene = _incomingScene;
+
+    }
+
+
     public void LoadAdditiveScene(AdditiveSceneTrigger _incomingScene)
     {
-        SceneManager.LoadSceneAsync(listOfScenesConnectedToThisWorld[_incomingScene.thisSceneIndex], LoadSceneMode.Additive);
+        var _operation = SceneManager.LoadSceneAsync(listOfScenesConnectedToThisWorld[_incomingScene.sceneIndex], LoadSceneMode.Additive);
+
+        // Find anything that can be saved within the scene
+        _operation.completed += (AsyncOperation op) =>
+        {
+            _incomingScene.LoadSceneData();
+        };
     }
 
     public void UnloadScene(AdditiveSceneTrigger _incomingScene)
     {
         if (_incomingScene.isLoaded)
         {
-            SceneManager.UnloadSceneAsync(listOfScenesConnectedToThisWorld[_incomingScene.thisSceneIndex]);
+            SceneManager.UnloadSceneAsync(listOfScenesConnectedToThisWorld[_incomingScene.sceneIndex]);
         }
     }
+
+    public void OverRideUnloadScene(AdditiveSceneTrigger _incomingScene)
+    {
+
+        SceneManager.UnloadSceneAsync(listOfScenesConnectedToThisWorld[_incomingScene.sceneIndex]);
+
+    }
+
+
 
 }

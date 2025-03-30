@@ -84,9 +84,64 @@ public class Entity
         currentMana = MaxMana;
         currentLust = 0;
 
+        StatusChanges = new Queue<string>();
         ResetStatModifications();
 
         Status = null;
+        VolitileStatus = null;
+    }
+
+    public EntitySaveData GetSaveData()
+    {
+        var _saveData = new EntitySaveData()
+        {
+            //Basic Data
+            entityName = Base.EntityName,
+            entityCurrentHP = currentHP,
+            entityCurrentMana = currentMana,
+            entityCurrentLust = currentLust,
+
+            //Level Data
+            entityLevel = level,
+            entityEXP = exp,
+
+            //Special Data
+            entityStatusID = Status?.ID,
+
+            attackData = knownAttacks.Select(a => a.GetAttackSaveData()).ToList()
+        };
+
+        return _saveData;
+    }
+
+    public Entity(EntitySaveData _saveData)
+    {
+        //Basic Data
+        BaseContainer = EntityDataBase.GetEntityByName(_saveData.entityName);
+
+        currentHP = _saveData.entityCurrentHP;
+        currentMana = _saveData.entityCurrentMana;
+        currentLust = _saveData.entityCurrentLust;
+
+        //Level Data
+        level = _saveData.entityLevel;
+        exp = _saveData.entityEXP;
+
+        //Special Data
+        if (_saveData.entityStatusID != null)
+            Status = ConditionDataBase.Conditions[_saveData.entityStatusID.Value];
+        else
+            Status = null;
+
+
+        //Additional Functionality for data restoration
+
+        knownAttacks = _saveData.attackData.Select(s => new Attack(s)).ToList();
+
+
+        CalculateStats();
+        StatusChanges = new Queue<string>();
+        ResetStatModifications();
         VolitileStatus = null;
     }
 
@@ -119,7 +174,7 @@ public class Entity
 
         Status = ConditionDataBase.Conditions[_incomingCondition];
         Status?.OnStart?.Invoke(this);
-        StatusChanges.Enqueue($"{Base.Name} {Status.StartMessage}");
+        StatusChanges.Enqueue($"{Base.EntityName} {Status.StartMessage}");
 
         OnStatusConditionChanged?.Invoke();
     }
@@ -130,7 +185,7 @@ public class Entity
 
         VolitileStatus = ConditionDataBase.Conditions[_incomingCondition];
         VolitileStatus?.OnStart?.Invoke(this);
-        StatusChanges.Enqueue($"{Base.Name} {VolitileStatus.StartMessage}");
+        StatusChanges.Enqueue($"{Base.EntityName} {VolitileStatus.StartMessage}");
 
     }
 
@@ -188,11 +243,11 @@ public class Entity
             StatModifications[_stat] = (int)Mathf.Clamp((StatModifications[_stat] + _statModification), -10f, 10f);
             if (_statModification > 0)
             {
-                StatusChanges.Enqueue($"{Base.Name}'s {_stat} was increased!");
+                StatusChanges.Enqueue($"{Base.EntityName}'s {_stat} was increased!");
             }
             else
             {
-                StatusChanges.Enqueue($"{Base.Name}'s {_stat} was decreased!");
+                StatusChanges.Enqueue($"{Base.EntityName}'s {_stat} was decreased!");
 
             }
 
@@ -323,4 +378,23 @@ public class DamageDetails
     public float Type { get; set; }
 
     public bool Aroused { get; set; }
+}
+
+[System.Serializable]
+public class EntitySaveData
+{
+    //Basic values that must be saved.
+
+    public string entityName;
+    public float entityCurrentHP, entityCurrentMana, entityCurrentLust;
+
+    //Level related values that must be saved.
+    public int entityLevel;
+
+    public float entityEXP;
+
+    //Special values that must be saved.
+    public ConditionID? entityStatusID;
+
+    public List<AttackSaveData> attackData;
 }

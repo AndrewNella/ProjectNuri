@@ -133,7 +133,8 @@ MonoBehaviour:
     level: 1
   exclamationSprite: {fileID: 5885733390967104253}
   enemySprite: {fileID: 1471790381148292198}
-  triggerArea: {fileID: 0}
+  triggerArea: {fileID: 7942214917305805263}
+  character: {fileID: 550160509746899636}
   fieldBattleType: 1
   isBattlingDisabled: 0
   stunTimeWhenDefeated: 10

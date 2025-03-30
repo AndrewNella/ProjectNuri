@@ -24,7 +24,7 @@ public class EntityBase : ScriptableObject
         return _level * _level * _level;
     }
 
-    public string Name => entityName;
+    public string EntityName => entityName;
 
 
     public string Description => entityDescription;

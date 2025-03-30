@@ -109,7 +109,7 @@ public class FieldMonsterBase : MonoBehaviour, ISavable
     }
     public object CaptureState()
     {
-
+        Debug.Log("Monster State is Saved");
         return isBattlingDisabled;
     }
 

@@ -238,13 +238,13 @@ public class BattleController : MonoBehaviour
 
 
 
-        battleMenuControlSystem.SetDialogue($"You were spotted by a {enemyUnit.entity.Base.Name}. You cannot avoid a battle.");
+        battleMenuControlSystem.SetDialogue($"You were spotted by a {enemyUnit.entity.Base.EntityName}. You cannot avoid a battle.");
 
         battleMenuControlSystem.PopulateAttackButtons(playerUnit.entity.knownAttacks);
 
         // yield return EnableButtons(true);
 
-        yield return StartCoroutine(battleMenuControlSystem.TypeDialogue($"You were spotted by a {enemyUnit.entity.Base.Name}. You cannot avoid a battle."));
+        yield return StartCoroutine(battleMenuControlSystem.TypeDialogue($"You were spotted by a {enemyUnit.entity.Base.EntityName}. You cannot avoid a battle."));
         yield return new WaitForSeconds(1f);
 
         ActionSelection();
@@ -343,7 +343,7 @@ public class BattleController : MonoBehaviour
         yield return ShowStatusChanges(_incomingSourceUnit.entity);
 
 
-        yield return battleMenuControlSystem.TypeDialogue($"{_incomingSourceUnit.entity.Base.Name} used {_attack.Base.Attackname}.");
+        yield return battleMenuControlSystem.TypeDialogue($"{_incomingSourceUnit.entity.Base.EntityName} used {_attack.Base.Attackname}.");
 
 
 
@@ -386,14 +386,14 @@ public class BattleController : MonoBehaviour
         }
         else
         {
-            yield return battleMenuControlSystem.TypeDialogue($"{_incomingSourceUnit.entity.Base.Name}'s attack missed.");
+            yield return battleMenuControlSystem.TypeDialogue($"{_incomingSourceUnit.entity.Base.EntityName}'s attack missed.");
         }
 
         _incomingSourceUnit.entity.OnAfterTurn();
     }
     IEnumerator HandleDefeatedEntity(BattleUnit _defeatedUnit)
     {
-        yield return battleMenuControlSystem.TypeDialogue($"{_defeatedUnit.entity.Base.Name} was defeated.");
+        yield return battleMenuControlSystem.TypeDialogue($"{_defeatedUnit.entity.Base.EntityName} was defeated.");
         yield return new WaitForSeconds(2f);
 
         if (!_defeatedUnit.IsPlayerUnit)
@@ -405,7 +405,7 @@ public class BattleController : MonoBehaviour
             _gainedEXP *= _enemyLevel;
 
             playerUnit.entity.exp += _gainedEXP;
-            yield return battleMenuControlSystem.TypeDialogue($"{playerUnit.entity.Base.Name} gained {_gainedEXP} exp.");
+            yield return battleMenuControlSystem.TypeDialogue($"{playerUnit.entity.Base.EntityName} gained {_gainedEXP} exp.");
 
 
             //Check if Player has enough EXP to Level up.
@@ -413,7 +413,7 @@ public class BattleController : MonoBehaviour
             while (playerUnit.entity.CheckForLevelUp())
             {
                 playerUnit.HUD.SetLevel();
-                yield return battleMenuControlSystem.TypeDialogue($"{playerUnit.entity.Base.Name} become Level {playerUnit.entity.Level}.");
+                yield return battleMenuControlSystem.TypeDialogue($"{playerUnit.entity.Base.EntityName} become Level {playerUnit.entity.Level}.");
 
                 //Check for new move to learn, if possible
                 var _newAttack = playerUnit.entity.GetLearnableAttackeAtCurrentLevel();

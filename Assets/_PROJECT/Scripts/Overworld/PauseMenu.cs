@@ -5,6 +5,8 @@ public class PauseMenu : MonoBehaviour, UIEventSelection
 {
     [SerializeField] CanvasGroup pauseCanvasGroup;
     [SerializeField] GameObject characterOverworldHUD;
+
+    public GameObject OverworldHUD => characterOverworldHUD;
     public bool isPauseMenuActive { get; private set; } = false;
 
     [Header("First Item For Each Menu")]
@@ -65,5 +67,5 @@ public class PauseMenu : MonoBehaviour, UIEventSelection
     }
     #endregion
 
-   
+
 }

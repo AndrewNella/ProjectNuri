@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.ComponentModel;
+using UnityEditor.Overlays;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -132,17 +133,42 @@ public class PlayerController : MonoBehaviour, ISavable
 
     public object CaptureState()
     {
-        //Save Position
-        float[] _position = new float[] { PlayerCharacter.gridparentTransform.position.x, PlayerCharacter.gridparentTransform.position.y };
+        var _saveData = new PlayerSaveData()
+        {
 
-        Debug.Log($"Save array of {_position}");
-        return _position;
+            savedPlayerPosition = new float[] { PlayerCharacter.gridparentTransform.position.x, PlayerCharacter.gridparentTransform.position.y },
+            savedPlayerEntity = mainPlayerEntity.GetSaveData()
+
+        };
+
+        return _saveData;
     }
 
     public void RestoreState(object state)
     {
-        var _position = (float[])state;
-        Debug.Log($"Load array of {_position}");
+        var _saveData = (PlayerSaveData)state;
+
+        // Restore Position
+        var _position = _saveData.savedPlayerPosition;
+
         character.gridparentTransform.position = new Vector3(_position[0], _position[1]);
+
+        //Restore Player Data
+        mainPlayerEntity = new Entity(_saveData.savedPlayerEntity);
+
+        //Extra Functionality
+
+        if (GameController.instance.OverWorldHUD != null)
+        {
+            GameController.instance.OverWorldHUD.UpdateHUDPlayerStats();
+        }
     }
+}
+
+[System.Serializable]
+public class PlayerSaveData
+{
+    public float[] savedPlayerPosition;
+
+    public EntitySaveData savedPlayerEntity;
 }

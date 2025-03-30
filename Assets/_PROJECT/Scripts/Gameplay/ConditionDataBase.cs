@@ -24,7 +24,7 @@ public class ConditionDataBase
             OnAfterTurn = (Entity _entity) =>
                 {
                     _entity.DamageHP( _entity.MaxHp/5);
-                    _entity.StatusChanges.Enqueue($"{_entity.Base.Name} was hurt due to poison");
+                    _entity.StatusChanges.Enqueue($"{_entity.Base.EntityName} was hurt due to poison");
                 }
             }
         },
@@ -35,7 +35,7 @@ public class ConditionDataBase
             OnAfterTurn = (Entity _entity) =>
                 {
                     _entity.DamageHP( _entity.MaxHp/10);
-                    _entity.StatusChanges.Enqueue($"{_entity.Base.Name} was hurt due to burning");
+                    _entity.StatusChanges.Enqueue($"{_entity.Base.EntityName} was hurt due to burning");
                 }
             }
         },
@@ -46,7 +46,7 @@ public class ConditionDataBase
             OnAfterTurn = (Entity _entity) =>
                 {
                     _entity.InflictLust( 20/_entity.MaxLust*100);
-                    _entity.StatusChanges.Enqueue($"{_entity.Base.Name}'s lust increases due to arousal.");
+                    _entity.StatusChanges.Enqueue($"{_entity.Base.EntityName}'s lust increases due to arousal.");
                 }
             }
         },
@@ -58,7 +58,7 @@ public class ConditionDataBase
                 {
                     if (Random.Range(1,5) == 1)
                     {
-                    _entity.StatusChanges.Enqueue($"{_entity.Base.Name}'s paralasys prevented it from moving.");
+                    _entity.StatusChanges.Enqueue($"{_entity.Base.EntityName}'s paralasys prevented it from moving.");
 
                     return false;
 
@@ -76,12 +76,12 @@ public class ConditionDataBase
                     if (Random.Range(1,5) == 1)
                     {
                     _entity.CureStatusCondition();
-                    _entity.StatusChanges.Enqueue($"{_entity.Base.Name} has been unfrozen.");
+                    _entity.StatusChanges.Enqueue($"{_entity.Base.EntityName} has been unfrozen.");
                     return true;
 
                     } else
                     {
-                    _entity.StatusChanges.Enqueue($"{_entity.Base.Name} is forzen and cant move.");
+                    _entity.StatusChanges.Enqueue($"{_entity.Base.EntityName} is forzen and cant move.");
                      return false;
                     }
                 }
@@ -101,11 +101,11 @@ public class ConditionDataBase
                     if (_entity.StatusTime <= 0)
                     {
                         _entity.CureStatusCondition();
-                        _entity.StatusChanges.Enqueue($"{_entity.Base.Name} has woken up.");
+                        _entity.StatusChanges.Enqueue($"{_entity.Base.EntityName} has woken up.");
                         return true;
                     }
                     _entity.StatusTime--;
-                    _entity.StatusChanges.Enqueue($"{_entity.Base.Name} is sleeping.");
+                    _entity.StatusChanges.Enqueue($"{_entity.Base.EntityName} is sleeping.");
 
                     return false;
 
@@ -128,17 +128,17 @@ public class ConditionDataBase
                     if (_entity.VolitileStatusTime <= 0)
                     {
                         _entity.CureVolitileStatusCondition();
-                        _entity.StatusChanges.Enqueue($"{_entity.Base.Name} has calmed down.");
+                        _entity.StatusChanges.Enqueue($"{_entity.Base.EntityName} has calmed down.");
                         return true;
                     }
                     _entity.VolitileStatusTime--;
-                    _entity.StatusChanges.Enqueue($"{_entity.Base.Name} is still in heat..");
+                    _entity.StatusChanges.Enqueue($"{_entity.Base.EntityName} is still in heat..");
 
                     //50% chance to do a move
                     if (Random.Range(1,3) == 1) return true;
                     
                     //50% chance to inflict lust damage to self.
-                    _entity.StatusChanges.Enqueue($"{_entity.Base.Name} is mastrubating.");
+                    _entity.StatusChanges.Enqueue($"{_entity.Base.EntityName} is mastrubating.");
                     _entity.InflictLust(_entity.MaxLust/5);
                     _entity.StatusChanges.Enqueue("They have become more lustfull.");
                     return false;
