@@ -1,21 +1,29 @@
+using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
 public class PauseMenu : MonoBehaviour, UIEventSelection
 {
-    [SerializeField] CanvasGroup pauseCanvasGroup;
-    [SerializeField] GameObject characterOverworldHUD;
+    [SerializeField] CanvasGroup mainPauseCanvasGroup, currentCanvasGroup;
+
+
+    [SerializeField] GameObject characterOverworldHUD, inventoryMenu;
 
     public GameObject OverworldHUD => characterOverworldHUD;
+
+
     public bool isPauseMenuActive { get; private set; } = false;
 
-    [Header("First Item For Each Menu")]
-    [SerializeField] GameObject firstObject;
+    [Header("Pause Menu Pages")]
+    [SerializeField] List<CanvasGroup> listOfPauseMenuPages = new List<CanvasGroup>();
+    [SerializeField] List<GameObject> listOfPauseMenuPagesFirstItem = new List<GameObject>();
 
     private void Awake()
     {
-        if (pauseCanvasGroup == null)
-            pauseCanvasGroup = GetComponent<CanvasGroup>();
+        currentCanvasGroup = listOfPauseMenuPages[0];
+        if (mainPauseCanvasGroup == null)
+            mainPauseCanvasGroup = GetComponent<CanvasGroup>();
 
         if (characterOverworldHUD == null)
             characterOverworldHUD = FindAnyObjectByType<OverworldUI>().gameObject;
@@ -23,6 +31,35 @@ public class PauseMenu : MonoBehaviour, UIEventSelection
 
 
     }
+
+    public void SwapPages(CanvasGroup _incomingCanvasGroup)
+    {
+        if (currentCanvasGroup == _incomingCanvasGroup) return;
+
+        if (listOfPauseMenuPages.Contains(_incomingCanvasGroup))
+        {
+            //Deactive the old page
+            currentCanvasGroup.alpha = 0;
+            currentCanvasGroup.interactable = false;
+            currentCanvasGroup.blocksRaycasts = false;
+
+            //Activate the new page
+            _incomingCanvasGroup.alpha = 1;
+            _incomingCanvasGroup.interactable = true;
+            _incomingCanvasGroup.blocksRaycasts = true;
+
+            //Update the current page
+            currentCanvasGroup = _incomingCanvasGroup;
+
+            //Set the current selected object
+            int _listIndex = listOfPauseMenuPages.FindIndex(x => x == _incomingCanvasGroup);
+            Debug.Log(listOfPauseMenuPagesFirstItem[_listIndex]);
+            SetCurrentlySelectedObject(listOfPauseMenuPagesFirstItem[_listIndex]);
+
+        }
+
+    }
+
 
     //Enter True to activate the pause menu, or false to disable it.
     public void TogglePauseMenu(bool _incomingBool)
@@ -33,17 +70,24 @@ public class PauseMenu : MonoBehaviour, UIEventSelection
         characterOverworldHUD.SetActive(!isPauseMenuActive);
 
         if (isPauseMenuActive)
-            SetCurrentlySelectedObject(firstObject);
-        else
-            ClearCurrentlySelectedObject();
+        {
+            SwapPages(listOfPauseMenuPages[0]);
+            SetCurrentlySelectedObject(listOfPauseMenuPagesFirstItem[0]);
+            // currentCanvasGroup = listOfPauseMenuPages[0];
+        }
+        // else
+        // ClearCurrentlySelectedObject();
 
 
 
-        pauseCanvasGroup.alpha = isPauseMenuActive ? 1 : 0;
-        pauseCanvasGroup.interactable = isPauseMenuActive ? true : false;
-        pauseCanvasGroup.blocksRaycasts = isPauseMenuActive ? true : false;
+        mainPauseCanvasGroup.alpha = isPauseMenuActive ? 1 : 0;
+        mainPauseCanvasGroup.interactable = isPauseMenuActive ? true : false;
+        mainPauseCanvasGroup.blocksRaycasts = isPauseMenuActive ? true : false;
 
-        // EventSystem.Set
+        if (!_incomingBool && currentCanvasGroup != listOfPauseMenuPages[0])
+        {
+            SwapPages(listOfPauseMenuPages[0]);
+        }
     }
 
 
@@ -59,11 +103,9 @@ public class PauseMenu : MonoBehaviour, UIEventSelection
     {
         EventSystem.current.SetSelectedGameObject(_incomingGameObject);
     }
-
     public void ClearCurrentlySelectedObject()
     {
         EventSystem.current.SetSelectedGameObject(null);
-
     }
     #endregion
 

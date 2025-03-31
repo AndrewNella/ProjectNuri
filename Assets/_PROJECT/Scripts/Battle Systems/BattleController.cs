@@ -59,6 +59,7 @@ public class BattleController : MonoBehaviour
     {
         if (state == BattleState.AttackSelection)
         {
+         
             if (EventSystem.current.currentSelectedGameObject.TryGetComponent<Button>(out Button _button))
             {
                 TMP_Text _textHolder = _button.GetComponentInChildren<TextMeshProUGUI>();

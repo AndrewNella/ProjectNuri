@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e769a33ac6d4d7488c9a50ac7b63ea3, type: 3}
+  m_Name: SimplePotion
+  m_EditorClassIdentifier: 
+  itemName: Lesser Health Potion
+  itemDescription: A basic healing potion. Recovers 50 points of health.
+  itemIcon: {fileID: 2099718416087951911, guid: 66eb0f33e3f2b1e43b632164c3d9aabd, type: 3}
+  isHealingItem: 1
+  isManaRestoreItem: 0
+  isLustResetItem: 0
+  isStatusHealingItem: 0
+  isRevivalItem: 0
+  hpRecoveryAmount: 50
+  restoreMaxHP: 0
+  manaRecoveryAmount: 0
+  restoreMaxMana: 0
+  lustRecoveryAmount: 0
+  resetCurrentLust: 0
+  statusEffect: 0
+  recoverAllStatusEffects: 0
+  revive: 0
+  maxRevive: 0
