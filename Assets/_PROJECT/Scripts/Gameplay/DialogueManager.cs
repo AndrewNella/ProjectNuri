@@ -42,6 +42,18 @@ public class DialogueManager : MonoBehaviour
 
     }
 
+    public IEnumerator ShowDialogueText(string _text, bool _waitForInput = true)
+    {
+        isShowing = true;
+        dialogueBox.SetActive(true);
+
+        yield return TypeDialogue(_text);
+
+        yield return new WaitForSeconds(0.5f);
+
+        dialogueBox.SetActive(false);
+        isShowing = false;
+    }
     public void UpdateDialogue()
     {
         if (!isTyping)

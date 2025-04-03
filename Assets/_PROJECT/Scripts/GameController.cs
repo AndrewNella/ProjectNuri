@@ -50,7 +50,6 @@ public class GameController : MonoBehaviour
     {
         battleController.OnBattleOver += EndBattle;
 
-
         DialogueManager.Instance.OnShowDialogue += () =>
         {
             state = GameState.Dialogue;

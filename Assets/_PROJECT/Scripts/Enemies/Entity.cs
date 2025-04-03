@@ -33,16 +33,14 @@ public class Entity
 
     public event Action OnStatusConditionChanged;
 
-    public bool hpChanged { get; set; }
-    public bool manaChanged { get; set; }
-    public bool lustChanged { get; set; }
-
     public int StatusTime { get; set; }
 
     public Condition VolitileStatus { get; private set; }
     public int VolitileStatusTime { get; set; }
 
-
+    public event Action OnHPChanged;
+    public event Action OnManaChanged;
+    public event Action OnLustChanged;
     public LearnableAttacks GetLearnableAttackeAtCurrentLevel()
     {
         return Base.LearnableAttacks.Where(x => x.Level == level).FirstOrDefault();
@@ -143,6 +141,7 @@ public class Entity
         StatusChanges = new Queue<string>();
         ResetStatModifications();
         VolitileStatus = null;
+        
     }
 
     public bool CheckForLevelUp()
@@ -332,12 +331,25 @@ public class Entity
     public void DamageHP(float _incomingFloat)
     {
         currentHP = Mathf.Clamp(currentHP - _incomingFloat, 0, MaxHp);
-        hpChanged = true;
+
+        OnHPChanged?.Invoke();
+    }
+
+    public void HealHP(float _incomingFloat)
+    {
+        currentHP = Mathf.Clamp(currentHP + _incomingFloat, 0, MaxHp);
+        OnHPChanged?.Invoke();
     }
     public void InflictLust(float _incomingFloat)
     {
         currentLust = Mathf.Clamp(currentLust + _incomingFloat, 0, MaxHp);
-        lustChanged = true;
+        OnLustChanged?.Invoke();
+    }
+
+    public void InvokeManaChange()
+    {
+        OnLustChanged?.Invoke();
+
     }
 
     public void OnAfterTurn()

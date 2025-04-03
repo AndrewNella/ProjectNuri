@@ -47,5 +47,20 @@ public class RecoveryItems : ItemBase
     [ShowIf("isRevivalItem")]
     [SerializeField] bool maxRevive;
 
+    Entity GetPlayerEntity()
+    {
+        return PlayerController.instance.PlayerEntity;
+    }
+    public override bool Use()
+    {
 
+        if (hpRecoveryAmount > 0)
+        {
+            if (GetPlayerEntity().currentHP == GetPlayerEntity().MaxHp) return false;
+
+            GetPlayerEntity().HealHP(hpRecoveryAmount);
+            return true;
+        }
+        return true;
+    }
 }

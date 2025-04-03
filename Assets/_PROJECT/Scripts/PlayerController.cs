@@ -12,7 +12,13 @@ public class PlayerController : MonoBehaviour, ISavable
 
     [SerializeField] Entity mainPlayerEntity;
 
+    // Inventory playerInventory;
+
+    // public Inventory PlayerInventory => playerInventory;
+
     public Entity PlayerEntity => mainPlayerEntity;
+
+
 
     [SerializeField] float randomEncounterChance;
     [SerializeField] bool isInMenu { get; set; }
@@ -36,6 +42,9 @@ public class PlayerController : MonoBehaviour, ISavable
         inputVector = Vector2.zero;
 
         character = GetComponent<Character>();
+        // playerInventory = GetComponent<Inventory>();
+
+
     }
     private void Start()
     {

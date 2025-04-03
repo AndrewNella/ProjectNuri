@@ -1,3 +1,5 @@
+using System;
+using System.Collections;
 using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
@@ -10,6 +12,8 @@ public class InventoryUI : MonoBehaviour
 
     Inventory playerInventory;
 
+    public Inventory PlayerInventory => playerInventory;
+
     [SerializeField] bool displayItemDetails;
 
     [SerializeField] TMP_Text itemName;
@@ -19,14 +23,14 @@ public class InventoryUI : MonoBehaviour
     [SerializeField] TMP_Text itemDetailText;
 
 
-
-
     // [SerializeField] RectTransform itemList
     private void Start()
     {
         playerInventory = Inventory.GetInventory();
 
         UpdateItemList();
+
+        playerInventory.OnUpdated += UpdateItemList;
     }
 
 
@@ -44,8 +48,27 @@ public class InventoryUI : MonoBehaviour
         {
             itemDetailText.text = "";
         }
+    }
 
+    public void UseItemAndUpdateUI(ItemBase _item)
+    {
+        StartCoroutine(UseItemAndDisplayText(_item));
+    }
 
+    IEnumerator UseItemAndDisplayText(ItemBase _item)
+    {
+        var _usedItem = playerInventory.AttemptToUseItem(_item);
+        if (_usedItem != null)
+        {
+            yield return DialogueManager.Instance.ShowDialogueText($"You used {_usedItem.ItemName}");
+        }
+        else
+        {
+
+            yield return DialogueManager.Instance.ShowDialogueText($"That item won't have any effect.");
+        }
+
+        yield return null;
     }
 
 
@@ -64,5 +87,7 @@ public class InventoryUI : MonoBehaviour
             _instantiatedObjectHolder.GetComponent<ItemSlotUI>().SetData(_itemSlot);
         }
     }
+
+
 
 }

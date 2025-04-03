@@ -15,7 +15,8 @@ public class BattleHUD : MonoBehaviour
         currentEntity = _incomingEntity;
         nameText.text = _incomingEntity.Base.EntityName;
         SetLevel();
-        
+        SetListenersForEntity();
+
         vitals.SetMaximums(_incomingEntity);
 
         vitals.SetHP(_incomingEntity.currentHP);
@@ -25,7 +26,31 @@ public class BattleHUD : MonoBehaviour
 
         SetStatusText();
 
+
         currentEntity.OnStatusConditionChanged += SetStatusText;
+    }
+
+    void SetListenersForEntity()
+    {
+        currentEntity.OnHPChanged += UpdateHP;
+        currentEntity.OnManaChanged += UpdateMana;
+        currentEntity.OnLustChanged += UpdateLust;
+    }
+    void RemoveListenersForEntity()
+    {
+        currentEntity.OnHPChanged -= UpdateHP;
+        currentEntity.OnManaChanged -= UpdateMana;
+        currentEntity.OnLustChanged -= UpdateLust;
+    }
+
+    private void OnDisable()
+    {
+        RemoveListenersForEntity();
+    }
+
+    private void OnDestroy()
+    {
+        RemoveListenersForEntity();
     }
 
     public void SetLevel()
@@ -52,27 +77,20 @@ public class BattleHUD : MonoBehaviour
     }
     public void UpdateMana()
     {
-        if (currentEntity.manaChanged)
-        {
 
-            currentEntity.manaChanged = false;
-            vitals.SetMana(currentEntity.currentMana);
-        }
+        vitals.SetMana(currentEntity.currentMana);
+
     }
     public void UpdateHP()
     {
-        if (currentEntity.hpChanged)
-        {
-            vitals.SetHP(currentEntity.currentHP);
-            currentEntity.hpChanged = false;
-        }
+
+        vitals.SetHP(currentEntity.currentHP);
+
     }
     public void UpdateLust()
     {
-        if (currentEntity.lustChanged)
-        {
-            vitals.SetLust(currentEntity.currentLust);
-            currentEntity.lustChanged = false;
-        }
+
+        vitals.SetLust(currentEntity.currentLust);
+
     }
 }

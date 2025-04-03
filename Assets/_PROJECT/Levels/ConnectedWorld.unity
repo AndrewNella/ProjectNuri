@@ -449,6 +449,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Persistant Systems
       objectReference: {fileID: 0}
+    - target: {fileID: 7050081773314241511, guid: d11429ecca7867a4188908e221cab435, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7082166175304892231, guid: d11429ecca7867a4188908e221cab435, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0

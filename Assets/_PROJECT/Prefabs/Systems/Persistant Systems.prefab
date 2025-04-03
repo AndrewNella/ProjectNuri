@@ -595,10 +595,10 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 4160194057228545725}
   - {fileID: 3236968403600362123}
-  - {fileID: 7454069944355495235}
   - {fileID: 6397777578573874131}
+  - {fileID: 4160194057228545725}
+  - {fileID: 7454069944355495235}
   m_Father: {fileID: 7683928423575287261}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -1825,6 +1825,10 @@ PrefabInstance:
     - target: {fileID: 8454265744331139011, guid: b466f37f861b5df41894a01f96df38a5, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8525032708629963009, guid: b466f37f861b5df41894a01f96df38a5, type: 3}
+      propertyPath: m_Alpha
+      value: 0.13
       objectReference: {fileID: 0}
     - target: {fileID: 8636995357479845948, guid: b466f37f861b5df41894a01f96df38a5, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target

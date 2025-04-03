@@ -14,4 +14,10 @@ public class ItemBase : ScriptableObject
     public string ItemDescription => itemDescription;
     public Sprite ItemSprite => itemIcon;
 
+
+    public virtual bool Use()
+    {
+        return false;
+    }
+
 }

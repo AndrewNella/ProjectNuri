@@ -4,6 +4,7 @@ using DG.Tweening;
 using TMPro;
 using System;
 using System.Collections;
+using Sirenix.OdinInspector;
 public class OverworldUI : MonoBehaviour
 {
     [SerializeField] Slider healthBar, manaBar, lustBar;
@@ -12,47 +13,96 @@ public class OverworldUI : MonoBehaviour
     [SerializeField] Slider expBar;
     [SerializeField] TMP_Text expText, levelText, nameText;
 
-    private void Awake()
+    [SerializeField] float maxHP, maxMana, maxLust;
+
+    Entity playerEntity;
+
+
+
+
+    public void SetMaximums(Entity _incomingEntity)
     {
+        maxHP = _incomingEntity.MaxHp;
+        healthBar.maxValue = maxHP;
 
-        StartCoroutine(LoadData());
+        maxMana = _incomingEntity.MaxMana;
+        manaBar.maxValue = maxMana;
+
+        maxLust = _incomingEntity.Base.MaxLust;
+        lustBar.maxValue = maxLust;
     }
+    private void OnEnable()
+    {
+        StartCoroutine(LoadData());
 
- 
+    }
     IEnumerator LoadData()
     {
         yield return new WaitForEndOfFrame();
 
+        playerEntity = PlayerController.instance.PlayerEntity;
+
+        SetMaximums(playerEntity);
+
         UpdateHUDPlayerStats();
+        playerEntity.OnHPChanged += UpdateHUDHealth;
+        playerEntity.OnManaChanged += UpdateHUDHealth;
+        playerEntity.OnLustChanged += UpdateHUDLust;
+    }
+
+
+
+    void OnDisable()
+    {
+        playerEntity.OnHPChanged -= UpdateHUDHealth;
+        playerEntity.OnManaChanged -= UpdateHUDHealth;
+        playerEntity.OnLustChanged -= UpdateHUDLust;
     }
 
     public void UpdateExpBar()
     {
-        expText.text = $"{PlayerController.instance.PlayerEntity.exp} / {PlayerController.instance.PlayerEntity.Base.GetExpForLevel(PlayerController.instance.PlayerEntity.Level + 1)}";
-        expBar.maxValue = PlayerController.instance.PlayerEntity.Base.GetExpForLevel(PlayerController.instance.PlayerEntity.Level + 1);
-        expBar.value = PlayerController.instance.PlayerEntity.exp;
+        expText.text = $"{playerEntity.exp} / {playerEntity.Base.GetExpForLevel(playerEntity.Level + 1)}";
+        expBar.maxValue = playerEntity.Base.GetExpForLevel(playerEntity.Level + 1);
+        expBar.value = playerEntity.exp;
 
     }
+
+    [Button("Update Player Data")]
     public void UpdateHUDPlayerStats()
     {
-        nameText.text = PlayerController.instance.PlayerEntity.Base.EntityName;
-        levelText.text = $"LVL {PlayerController.instance.PlayerEntity.Level}";
+        nameText.text = playerEntity.Base.EntityName;
+        levelText.text = $"LVL {playerEntity.Level}";
 
-        healthText.text = $"{PlayerController.instance.PlayerEntity.currentHP}/{PlayerController.instance.PlayerEntity.MaxHp}";
-        manaText.text = $"{PlayerController.instance.PlayerEntity.currentMana}/{PlayerController.instance.PlayerEntity.MaxMana}";
-        lustText.text = $"{PlayerController.instance.PlayerEntity.currentLust}/{PlayerController.instance.PlayerEntity.MaxLust}";
-
-        healthBar.maxValue = PlayerController.instance.PlayerEntity.Base.MaxHp;
-        manaBar.maxValue = PlayerController.instance.PlayerEntity.Base.MaxMana;
-        lustBar.maxValue = PlayerController.instance.PlayerEntity.Base.MaxLust;
-
-        healthBar.value = PlayerController.instance.PlayerEntity.currentHP;
-        manaBar.value = PlayerController.instance.PlayerEntity.currentMana;
-        lustBar.value = PlayerController.instance.PlayerEntity.currentLust;
-
-
+        UpdateHUDHealth();
+        UpdateHUDMana();
+        UpdateHUDLust();
 
         UpdateExpBar();
+    }
+
+    public void UpdateHUDHealth()
+    {
+        healthText.text = $"{playerEntity.currentHP}/{maxLust}";
+
+        healthBar.maxValue = maxHP;
+        healthBar.value = playerEntity.currentHP;
+
+    }
+
+    public void UpdateHUDMana()
+    {
+        manaText.text = $"{playerEntity.currentMana}/{maxMana}";
+
+        manaBar.maxValue = maxMana;
+        manaBar.value = playerEntity.currentMana;
+    }
+
+    public void UpdateHUDLust()
+    {
+
+        lustText.text = $"{playerEntity.currentLust}/{maxLust}";
+        lustBar.maxValue = maxLust;
+        lustBar.value = playerEntity.currentLust;
     }
 
 }

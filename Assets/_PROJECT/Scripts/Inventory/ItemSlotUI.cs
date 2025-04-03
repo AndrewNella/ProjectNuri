@@ -9,32 +9,52 @@ public class ItemSlotUI : MonoBehaviour, ISelectHandler
 {
     [SerializeField] TMP_Text itemNameText, itemCountText;
 
-    ItemSlot _itemInformation;
+    ItemSlot itemInformation;
+
+    public ItemSlot ItemInformation => itemInformation;
     public InventoryUI connectedInventoryUI;
 
+    Button connectedButton;
 
+    private void Awake()
+    {
 
+        connectedButton = GetComponent<Button>();
+        connectedButton.onClick.AddListener(ClickButtonFunction);
+    }
+
+    private void OnDisable()
+    {
+        connectedButton.onClick.RemoveAllListeners();
+    }
+
+    private void OnDestroy()
+    {
+        connectedButton.onClick.RemoveAllListeners();
+    }
+
+    void ClickButtonFunction()
+    {
+        connectedInventoryUI.UseItemAndUpdateUI(itemInformation.Item);
+    }
     public void OnSelect(BaseEventData eventData)
     {
         var _scrollRect = GetComponentInParent<ScrollRect>();
-        if (_scrollRect != null)
-        {
-            // _scrollRect.
-
-        }
 
         if (connectedInventoryUI != null)
         {
-            connectedInventoryUI.UpdateItemInformation(_itemInformation);
+            connectedInventoryUI.UpdateItemInformation(itemInformation);
         }
     }
+
+
 
     public void SetData(ItemSlot _itemSlot)
     {
         itemNameText.text = _itemSlot.Item.ItemName;
         itemCountText.text = $" X {_itemSlot.ItemCount}";
 
-        _itemInformation = _itemSlot;
+        itemInformation = _itemSlot;
 
 
     }

@@ -59,7 +59,7 @@ public class BattleController : MonoBehaviour
     {
         if (state == BattleState.AttackSelection)
         {
-         
+
             if (EventSystem.current.currentSelectedGameObject.TryGetComponent<Button>(out Button _button))
             {
                 TMP_Text _textHolder = _button.GetComponentInChildren<TextMeshProUGUI>();
@@ -187,7 +187,8 @@ public class BattleController : MonoBehaviour
         if (_incomingAttack.ManaCost > 0)
         {
             _incomingUnit.entity.currentMana -= _incomingAttack.ManaCost;
-            _incomingUnit.entity.manaChanged = true;
+            _incomingUnit.entity.InvokeManaChange();
+
         }
         if (_incomingAttack.LustCost > 0)
         {
@@ -199,7 +200,7 @@ public class BattleController : MonoBehaviour
             else
             {
                 _incomingUnit.entity.currentLust += _incomingAttack.LustCost;
-                _incomingUnit.entity.lustChanged = true;
+                _incomingUnit.entity.InvokeManaChange();
             }
         }
     }
