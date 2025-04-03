@@ -18,7 +18,7 @@ public class BattleController : MonoBehaviour
     [SerializeField] BattleUnit playerUnit, enemyUnit;
     [SerializeField] BattleMenuControl battleMenuControlSystem;
 
-
+    Action onItemUsed;
     public event Action<bool, bool> OnBattleOver;
     BattleState state;
     BattleState preState;
@@ -27,7 +27,7 @@ public class BattleController : MonoBehaviour
     Entity enemyEntity;
     int escapeAttempts;
     FieldMonsterBase fieldMonster;
-
+    ItemBase itemHolder;
     [SerializeField] InventoryUI inventoryUI;
     public BattleState GetCurrentBattleState => state;
     private void Awake()
@@ -101,8 +101,15 @@ public class BattleController : MonoBehaviour
         battleMenuControlSystem.EnableDialogueText(true);
         StartCoroutine(RunTurns(BattleAction.Run));
     }
-    public void UseItem()
+    public void UseItem(ItemBase _usedItem)
     {
+
+        // Debug.Log("Execute Battle Logic when Item is used");
+
+        itemHolder = _usedItem;
+        battleMenuControlSystem.EnableInventoryScreen(false);
+        battleMenuControlSystem.EnableActionSelector(false);
+        battleMenuControlSystem.EnableDialogueText(true);
         StartCoroutine(RunTurns(BattleAction.UseItem));
     }
 
@@ -130,7 +137,6 @@ public class BattleController : MonoBehaviour
         UpdateCurrentlySelectedAttack(null);
         state = BattleState.Inventory;
         battleMenuControlSystem.EnableInventoryScreen(true);
-        EventSystem.current.SetSelectedGameObject(battleMenuControlSystem.inventoryMenuFirst);
 
     }
     #endregion
@@ -152,6 +158,7 @@ public class BattleController : MonoBehaviour
         battleMenuControlSystem.EnableAttackSelector(true);
     }
 
+    #region Battle Related Functions
     void BattleOver(bool _didThePlayerWin, bool _isThisAnEscape)
     {
         state = BattleState.BattleOver;
@@ -231,19 +238,23 @@ public class BattleController : MonoBehaviour
         return UnityEngine.Random.Range(1, 100) <= _attackAccuracy;
     }
 
-
-    #region Coroutines
+    #endregion
+    #region Core Battle Functions
     public IEnumerator SetupBattle()
     {
         escapeAttempts = 0;
         playerUnit.Setup(PlayerController.instance.GetPlayerEntity());
         enemyUnit.Setup(enemyEntity);
 
-
-
         battleMenuControlSystem.SetDialogue($"You were spotted by a {enemyUnit.entity.Base.EntityName}. You cannot avoid a battle.");
-
         battleMenuControlSystem.PopulateAttackButtons(playerUnit.entity.knownAttacks);
+
+        inventoryUI.SetBattleMenu(battleMenuControlSystem);
+
+        // Debug.Log(inventoryUI.firstButton);
+
+        inventoryUI.OnItemUsed += UseItem;
+
 
         // yield return EnableButtons(true);
 
@@ -256,7 +267,7 @@ public class BattleController : MonoBehaviour
     {
         state = BattleState.RunningTurn;
 
-
+        //Perform an action depending on the Player's Action
         switch (_playerAction)
         {
             case BattleAction.Attack:
@@ -296,7 +307,10 @@ public class BattleController : MonoBehaviour
 
             case BattleAction.UseItem:
                 state = BattleState.Busy;
-                yield return battleMenuControlSystem.TypeDialogue("You used an item");
+                yield return battleMenuControlSystem.TypeDialogue($"You used {itemHolder.ItemName}");
+                itemHolder = null;
+                yield return RunAfterTurn(playerUnit);
+
                 state = BattleState.RunningTurn;
 
                 //EnemyTurn
@@ -435,7 +449,7 @@ public class BattleController : MonoBehaviour
             yield return new WaitForSeconds(1f);
         }
 
-        CheckForBattleOver(_defeatedUnit);
+        EndBattle(_defeatedUnit);
     }
     IEnumerator RunAfterTurn(BattleUnit _sourceUnit)
     {
@@ -535,8 +549,11 @@ public class BattleController : MonoBehaviour
     }
 
     #endregion
-    void CheckForBattleOver(BattleUnit _defeatedUnit)
+    void EndBattle(BattleUnit _defeatedUnit)
     {
+        inventoryUI.OnItemUsed -= UseItem;
+
+
         if (_defeatedUnit.IsPlayerUnit)
         {
             BattleOver(false, false);

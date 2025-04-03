@@ -22,9 +22,9 @@ public class BattleMenuControl : MonoBehaviour, UIEventSelection
     [Header("First Selected Action")]
     [SerializeField] GameObject actionMenuFirst;
     [SerializeField] GameObject attackMenuFirst;
-    public GameObject inventoryMenuFirst;
+    [SerializeField] GameObject inventoryMenuFirst;
 
-    
+
 
     public GameObject ActionSelection => actionSelector;
     public GameObject AttackSelector => attackSelector;
@@ -55,7 +55,25 @@ public class BattleMenuControl : MonoBehaviour, UIEventSelection
     public void EnableInventoryScreen(bool _incomingBool)
     {
         inventoryScreen.SetActive(_incomingBool);
-      
+        if (_incomingBool)
+        {
+            if (inventoryMenuFirst == null)
+            {
+                StartCoroutine(DelayedInventoryScreenEnable());
+                return;
+            }
+            SetCurrentlySelectedObject(inventoryMenuFirst);
+        }
+    }
+
+    public void SetFirstInventoryButton(GameObject _incomingGameObject)
+    {
+        inventoryMenuFirst = _incomingGameObject;
+    }
+    IEnumerator DelayedInventoryScreenEnable()
+    {
+        yield return new WaitForEndOfFrame();
+        SetCurrentlySelectedObject(inventoryMenuFirst);
     }
     public void EnableActionSelector(bool _incomingBool)
     {
@@ -121,8 +139,6 @@ public class BattleMenuControl : MonoBehaviour, UIEventSelection
         lustCostText.text = $"Lust Cost:  {_incomingAttack.Base.LustCost}";
 
         type1Text.text = $"Attack Type - {_incomingAttack.Base.DamageType}";
-
-
 
         attackDescriptionText.text = $"{_incomingAttack.Base.AttackDescription}";
     }

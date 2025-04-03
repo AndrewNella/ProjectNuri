@@ -22,6 +22,7 @@ public class UnitVitals : MonoBehaviour
     {
         maxHP = _incomingEntity.MaxHp;
         healthBar.maxValue = maxHP;
+        
 
         maxMana = _incomingEntity.MaxMana;
         manaBar.maxValue = maxMana;

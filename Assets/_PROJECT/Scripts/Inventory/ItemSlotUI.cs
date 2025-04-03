@@ -14,27 +14,9 @@ public class ItemSlotUI : MonoBehaviour, ISelectHandler
     public ItemSlot ItemInformation => itemInformation;
     public InventoryUI connectedInventoryUI;
 
-    Button connectedButton;
-
-    private void Awake()
+    public void ClickButtonFunction()
     {
-
-        connectedButton = GetComponent<Button>();
-        connectedButton.onClick.AddListener(ClickButtonFunction);
-    }
-
-    private void OnDisable()
-    {
-        connectedButton.onClick.RemoveAllListeners();
-    }
-
-    private void OnDestroy()
-    {
-        connectedButton.onClick.RemoveAllListeners();
-    }
-
-    void ClickButtonFunction()
-    {
+        Debug.Log("Button is clicked");
         connectedInventoryUI.UseItemAndUpdateUI(itemInformation.Item);
     }
     public void OnSelect(BaseEventData eventData)
