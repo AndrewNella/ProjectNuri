@@ -3,6 +3,7 @@ using System.Collections;
 using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class InventoryUI : MonoBehaviour
@@ -18,6 +19,7 @@ public class InventoryUI : MonoBehaviour
 
     [SerializeField] TMP_Text itemName;
     [SerializeField] Image itemIcon;
+    public GameObject firstButton;
 
     [ShowIf("displayItemDetails")]
     [SerializeField] TMP_Text itemDetailText;
@@ -79,10 +81,15 @@ public class InventoryUI : MonoBehaviour
         {
             Destroy(_itemTransform.gameObject);
         }
-
+        bool _isTargetSet = false;
         foreach (var _itemSlot in playerInventory.InventorySlotList)
         {
             GameObject _instantiatedObjectHolder = Instantiate(itemSlotPrefab, itemListGameObject.transform);
+            if (!_isTargetSet)
+            {
+                EventSystem.current.SetSelectedGameObject(_instantiatedObjectHolder);
+                _isTargetSet = true;
+            }
             _instantiatedObjectHolder.GetComponent<ItemSlotUI>().connectedInventoryUI = this;
             _instantiatedObjectHolder.GetComponent<ItemSlotUI>().SetData(_itemSlot);
         }

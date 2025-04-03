@@ -141,7 +141,7 @@ public class Entity
         StatusChanges = new Queue<string>();
         ResetStatModifications();
         VolitileStatus = null;
-        
+
     }
 
     public bool CheckForLevelUp()
@@ -348,8 +348,7 @@ public class Entity
 
     public void InvokeManaChange()
     {
-        OnLustChanged?.Invoke();
-
+        OnManaChanged?.Invoke();
     }
 
     public void OnAfterTurn()

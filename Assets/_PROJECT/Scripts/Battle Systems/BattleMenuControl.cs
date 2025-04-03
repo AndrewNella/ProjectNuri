@@ -22,7 +22,9 @@ public class BattleMenuControl : MonoBehaviour, UIEventSelection
     [Header("First Selected Action")]
     [SerializeField] GameObject actionMenuFirst;
     [SerializeField] GameObject attackMenuFirst;
-    [SerializeField] GameObject inventoryMenuFirst;
+    public GameObject inventoryMenuFirst;
+
+    
 
     public GameObject ActionSelection => actionSelector;
     public GameObject AttackSelector => attackSelector;
@@ -53,11 +55,7 @@ public class BattleMenuControl : MonoBehaviour, UIEventSelection
     public void EnableInventoryScreen(bool _incomingBool)
     {
         inventoryScreen.SetActive(_incomingBool);
-        if (_incomingBool)
-        {
-            EventSystem.current.SetSelectedGameObject(inventoryMenuFirst);
-        }
-
+      
     }
     public void EnableActionSelector(bool _incomingBool)
     {

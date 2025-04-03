@@ -10,7 +10,7 @@ using UnityEngine.UI;
 using Unity.Multiplayer.Center.Common;
 
 
-public enum BattleState { Start, ActionSelection, AttackSelection, RunningTurn, Busy, Inventory, BattleOver }
+public enum BattleState { Start, ActionSelection, AttackSelection, RunningTurn, Busy, Inventory, BattleOver, Journal }
 public enum BattleAction { Attack, UseItem, Run }
 public class BattleController : MonoBehaviour
 {
@@ -28,7 +28,7 @@ public class BattleController : MonoBehaviour
     int escapeAttempts;
     FieldMonsterBase fieldMonster;
 
-
+    [SerializeField] InventoryUI inventoryUI;
     public BattleState GetCurrentBattleState => state;
     private void Awake()
     {
@@ -59,7 +59,6 @@ public class BattleController : MonoBehaviour
     {
         if (state == BattleState.AttackSelection)
         {
-
             if (EventSystem.current.currentSelectedGameObject.TryGetComponent<Button>(out Button _button))
             {
                 TMP_Text _textHolder = _button.GetComponentInChildren<TextMeshProUGUI>();
@@ -80,7 +79,7 @@ public class BattleController : MonoBehaviour
     }
     public void ReturnToMainBattleMenu()
     {
-        if (state == BattleState.ActionSelection || state == BattleState.AttackSelection || state == BattleState.Inventory)
+        if (state == BattleState.ActionSelection || state == BattleState.AttackSelection || state == BattleState.Inventory || state == BattleState.Journal)
         {
 
             if (battleMenuControlSystem.AttackSelector.activeSelf)
@@ -131,6 +130,8 @@ public class BattleController : MonoBehaviour
         UpdateCurrentlySelectedAttack(null);
         state = BattleState.Inventory;
         battleMenuControlSystem.EnableInventoryScreen(true);
+        EventSystem.current.SetSelectedGameObject(battleMenuControlSystem.inventoryMenuFirst);
+
     }
     #endregion
 
