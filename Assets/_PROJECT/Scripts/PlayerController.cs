@@ -9,7 +9,7 @@ public class PlayerController : MonoBehaviour, ISavable
 {
     public static PlayerController instance;
 
-
+    public bool enablePlayerInputs = true;
     [SerializeField] Entity mainPlayerEntity;
 
     // Inventory playerInventory;
@@ -33,7 +33,6 @@ public class PlayerController : MonoBehaviour, ISavable
 
 
     Vector2 inputVector;
-
 
 
     private void Awake()
@@ -87,6 +86,8 @@ public class PlayerController : MonoBehaviour, ISavable
 
     void OnInteract()
     {
+        if (!enablePlayerInputs) return;
+
         if (!isInMenu)
         {
             Debug.Log("Interact");
@@ -105,18 +106,21 @@ public class PlayerController : MonoBehaviour, ISavable
 
     public void HandleUpdate()
     {
-        if (!character.isMoving)
+        if (enablePlayerInputs)
         {
-            //Removes Diagonal Movement
-            if (inputVector.x != 0) inputVector.y = 0;
-
-
-            if (inputVector != Vector2.zero)
+            if (!character.isMoving)
             {
-                StartCoroutine(character.Move(inputVector, character.gridparentTransform, OnMoveOver));
-            }
+                //Removes Diagonal Movement
+                if (inputVector.x != 0) inputVector.y = 0;
 
-            character.HandleUpdate();
+
+                if (inputVector != Vector2.zero)
+                {
+                    StartCoroutine(character.Move(inputVector, character.gridparentTransform, OnMoveOver));
+                }
+
+                character.HandleUpdate();
+            }
         }
     }
     void OnMoveOver()

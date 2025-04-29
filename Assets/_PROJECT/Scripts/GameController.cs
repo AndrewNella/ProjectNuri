@@ -1,10 +1,13 @@
 using UnityEngine;
 using Cinemachine;
+using System;
 
 
-public enum GameState { FreeRoam, Battle, Dialogue, CutScene, Pause, Busy }
+public enum GameState { FreeRoam, Battle, Dialogue, CutScene, Pause, Busy, GameOver }
 public class GameController : MonoBehaviour
 {
+    public event Action playerIsDefeated;
+
 
     public bool isDataLoaded { get; private set; } = false;
     [Header("Camera Data")]
@@ -214,12 +217,29 @@ public class GameController : MonoBehaviour
 
     void EndBattle(bool _isBattleWon, bool _isEscape)
     {
+        if (!_isBattleWon)
+        {
+            state = GameState.GameOver;
+            battleController.gameObject.SetActive(false);
+            battleCamera.Priority = 1;
+
+            if (currentFieldMonsterBase != null)
+            {
+                currentFieldMonsterBase.OnWonBattle();
+            }
+            
+            playerIsDefeated?.Invoke();
+
+        }
+
         if (currentFieldMonsterBase != null && _isBattleWon)
         {
             if (_isEscape) currentFieldMonsterBase.EscapeStun();
             else currentFieldMonsterBase.OnDefeated();
 
         }
+
+
         overWorldUISystem.UpdateHUDPlayerStats();
         EnableOrDisableOverworldHUD(true);
         state = GameState.FreeRoam;

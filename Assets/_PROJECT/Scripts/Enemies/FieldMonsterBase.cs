@@ -107,6 +107,12 @@ public class FieldMonsterBase : MonoBehaviour, ISavable
                 break;
         }
     }
+
+    public void OnWonBattle()
+    {
+        StopAllCoroutines();
+        Destroy(character.gridparentTransform.gameObject);
+    }
     public object CaptureState()
     {
         Debug.Log("Monster State is Saved");

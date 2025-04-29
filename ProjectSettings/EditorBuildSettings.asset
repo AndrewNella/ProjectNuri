@@ -6,15 +6,6 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/_PROJECT/Levels/Test Levels/Prototype Area 1.unity
-    guid: 4e638eff14d04934bb1aa91606e1c094
-  - enabled: 1
-    path: Assets/_PROJECT/Levels/Test Levels/Prototype Area 2.unity
-    guid: 187fb44f62e22c142be0531570359a67
-  - enabled: 1
-    path: Assets/_PROJECT/Levels/Test Levels/Prototype Indoor 1.unity
-    guid: 675d563105f29a246aad59539390371e
-  - enabled: 1
     path: Assets/_PROJECT/Levels/ConnectedWorldLevels/CNPrototype Area 1.unity
     guid: 3e9c9fd163d4343479e01b3b674f6613
   - enabled: 1
@@ -26,6 +17,15 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/_PROJECT/Levels/ConnectedWorldLevels/CNPrototype Indoor 1.unity
     guid: b785dc3d2a31e1b43846453dcceb7db9
+  - enabled: 1
+    path: Assets/_PROJECT/Levels/Test Levels/Prototype Area 1.unity
+    guid: 4e638eff14d04934bb1aa91606e1c094
+  - enabled: 1
+    path: Assets/_PROJECT/Levels/Test Levels/Prototype Area 2.unity
+    guid: 187fb44f62e22c142be0531570359a67
+  - enabled: 1
+    path: Assets/_PROJECT/Levels/Test Levels/Prototype Indoor 1.unity
+    guid: 675d563105f29a246aad59539390371e
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 6f08d4f1e2c35dc46bf32825b80514d1, type: 3}
   m_UseUCBPForAssetBundles: 0
