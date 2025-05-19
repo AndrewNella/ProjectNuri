@@ -1,5 +1,6 @@
 using Sirenix.OdinInspector;
 using UnityEngine;
+using Kisei.Player;
 
 [CreateAssetMenu(menuName = "Scriptable Objects/Create New Recovery Item")]
 public class RecoveryItems : ItemBase
@@ -49,7 +50,7 @@ public class RecoveryItems : ItemBase
 
     Entity GetPlayerEntity()
     {
-        return PlayerController.instance.PlayerEntity;
+        return PlayerInstanceHUB.Instance.PlayerController.PlayerEntity;
     }
     public override bool Use()
     {

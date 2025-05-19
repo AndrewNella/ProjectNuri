@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using Unity.VisualScripting;
+using Kisei.Player;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -66,7 +66,7 @@ public class PauseMenu : MonoBehaviour, UIEventSelection
     {
         isPauseMenuActive = _incomingBool;
 
-        PlayerController.instance.SetIsInMenu(isPauseMenuActive);
+        PlayerInstanceHUB.Instance.PlayerController.SetIsInMenu(isPauseMenuActive);
         characterOverworldHUD.SetActive(!isPauseMenuActive);
 
         if (isPauseMenuActive)

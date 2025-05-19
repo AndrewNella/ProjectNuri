@@ -4,7 +4,7 @@ using TMPro;
 
 using UnityEngine;
 using UnityEngine.EventSystems;
-using Unity.VisualScripting;
+using Kisei.Player;
 using UnityEngine.UI;
 using Unity.Multiplayer.Center.Common;
 
@@ -47,7 +47,6 @@ public class BattleController : MonoBehaviour
     }
     public void StartBattle(Entity _enemyEntity, FieldMonsterBase _enemyFieldBase)
     {
-
         enemyEntity = _enemyEntity;
         fieldMonster = _enemyFieldBase;
         StartCoroutine(SetupBattle());
@@ -242,7 +241,7 @@ public class BattleController : MonoBehaviour
     public IEnumerator SetupBattle()
     {
         escapeAttempts = 0;
-        playerUnit.Setup(PlayerController.instance.GetPlayerEntity());
+        playerUnit.Setup(PlayerInstanceHUB.Instance.PlayerController.GetPlayerEntity());
         enemyUnit.Setup(enemyEntity);
 
         battleMenuControlSystem.SetDialogue($"You were spotted by a {enemyUnit.entity.Base.EntityName}. You cannot avoid a battle.");

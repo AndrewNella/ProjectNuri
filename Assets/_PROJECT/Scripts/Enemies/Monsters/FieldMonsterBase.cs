@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using Kisei.Player;
+
 /// <summary>
 /// Base Controller for Monsters
 /// </summary>
@@ -13,7 +15,7 @@ public class FieldMonsterBase : MonoBehaviour, ISavable
     [SerializeField] GameObject triggerArea;
 
     public GameObject TriggerAreaObject => triggerArea;
-    FieldMonster fieldMonster = null;
+    MonsterMovement fieldMonster = null;
 
     public Character character;
     public FieldMonsterType FieldBattleType => fieldBattleType;
@@ -36,12 +38,12 @@ public class FieldMonsterBase : MonoBehaviour, ISavable
     private void Awake()
     {
         character = GetComponent<Character>();
-        fieldMonster = GetComponent<FieldMonster>();
+        fieldMonster = GetComponent<MonsterMovement>();
     }
 
     public void TriggerAttackFromThisEntity()
     {
-        PlayerController.instance.StopPlayerAnimator();
+        PlayerInstanceHUB.Instance.PlayerController.StopPlayerAnimator();
         if (exclamationSprite == null)
         {
             QuickBattleIntro();
@@ -66,7 +68,7 @@ public class FieldMonsterBase : MonoBehaviour, ISavable
 
 
         //Move Towards player
-        var _difference = PlayerController.instance.transform.position - enemySprite.transform.position;
+        var _difference = PlayerInstanceHUB.Instance.PlayerController.transform.position - enemySprite.transform.position;
         var _moveVector = _difference - _difference.normalized;
         _moveVector = new Vector2(Mathf.Round(_moveVector.x), Mathf.Round(_moveVector.y));
 

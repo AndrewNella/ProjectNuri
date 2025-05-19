@@ -30,7 +30,7 @@ public enum MonsterMovementDirection
 }
 
 
-public class FieldMonster : MonoBehaviour
+public class MonsterMovement : MonoBehaviour
 {
 
     [SerializeField] FieldMonsterBase fieldbase;

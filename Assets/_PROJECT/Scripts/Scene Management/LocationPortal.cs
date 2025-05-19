@@ -1,6 +1,6 @@
 using System.Collections;
 using System.Linq;
-using Unity.VisualScripting;
+using Kisei.Player;
 using UnityEngine;
 
 
@@ -20,7 +20,7 @@ public class LocationPortal : MonoBehaviour, IPlayerTriggerable
     public void OnPlayerTrigger(PlayerController _player)
     {
         GameController.instance.GameisBusy(true);
-        PlayerController.instance.StopPlayerAnimator();
+        PlayerInstanceHUB.Instance.PlayerController.StopPlayerAnimator();
         StartCoroutine(TeleportPlayer());
     }
 
@@ -37,9 +37,7 @@ public class LocationPortal : MonoBehaviour, IPlayerTriggerable
 
         var _destinationPortal = FindObjectsByType<LocationPortal>(FindObjectsInactive.Include, FindObjectsSortMode.None).FirstOrDefault(x => x != this && x.destinationPortal == this.destinationPortal);
 
-
-
-        PlayerController.instance.PlayerCharacter.SetPositionAndSnapToTile(_destinationPortal.spawnpoint.position);
+        PlayerInstanceHUB.Instance.PlayerCharacter.SetPositionAndSnapToTile(_destinationPortal.spawnpoint.position);
 
 
         yield return sceneFader?.FadeRoutine(false);

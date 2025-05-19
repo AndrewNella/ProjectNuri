@@ -1,5 +1,5 @@
 using UnityEngine;
-
+using Kisei.Player;
 public class AttackTrigger : MonoBehaviour, IPlayerTriggerable
 {
     [SerializeField] FieldMonsterBase fieldBase;
@@ -18,7 +18,7 @@ public class AttackTrigger : MonoBehaviour, IPlayerTriggerable
     {
         if (!fieldBase.GetIsBattleDisabled())
         {
-            PlayerController.instance.StopPlayerAnimator();
+            PlayerInstanceHUB.Instance.PlayerController.StopPlayerAnimator();
 
             fieldBase.TriggerAttackFromThisEntity();
         }

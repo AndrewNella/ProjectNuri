@@ -14,9 +14,9 @@ public class InventoryUI : MonoBehaviour
 
     public List<GameObject> listOfUiButtons = new List<GameObject>();
 
-    Inventory playerInventory;
+    PlayerInventory playerInventory;
 
-    public Inventory PlayerInventory => playerInventory;
+    public PlayerInventory PlayerInventory => playerInventory;
 
     [SerializeField] bool displayItemDetails;
 
@@ -35,7 +35,7 @@ public class InventoryUI : MonoBehaviour
     // [SerializeField] RectTransform itemList
     private void Start()
     {
-        playerInventory = Inventory.GetInventory();
+        playerInventory = PlayerInventory.GetPlayerInventory();
 
         UpdateItemList();
 

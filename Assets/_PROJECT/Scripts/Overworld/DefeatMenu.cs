@@ -1,4 +1,5 @@
 using UnityEngine;
+using Kisei.Player;
 
 public class DefeatMenu : MonoBehaviour
 {
@@ -19,7 +20,7 @@ public class DefeatMenu : MonoBehaviour
 
     void EnableDefeatMenu()
     {
-        PlayerController.instance.enablePlayerInputs = false;
+        PlayerInstanceHUB.Instance.PlayerController.enablePlayerInputs = false;
 
         mainPauseCanvasGroup.alpha = 1;
         mainPauseCanvasGroup.blocksRaycasts = true;

@@ -1,20 +1,15 @@
 using System;
 using System.Collections;
 using System.ComponentModel;
+using Kisei.Player;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour, ISavable
 {
-    public static PlayerController instance;
 
     public bool enablePlayerInputs = true;
     [SerializeField] Entity mainPlayerEntity;
-
-    // Inventory playerInventory;
-
-    // public Inventory PlayerInventory => playerInventory;
-
     public Entity PlayerEntity => mainPlayerEntity;
 
 
@@ -26,21 +21,15 @@ public class PlayerController : MonoBehaviour, ISavable
     [Header("Movement Data")]
 
     [SerializeField] GameObject headPlayerControllerParent;
-    [SerializeField] Character character;
-
-    public Character PlayerCharacter => character;
-
-
+    Character character;
     Vector2 inputVector;
 
 
     private void Awake()
     {
-        instance = this;
         inputVector = Vector2.zero;
 
-        character = GetComponent<Character>();
-        // playerInventory = GetComponent<Inventory>();
+        character = PlayerInstanceHUB.Instance.PlayerCharacter;
 
 
     }
@@ -79,7 +68,6 @@ public class PlayerController : MonoBehaviour, ISavable
 
     private void OnPlayerMoveInput(Vector2 _incomingVector2)
     {
-
         inputVector = _incomingVector2;
     }
 
@@ -125,7 +113,6 @@ public class PlayerController : MonoBehaviour, ISavable
     void OnMoveOver()
     {
         var _colliders = Physics2D.OverlapCircleAll(character.gridparentTransform.position, 0.2f, GameLayers.Instance.TriggerableLayer);
-
         foreach (var _collider in _colliders)
         {
             var _trigger = _collider.GetComponent<IPlayerTriggerable>();
@@ -147,8 +134,7 @@ public class PlayerController : MonoBehaviour, ISavable
     {
         var _saveData = new PlayerSaveData()
         {
-
-            savedPlayerPosition = new float[] { PlayerCharacter.gridparentTransform.position.x, PlayerCharacter.gridparentTransform.position.y },
+            savedPlayerPosition = new float[] { character.gridparentTransform.position.x, character.gridparentTransform.position.y },
             savedPlayerEntity = mainPlayerEntity.GetSaveData()
 
         };

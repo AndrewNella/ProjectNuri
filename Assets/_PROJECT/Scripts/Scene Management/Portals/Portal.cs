@@ -3,7 +3,7 @@ using Unity.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Linq;
-using Unity.VisualScripting;
+using Kisei.Player;
 
 /// <summary>
 /// Portal System that swaps between scenes
@@ -20,7 +20,7 @@ public class Portal : MonoBehaviour, IPlayerTriggerable
     public Transform SpawnPoint => spawnpoint;
     public void OnPlayerTrigger(PlayerController _player)
     {
-        PlayerController.instance.StopPlayerAnimator();
+        PlayerInstanceHUB.Instance.PlayerController.StopPlayerAnimator();
         GameController.instance.GameisBusy(true);
         StartCoroutine(SwitchScene());
     }
@@ -42,7 +42,7 @@ public class Portal : MonoBehaviour, IPlayerTriggerable
 
 
         Portal _destinationPortal = FindObjectsByType<Portal>(FindObjectsInactive.Exclude, FindObjectsSortMode.None).FirstOrDefault(x => x != this && x.destinationPortal == this.destinationPortal);
-        PlayerController.instance.PlayerCharacter.SetPositionAndSnapToTile(_destinationPortal.spawnpoint.position);
+        PlayerInstanceHUB.Instance.PlayerCharacter.SetPositionAndSnapToTile(_destinationPortal.spawnpoint.position);
 
 
         yield return sceneFader?.FadeRoutine(false);

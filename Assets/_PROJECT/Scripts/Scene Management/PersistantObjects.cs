@@ -1,8 +1,8 @@
 using UnityEngine;
 
-public class PersistantObjcets : MonoBehaviour
+public class PersistantObjects : MonoBehaviour
 {
-    [SerializeField] GameObject essentialItemsPrefab;
+    // [SerializeField] GameObject essentialItemsPrefab;
 
     private void Awake()
     {

@@ -1,4 +1,5 @@
 using UnityEngine;
+using Kisei.Player;
 
 public class DangerAreaTrigger : MonoBehaviour, IPlayerTriggerable
 {
@@ -7,7 +8,7 @@ public class DangerAreaTrigger : MonoBehaviour, IPlayerTriggerable
     {
         if (UnityEngine.Random.Range(1, 101) < randomEncounterChance)
         {
-            PlayerController.instance.StopPlayerAnimator();
+            PlayerInstanceHUB.Instance.PlayerController.StopPlayerAnimator();
             GameController.instance.StartRandomizedAreaBattle();
         }
     }

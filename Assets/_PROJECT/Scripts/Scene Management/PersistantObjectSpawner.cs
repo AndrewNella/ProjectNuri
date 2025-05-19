@@ -1,5 +1,5 @@
 using UnityEngine;
-
+using Kisei.Player;
 public class PersistantObjectSpawner : MonoBehaviour
 {
     [SerializeField] GameObject persistantObjectPrefab;
@@ -11,7 +11,7 @@ public class PersistantObjectSpawner : MonoBehaviour
     void Awake()
     {
 
-        var _existingObjects = FindObjectsByType<PersistantObjcets>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+        var _existingObjects = FindObjectsByType<PersistantObjects>(FindObjectsInactive.Include, FindObjectsSortMode.None);
 
         if (_existingObjects.Length == 0)
         {
@@ -19,14 +19,11 @@ public class PersistantObjectSpawner : MonoBehaviour
             if (customPlayerTransform != null && useSpesificSpawnPointForPlayer)
             {
 
-                PlayerController.instance.PlayerCharacter.gridparentTransform.position = customPlayerTransform.position;
+                PlayerInstanceHUB.Instance.PlayerCharacter.gridparentTransform.position = customPlayerTransform.position;
             }
 
             GameController.instance.SetCurrentMapAreaToDefault();
             GameController.instance.SetIsDataLoaded();
-
-           
-
         }
 
 

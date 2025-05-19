@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using DG.Tweening;
 using TMPro;
 using System;
+using Kisei.Player;
 using System.Collections;
 using Sirenix.OdinInspector;
 public class OverworldUI : MonoBehaviour
@@ -13,12 +14,9 @@ public class OverworldUI : MonoBehaviour
     [SerializeField] Slider expBar;
     [SerializeField] TMP_Text expText, levelText, nameText;
 
-    [SerializeField] float maxHP, maxMana, maxLust;
+    private float maxHP, maxMana, maxLust;
 
     Entity playerEntity;
-
-
-
 
     public void SetMaximums(Entity _incomingEntity)
     {
@@ -31,7 +29,7 @@ public class OverworldUI : MonoBehaviour
         maxLust = _incomingEntity.Base.MaxLust;
         lustBar.maxValue = maxLust;
     }
-    private void OnEnable()
+    private void Start()
     {
         StartCoroutine(LoadData());
 
@@ -40,7 +38,7 @@ public class OverworldUI : MonoBehaviour
     {
         yield return new WaitForEndOfFrame();
 
-        playerEntity = PlayerController.instance.PlayerEntity;
+        playerEntity = PlayerInstanceHUB.Instance.PlayerController.PlayerEntity; 
 
         SetMaximums(playerEntity);
 
