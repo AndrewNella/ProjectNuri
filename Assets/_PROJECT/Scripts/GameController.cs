@@ -1,6 +1,8 @@
 using UnityEngine;
 using Cinemachine;
 using System;
+using Kisei.BattleSystem;
+using Kisei.Player;
 
 
 public enum GameState { FreeRoam, Battle, Dialogue, CutScene, Pause, Busy, GameOver }
@@ -15,8 +17,9 @@ public class GameController : MonoBehaviour
     public static GameController instance;
 
     [Header("System Controller Data")]
-    [SerializeField] PlayerController playerController;
-    [SerializeField] BattleController battleController;
+    PlayerController playerController;
+    BattleController battleController;
+    BattleFunctions battleLogic;
 
     public FieldMonsterBase currentFieldMonsterBase { get; private set; }
 
@@ -51,6 +54,10 @@ public class GameController : MonoBehaviour
     }
     void Start()
     {
+        battleController = BattleInstanceHUB.Instance.BattleController;
+        battleLogic = BattleInstanceHUB.Instance.BattleLogic;
+        playerController = PlayerInstanceHUB.Instance.PlayerController;
+
         battleController.OnBattleOver += EndBattle;
 
         DialogueManager.Instance.OnShowDialogue += () =>
@@ -79,7 +86,7 @@ public class GameController : MonoBehaviour
         switch (state)
         {
             case GameState.Battle:
-                battleController.ReturnToMainBattleMenu();
+                BattleInstanceHUB.Instance.BattleUI.ReturnToMainBattleMenu();
                 break;
 
             case GameState.Dialogue:
@@ -209,7 +216,6 @@ public class GameController : MonoBehaviour
         battleController.gameObject.SetActive(true);
         battleCamera.Priority = 6;
         Entity areaEnemy = mapArea.GetRandomAreaEnemy();
-
         battleController.StartBattle(areaEnemy);
     }
 
@@ -227,7 +233,7 @@ public class GameController : MonoBehaviour
             {
                 currentFieldMonsterBase.OnWonBattle();
             }
-            
+
             playerIsDefeated?.Invoke();
 
         }

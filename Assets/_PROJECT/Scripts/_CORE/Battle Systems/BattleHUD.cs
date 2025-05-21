@@ -38,6 +38,7 @@ public class BattleHUD : MonoBehaviour
     }
     void RemoveListenersForEntity()
     {
+        if (currentEntity == null) return;
         currentEntity.OnHPChanged -= UpdateHP;
         currentEntity.OnManaChanged -= UpdateMana;
         currentEntity.OnLustChanged -= UpdateLust;

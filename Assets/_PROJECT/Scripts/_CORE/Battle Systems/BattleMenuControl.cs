@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Kisei.BattleSystem;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -7,6 +8,8 @@ using UnityEngine.UI;
 
 public class BattleMenuControl : MonoBehaviour, UIEventSelection
 {
+    BattleController battleController;
+    BattleFunctions battleLogic;
     [SerializeField] TMP_Text dialogText;
     [SerializeField] float dialogueLetterWaiterTimer;
 
@@ -29,6 +32,12 @@ public class BattleMenuControl : MonoBehaviour, UIEventSelection
     public GameObject ActionSelection => actionSelector;
     public GameObject AttackSelector => attackSelector;
     public GameObject InventoryMenu => inventoryScreen;
+
+    private void Awake()
+    {
+        battleController = BattleInstanceHUB.Instance.BattleController;
+        battleLogic = BattleInstanceHUB.Instance.BattleLogic;
+    }
     public void SetDialogue(string _incomingDialogue)
     {
         dialogText.text = _incomingDialogue;
@@ -105,7 +114,14 @@ public class BattleMenuControl : MonoBehaviour, UIEventSelection
 
 
     }
-
+    public IEnumerator ShowStatusChanges(Entity _incomingEntity)
+    {
+        while (_incomingEntity.StatusChanges.Count > 0)
+        {
+            var _message = _incomingEntity.StatusChanges.Dequeue();
+            yield return TypeDialogue(_message);
+        }
+    }
     public void PopulateAttackButtons(List<Attack> attacks)
     {
         for (int i = 1; i < attacks.Count; i++)
@@ -113,7 +129,10 @@ public class BattleMenuControl : MonoBehaviour, UIEventSelection
             GameObject _newAttackButtonHolder = Instantiate(attackButtonPrefab, attackSelectorParent.transform);
             TMP_Text _text = _newAttackButtonHolder.GetComponentInChildren<TextMeshProUGUI>();
 
-            _newAttackButtonHolder.GetComponent<Button>().onClick.AddListener(BattleController.instance.InitiateAttack);
+            Debug.Log($"Battle Logic is {battleLogic}.");
+
+
+            _newAttackButtonHolder.GetComponent<Button>().onClick.AddListener(battleLogic.InitiateAttack);
 
             _text.text = attacks[i].Base.Attackname;
             listOfInstantiatedButtons.Add(_newAttackButtonHolder);
@@ -141,5 +160,25 @@ public class BattleMenuControl : MonoBehaviour, UIEventSelection
         type1Text.text = $"Attack Type - {_incomingAttack.Base.DamageType}";
 
         attackDescriptionText.text = $"{_incomingAttack.Base.AttackDescription}";
+    }
+    public void ReturnToMainBattleMenu()
+    {
+        if (
+        battleController.GetCurrentBattleState == BattleState.ActionSelection ||
+        battleController.GetCurrentBattleState == BattleState.AttackSelection ||
+        battleController.GetCurrentBattleState == BattleState.Inventory ||
+        battleController.GetCurrentBattleState == BattleState.Journal)
+        {
+            if (AttackSelector.activeSelf)
+            {
+                EnableAttackSelector(false);
+            }
+            if (InventoryMenu.activeSelf)
+            {
+                EnableInventoryScreen(false);
+            }
+            EnableDialogueText(true);
+            battleController.ActionSelection(this);
+        }
     }
 }
