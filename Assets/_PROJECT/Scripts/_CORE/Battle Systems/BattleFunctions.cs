@@ -21,6 +21,8 @@ public class BattleFunctions : MonoBehaviour
     public event Action<bool, bool> SendBattleOverArg1;
     public event Action<BattleUnit> SendBattleOverArg2;
     public event Action<BattleAction> SendStartTurnArg;
+    public event Action OnTurnFinished;
+
 
 
     #region General Functions
@@ -34,7 +36,25 @@ public class BattleFunctions : MonoBehaviour
 
     #region Battle Functions
 
+    public void InitiateAttack()
+    {
+        if (battleStateController.playerUnit.entity.CurrentAttack != null)
+        {
+            if (!CheckIfAttackCanBeAfforded(battleStateController.playerUnit, battleStateController.playerUnit.entity.CurrentAttack))
+            {
+                // Debug.Log("Mana is too low");
+            }
+            else
+            {
+                Debug.Log("Execute Attack");
+                battleUIController.EnableAttackSelector(false);
+                battleUIController.EnableDialogueText(true);
 
+                SendStartTurnArg?.Invoke(BattleAction.Attack);
+                // Debug.Log("Attack is succesfull");
+            }
+        }
+    }
     void PayCostsForAttack(BattleUnit _incomingUnit, Attack _incomingAttack)
     {
         if (_incomingAttack.ManaCost > 0)
@@ -96,7 +116,7 @@ public class BattleFunctions : MonoBehaviour
     }
     #endregion
 
-    
+    #region Battle Coroutines
     //Performs the entire Logic for an attack.
     public IEnumerator PerformAttack(BattleUnit _incomingSourceUnit, BattleUnit _incomingTargetUnit, Attack _attack)
     {
@@ -199,47 +219,7 @@ public class BattleFunctions : MonoBehaviour
         // EndBattle(_defeatedUnit);
     }
 
-    public IEnumerator TryToEscape()
-    {
-        battleStateController.SetCurrentState(BattleState.Busy);
 
-        if (isImportantBattle)
-        {
-            //Skip func
-            yield return battleUIController.TypeDialogue($"You cannot escape from this battle. You must fight it.");
-            battleStateController.SetCurrentState(BattleState.RunningTurn);
-            yield break;
-        }
-
-        escapeAttempts++;
-        float _playerSpeed = battleStateController.playerUnit.entity.Speed;
-        float _enemySpeed = battleStateController.enemyUnit.entity.Speed;
-
-        if (_enemySpeed < _playerSpeed)
-        {
-            yield return battleUIController.TypeDialogue($"You escaped safely.");
-            SendBattleOverArg1?.Invoke(true, true);
-            // battleStateController.BattleOver(true, true);
-        }
-        else
-        {
-            float f = (_playerSpeed * 128) / _enemySpeed + 30 * escapeAttempts;
-            f %= 256;
-
-            if (UnityEngine.Random.Range(0, 256) < f)
-            {
-                yield return battleUIController.TypeDialogue($"You escaped safely.");
-                SendBattleOverArg1?.Invoke(true, true);
-                // BattleOver(true, true);
-
-            }
-            else
-            {
-                yield return battleUIController.TypeDialogue($"You could not escape!");
-                battleStateController.SetCurrentState(BattleState.RunningTurn);
-            }
-        }
-    }
     public IEnumerator RunAfterTurn(BattleUnit _sourceUnit)
     {
 
@@ -286,23 +266,102 @@ public class BattleFunctions : MonoBehaviour
 
 
     }
-    public void InitiateAttack()
+
+    public IEnumerator StartEscapeTurn()
     {
-        if (battleStateController.playerUnit.entity.CurrentAttack != null)
+        battleStateController.SetCurrentState(BattleState.Busy);
+
+        if (isImportantBattle)
         {
-            if (!CheckIfAttackCanBeAfforded(battleStateController.playerUnit, battleStateController.playerUnit.entity.CurrentAttack))
+            //Skip func
+            yield return battleUIController.TypeDialogue($"You cannot escape from this battle. You must fight it.");
+            battleStateController.SetCurrentState(BattleState.RunningTurn);
+            yield break;
+        }
+
+        escapeAttempts++;
+        float _playerSpeed = battleStateController.playerUnit.entity.Speed;
+        float _enemySpeed = battleStateController.enemyUnit.entity.Speed;
+
+        if (_enemySpeed < _playerSpeed)
+        {
+            yield return battleUIController.TypeDialogue($"You escaped safely.");
+            SendBattleOverArg1?.Invoke(true, true);
+            // battleStateController.BattleOver(true, true);
+        }
+        else
+        {
+            float f = (_playerSpeed * 128) / _enemySpeed + 30 * escapeAttempts;
+            f %= 256;
+
+            if (UnityEngine.Random.Range(0, 256) < f)
             {
-                // Debug.Log("Mana is too low");
+                yield return battleUIController.TypeDialogue($"You escaped safely.");
+                SendBattleOverArg1?.Invoke(true, true);
+                // BattleOver(true, true);
+
             }
             else
             {
-                Debug.Log("Execute Attack");
-                battleUIController.EnableAttackSelector(false);
-                battleUIController.EnableDialogueText(true);
-
-                SendStartTurnArg?.Invoke(BattleAction.Attack);
-                // Debug.Log("Attack is succesfull");
+                yield return battleUIController.TypeDialogue($"You could not escape!");
+                battleStateController.SetCurrentState(BattleState.RunningTurn);
             }
         }
+        OnTurnFinished?.Invoke();
     }
+    public IEnumerator StartAttackTurn()
+    {
+        battleStateController.GetCurrentEnemyUnit.entity.CurrentAttack = battleStateController.GetCurrentEnemyUnit.entity.GetRandomAttack();
+        int _playerAttackPriority = battleStateController.GetCurrentPlayerUnit.entity.CurrentAttack.Base.Priority;
+        int _enemyAttackPriority = battleStateController.GetCurrentEnemyUnit.entity.CurrentAttack.Base.Priority;
+
+        //Check Who goes first
+        bool _playerGoesFirst = true;
+
+        if (_enemyAttackPriority > _playerAttackPriority)
+            _playerGoesFirst = false;
+        else if (_enemyAttackPriority == _playerAttackPriority)
+            _playerGoesFirst = battleStateController.GetCurrentPlayerUnit.entity.Speed >= battleStateController.GetCurrentEnemyUnit.entity.Speed;
+
+
+
+        var _firstUnit = _playerGoesFirst ? battleStateController.GetCurrentPlayerUnit : battleStateController.GetCurrentEnemyUnit;
+        var _secondUnit = _playerGoesFirst ? battleStateController.GetCurrentEnemyUnit : battleStateController.GetCurrentPlayerUnit;
+
+        var _secondentity = _secondUnit.entity;
+        //First Unit
+        yield return PerformAttack(_firstUnit, _secondUnit, _firstUnit.entity.CurrentAttack);
+        yield return RunAfterTurn(_firstUnit);
+        if (battleStateController.GetCurrentBattleState == BattleState.BattleOver) yield break;
+
+
+        //Second Unit
+        if (_secondentity.currentHP > 0)
+        {
+            yield return PerformAttack(_secondUnit, _firstUnit, _secondUnit.entity.CurrentAttack);
+            yield return RunAfterTurn(_secondUnit);
+            if (battleStateController.GetCurrentBattleState == BattleState.BattleOver) yield break;
+        }
+
+        OnTurnFinished?.Invoke();
+    }
+
+    public IEnumerator StartItemUseTurn()
+    {
+        battleStateController.SetCurrentState(BattleState.Busy);
+        yield return battleUIController.TypeDialogue($"You used {battleStateController.itemHolder.ItemName}");
+        battleStateController.itemHolder = null;
+        yield return RunAfterTurn(battleStateController.GetCurrentPlayerUnit);
+
+        battleStateController.SetCurrentState(BattleState.RunningTurn);
+
+        //EnemyTurn
+        battleStateController.GetCurrentEnemyUnit.entity.CurrentAttack = battleStateController.GetCurrentEnemyUnit.entity.GetRandomAttack();
+        yield return PerformAttack(battleStateController.GetCurrentEnemyUnit, battleStateController.GetCurrentPlayerUnit, battleStateController.GetCurrentEnemyUnit.entity.CurrentAttack);
+        yield return RunAfterTurn(battleStateController.GetCurrentEnemyUnit);
+        if (battleStateController.GetCurrentBattleState == BattleState.BattleOver) yield break;
+
+        OnTurnFinished?.Invoke();
+    }
+    #endregion
 }

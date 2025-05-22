@@ -53,6 +53,7 @@ public class BattleController : MonoBehaviour
         battleLogic.SendBattleOverArg1 += BattleOver;
         battleLogic.SendBattleOverArg2 += EndBattleWithDefeatedUnit;
         battleLogic.SendStartTurnArg += RunTurns;
+        battleLogic.OnTurnFinished += OnTurnRunFishinsh;
     }
     void SetPreviousState()
     {
@@ -72,6 +73,7 @@ public class BattleController : MonoBehaviour
             battleLogic.SendBattleOverArg1 -= BattleOver;
             battleLogic.SendBattleOverArg2 -= EndBattleWithDefeatedUnit;
             battleLogic.SendStartTurnArg -= RunTurns;
+            battleLogic.OnTurnFinished -= OnTurnRunFishinsh;
 
         }
     }
@@ -127,17 +129,8 @@ public class BattleController : MonoBehaviour
     #endregion
 
 
-    private void ActionSelection()
+    public void ActionSelection()
     {
-        UpdateCurrentlySelectedAttack(null);
-        state = BattleState.ActionSelection;
-        BattleUI.SetDialogue("Choose an Action.");
-        BattleUI.EnableActionSelector(true);
-    }
-
-    public void ActionSelection(BattleMenuControl _menuControllerCheck = null)
-    {
-        if (_menuControllerCheck == null) return;
         UpdateCurrentlySelectedAttack(null);
         state = BattleState.ActionSelection;
         BattleUI.SetDialogue("Choose an Action.");
@@ -164,7 +157,6 @@ public class BattleController : MonoBehaviour
     }
     public IEnumerator SetupBattle()
     {
-        // mainBattleStateMachine.Initialize();
 
         battleLogic.escapeAttempts = 0;
 
@@ -180,7 +172,7 @@ public class BattleController : MonoBehaviour
 
         // yield return EnableButtons(true);
 
-        yield return BattleUI.TypeDialogue($"You were spotted by a {enemyUnit.entity.Base.EntityName}. You cannot avoid a battle.");
+        // yield return BattleUI.TypeDialogue($"You were spotted by a {enemyUnit.entity.Base.EntityName}. You cannot avoid a battle.");
         yield return new WaitForSeconds(1f);
 
         ActionSelection();
@@ -241,11 +233,15 @@ public class BattleController : MonoBehaviour
         }
 
 
+
+    }
+
+    public void OnTurnRunFishinsh()
+    {
         if (state != BattleState.BattleOver)
         {
             ActionSelection();
         }
-
     }
     #endregion
 

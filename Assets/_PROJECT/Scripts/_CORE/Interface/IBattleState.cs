@@ -9,4 +9,5 @@ public interface IBattleState
 {
 
     public void ExecuteTurn();
+
 }

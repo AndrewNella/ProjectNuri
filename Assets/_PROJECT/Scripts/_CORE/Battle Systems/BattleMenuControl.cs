@@ -178,7 +178,7 @@ public class BattleMenuControl : MonoBehaviour, UIEventSelection
                 EnableInventoryScreen(false);
             }
             EnableDialogueText(true);
-            battleController.ActionSelection(this);
+            battleController.ActionSelection();
         }
     }
 }

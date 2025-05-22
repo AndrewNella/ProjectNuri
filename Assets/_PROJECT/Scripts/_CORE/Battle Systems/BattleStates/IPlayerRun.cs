@@ -1,7 +1,7 @@
 using Kisei.BattleSystem;
 using UnityEngine;
 
-public class IPlayerRun :  IBattleState
+public class IPlayerRun : IBattleState
 {
     BattleInstanceHUB hub;
 
@@ -11,6 +11,8 @@ public class IPlayerRun :  IBattleState
     }
     public void ExecuteTurn()
     {
-        hub.StartCoroutine(hub.BattleLogic.TryToEscape());
+        hub.StartCoroutine(hub.BattleLogic.StartEscapeTurn());
     }
+
+
 }
