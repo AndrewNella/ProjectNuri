@@ -138,9 +138,6 @@ public class MonsterMovement : MonoBehaviour
                 case MonsterState.Wandering:
                     currentMovementCoroutine = StartCoroutine(MoveInRandomDirection());
                     break;
-                case MonsterState.Hunting:
-                    currentMovementCoroutine = StartCoroutine(MoveTowardsPlayer());
-                    break;
                 case MonsterState.WalkingPatroling:
                     UpdatePatrol();
                     currentMovementCoroutine = StartCoroutine(MoveInPatrolRoute());
@@ -171,18 +168,6 @@ public class MonsterMovement : MonoBehaviour
                 patrolIndex = 0;
             }
             patrolTargetTransform = patrolPositionList[patrolIndex];
-        }
-    }
-
-
-    void CheckIfPlayerIsWithinRangeForBattle()
-    {
-        if (currentDistanceWithPlayer < minimumDistanceToTriggerBattle && !fieldbase.GetIsBattleDisabled())
-        {
-            if (GameController.instance.state != GameState.Battle)
-            {
-                fieldbase.TriggerAttackFromThisEntity();
-            }
         }
     }
 
@@ -276,41 +261,5 @@ public class MonsterMovement : MonoBehaviour
                 randVector = new Vector2(0, -1);
                 break;
         }
-
-        //If the monster is aggressive, it will battle the player.
-        if (monsterPersonality == MonsterPersonality.Aggressive)
-        {
-            StartCoroutine(fieldbase.character.Move(randVector, fieldbase.character.gridparentTransform, CheckIfPlayerIsWithinRangeForBattle));
-        }
-        else
-        {
-            StartCoroutine(fieldbase.character.Move(randVector, fieldbase.character.gridparentTransform));
-        }
-
-
-    }
-    IEnumerator MoveTowardsPlayer()
-    {
-        Vector3 dir = playerTransform.position - transform.position;
-        dir = dir.normalized;
-
-        if ((Math.Abs(dir.x) >= Math.Abs(dir.y)) && dir.x >= 0)
-        {
-            MoveInSpesificDirection(MonsterMovementDirection.Left);
-        }
-        if ((Math.Abs(dir.x) >= Math.Abs(dir.y)) && dir.x <= 0)
-        {
-            MoveInSpesificDirection(MonsterMovementDirection.Right);
-        }
-        if ((Math.Abs(dir.x) < Math.Abs(dir.y)) && dir.y >= 0)
-        {
-            MoveInSpesificDirection(MonsterMovementDirection.Up);
-        }
-        if ((Math.Abs(dir.x) < Math.Abs(dir.y)) && dir.y <= 0)
-        {
-            MoveInSpesificDirection(MonsterMovementDirection.Down);
-        }
-        yield return new WaitForSeconds(movementWaitTimer);
-        currentMovementCoroutine = null;
     }
 }

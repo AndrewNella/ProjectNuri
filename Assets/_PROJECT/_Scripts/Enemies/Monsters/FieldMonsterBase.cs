@@ -18,11 +18,11 @@ public class FieldMonsterBase : MonoBehaviour, ISavable
     MonsterMovement fieldMonster = null;
 
     public Character character;
-    public FieldMonsterType FieldBattleType => fieldBattleType;
+    public BattleResultType FieldBattleType => fieldBattleType;
     public Entity FieldEntity => fieldEntity;
 
     [Header("Battle Behaviour Settings")]
-    [SerializeField] FieldMonsterType fieldBattleType;
+    [SerializeField] BattleResultType fieldBattleType;
     public bool isBattlingDisabled = false;
     bool isMonsterStunned = false;
     [SerializeField] float stunTimeWhenDefeated;
@@ -86,23 +86,23 @@ public class FieldMonsterBase : MonoBehaviour, ISavable
     {
         isBattlingDisabled = true;
         isMonsterStunned = true;
-        StartCoroutine(WaitForBattleStunTimer());
+        StartCoroutine(WaitUntilStunTimerIsDone());
     }
     public void OnDefeated()
     {
         switch (fieldBattleType)
         {
-            case FieldMonsterType.BattleOnceThenDead:
+            case BattleResultType.BattleOnceThenDead:
                 StopAllCoroutines();
                 fieldMonster?.StopAllCoroutines();
                 Destroy(character.gridparentTransform.gameObject);
                 break;
-            case FieldMonsterType.BattleOnceThenDisable:
+            case BattleResultType.BattleOnceThenDisable:
                 isBattlingDisabled = true;
                 TriggerAreaObject.SetActive(false);
 
                 break;
-            case FieldMonsterType.StunnedAfterBattle:
+            case BattleResultType.StunnedAfterBattle:
                 EscapeStun();
                 break;
             default:
@@ -126,7 +126,7 @@ public class FieldMonsterBase : MonoBehaviour, ISavable
         isBattlingDisabled = (bool)state;
     }
 
-    IEnumerator WaitForBattleStunTimer()
+    IEnumerator WaitUntilStunTimerIsDone()
     {
         Debug.Log("Monster is stunned");
         SpriteRenderer _spriteHolder = null;
@@ -148,7 +148,7 @@ public class FieldMonsterBase : MonoBehaviour, ISavable
         Debug.Log("Monster is no longer stunned");
 
     }
-    public enum FieldMonsterType
+    public enum BattleResultType
     {
         BattleOnceThenDead,
         BattleOnceThenDisable,

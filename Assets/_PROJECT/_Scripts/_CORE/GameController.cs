@@ -193,7 +193,6 @@ public class GameController : MonoBehaviour
         battleCamera.Priority = 6;
         _incomingMonsterEntity.Init();
         battleController.StartBattle(_incomingMonsterEntity);
-
     }
 
     public void StartSpesificMonsterBattle(Entity _incomingMonsterEntity, FieldMonsterBase _incomingFieldMonsterBase)

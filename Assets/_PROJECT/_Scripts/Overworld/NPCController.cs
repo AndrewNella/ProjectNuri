@@ -28,8 +28,15 @@ public class NPCController : MonoBehaviour, Interactable
     {
         character = GetComponent<Character>();
         idleTimer = 0;
-    }
 
+    }
+    private void Start()
+    {
+        if (npcState == NPCState.Patrolling)
+        {
+            StartCoroutine(WalkToPatrolPoint());
+        }
+    }
     public void Interact(Transform _initiator)
     {
         if (!isInteractableByPlayer) return;
@@ -78,6 +85,12 @@ public class NPCController : MonoBehaviour, Interactable
 
     public IEnumerator WalkToPatrolPoint()
     {
+        if (character == null)
+        {
+            Debug.LogError("Character component is missing. Cannot walk to patrol point.");
+            yield break;
+        }
+
         npcState = NPCState.Walking;
 
         var _oldPosition = transform.position;
