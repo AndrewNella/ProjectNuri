@@ -19,7 +19,7 @@ public class PersistantObjectSpawner : MonoBehaviour
             if (customPlayerTransform != null && useSpesificSpawnPointForPlayer)
             {
 
-                PlayerInstanceHUB.Instance.PlayerCharacter.gridparentTransform.position = customPlayerTransform.position;
+                PlayerInstanceHUB.Instance.PlayerCharacter.movementControl.gridparentTransform.position = customPlayerTransform.position;
             }
 
             GameController.instance.SetCurrentMapAreaToDefault();

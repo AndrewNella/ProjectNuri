@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 30792596703060199}
   - component: {fileID: 8805535147169465432}
+  - component: {fileID: 4491566568669550444}
   - component: {fileID: 7199918941544116515}
   - component: {fileID: 891317941452341029}
   - component: {fileID: 4278803420362210732}
@@ -55,12 +56,30 @@ MonoBehaviour:
     - Look Dad! I'm in a game!
     - Can I have a fish now?
   character: {fileID: 0}
+  npcState: 0
   maxIdleWaitTime: 2
   patrolList:
   - {x: -2, y: 0}
   - {x: 0, y: -3}
   - {x: 2, y: 0}
   - {x: 0, y: 3}
+--- !u!114 &4491566568669550444
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1665838450576402783}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a8cd2f0a10a729c4cbd88b8e3943b5c1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isInteractableByPlayer: 1
+  inputDialogue:
+    lines:
+    - Look Dad! I'm in a game!
+    - Can I have a fish now?
 --- !u!114 &7199918941544116515
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -74,12 +93,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isPlayerCharacter: 0
-  animator: {fileID: 1588611349470375848}
-  isMoving: 0
-  moveSpeed: 4
-  gridparentTransform: {fileID: 6102347009785681480}
-  movementMagnitudeLimit: 0.001
-  solidObjectDetectionRadius: 0.2
+  characterAnimator: {fileID: 0}
+  movementControl: {fileID: 0}
 --- !u!50 &891317941452341029
 Rigidbody2D:
   serializedVersion: 5

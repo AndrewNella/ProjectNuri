@@ -203,16 +203,17 @@ GameObject:
   m_Component:
   - component: {fileID: 1752469104469833644}
   - component: {fileID: 5360480549977388596}
+  - component: {fileID: 5560068729298396453}
   - component: {fileID: 3907563571876863265}
   - component: {fileID: 7418393227601992938}
-  - component: {fileID: 7646084981626847920}
   - component: {fileID: 5311169691374748513}
   - component: {fileID: 8633863757036578865}
   - component: {fileID: 4966389852436608942}
   - component: {fileID: 2001569478035551559}
   - component: {fileID: 7086712114301919372}
+  - component: {fileID: 9010997127046624333}
   m_Layer: 9
-  m_Name: Player
+  m_Name: PlayerController
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -288,6 +289,20 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &5560068729298396453
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6039702177351683381}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b60f5fddae7d2fb47b470c5019707f18, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _deactivateOnLoad: 0
+  _dontDestroyOnLoad: 0
 --- !u!114 &3907563571876863265
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -306,7 +321,6 @@ MonoBehaviour:
     level: 3
   randomEncounterChance: 20
   headPlayerControllerParent: {fileID: 9004455613256910730}
-  character: {fileID: 5311169691374748513}
 --- !u!95 &7418393227601992938
 Animator:
   serializedVersion: 7
@@ -329,19 +343,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &7646084981626847920
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6039702177351683381}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3f654b9a749a45948baa1f65345a8d5d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  mentors: []
 --- !u!114 &5311169691374748513
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -356,11 +357,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isPlayerCharacter: 0
   animator: {fileID: 7418393227601992938}
-  isMoving: 0
-  moveSpeed: 4
-  gridparentTransform: {fileID: 8322848907016068502}
-  movementMagnitudeLimit: 0.001
-  solidObjectDetectionRadius: 0.2
+  movementControl: {fileID: 0}
 --- !u!114 &8633863757036578865
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -464,10 +461,23 @@ MonoBehaviour:
     itemCount: 10
   - item: {fileID: 11400000, guid: a3b6472e8e6afae4fad9cdceb0596ddc, type: 2}
     itemCount: 3
-  - item: {fileID: 11400000, guid: 495ccd2ea0f6b674191ab257cdae207d, type: 2}
-    itemCount: 10
-  - item: {fileID: 11400000, guid: a26ee4d4f40dc69408ab60a5abe60d2a, type: 2}
-    itemCount: 2
+--- !u!114 &9010997127046624333
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6039702177351683381}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b056359f003a9174f88def14528f5ce1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gridparentTransform: {fileID: 0}
+  isMoving: 0
+  moveSpeed: 0
+  movementMagnitudeLimit: 0
+  solidObjectDetectionRadius: 0
 --- !u!1 &9004455613256910730
 GameObject:
   m_ObjectHideFlags: 0

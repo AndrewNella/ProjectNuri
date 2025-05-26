@@ -30,8 +30,6 @@ public class PlayerController : MonoBehaviour, ISavable
         inputVector = Vector2.zero;
 
         character = PlayerInstanceHUB.Instance.PlayerCharacter;
-
-
     }
     private void Start()
     {
@@ -86,7 +84,7 @@ public class PlayerController : MonoBehaviour, ISavable
             var _collider = Physics2D.OverlapCircle(_interactPosition, 0.3f, GameLayers.Instance.InteractableLayer);
             if (_collider != null)
             {
-                _collider.GetComponent<Interactable>()?.Interact(character.gridparentTransform);
+                _collider.GetComponent<Interactable>()?.Interact(character.movementControl.gridparentTransform);
             }
         }
     }
@@ -95,7 +93,7 @@ public class PlayerController : MonoBehaviour, ISavable
     {
         if (enablePlayerInputs)
         {
-            if (!character.isMoving)
+            if (!character.movementControl.isMoving)
             {
                 //Removes Diagonal Movement
                 if (inputVector.x != 0) inputVector.y = 0;
@@ -103,7 +101,7 @@ public class PlayerController : MonoBehaviour, ISavable
 
                 if (inputVector != Vector2.zero)
                 {
-                    StartCoroutine(character.Move(inputVector, character.gridparentTransform, OnMoveOver));
+                    StartCoroutine(character.movementControl.Move(inputVector, character.movementControl.gridparentTransform, OnMoveOver));
                 }
 
                 character.HandleUpdate();
@@ -112,7 +110,7 @@ public class PlayerController : MonoBehaviour, ISavable
     }
     void OnMoveOver()
     {
-        var _colliders = Physics2D.OverlapCircleAll(character.gridparentTransform.position, 0.2f, GameLayers.Instance.TriggerableLayer);
+        var _colliders = Physics2D.OverlapCircleAll(character.movementControl.gridparentTransform.position, 0.2f, GameLayers.Instance.TriggerableLayer);
         foreach (var _collider in _colliders)
         {
             var _trigger = _collider.GetComponent<IPlayerTriggerable>();
@@ -134,7 +132,7 @@ public class PlayerController : MonoBehaviour, ISavable
     {
         var _saveData = new PlayerSaveData()
         {
-            savedPlayerPosition = new float[] { character.gridparentTransform.position.x, character.gridparentTransform.position.y },
+            savedPlayerPosition = new float[] { character.movementControl.gridparentTransform.position.x, character.movementControl.gridparentTransform.position.y },
             savedPlayerEntity = mainPlayerEntity.GetSaveData()
 
         };
@@ -149,7 +147,7 @@ public class PlayerController : MonoBehaviour, ISavable
         // Restore Position
         var _position = _saveData.savedPlayerPosition;
 
-        character.gridparentTransform.position = new Vector3(_position[0], _position[1]);
+        character.movementControl.gridparentTransform.position = new Vector3(_position[0], _position[1]);
 
         //Restore Player Data
         mainPlayerEntity = new Entity(_saveData.savedPlayerEntity);

@@ -4,8 +4,10 @@ using UnityEngine;
 using System.Collections;
 using System;
 
-public class NPCController : MonoBehaviour, Interactable
+public class NPCController : MonoBehaviour
 {
+    public event Action<Transform> OnInteractTrigger;
+    InteractionBase interaction;
     [Header("Character Data")]
     [SerializeField] bool isInteractableByPlayer = false;
     [SerializeField] Dialogue inputDialogue;
@@ -17,17 +19,21 @@ public class NPCController : MonoBehaviour, Interactable
     [Header("Idle Settings")]
     [SerializeField] float maxIdleWaitTime;
 
-    float idleTimer = 0;
+    public float idleTimer = 0;
 
     [Header("Patrol Settings")]
     [SerializeField] List<Vector2> patrolList;
     int currentPatrolIndex = 0;
 
-
+    public List<Vector2> PatrolPointList => patrolList;
+    public int PatrolIndex => currentPatrolIndex;
     private void Awake()
     {
         character = GetComponent<Character>();
         idleTimer = 0;
+
+        interaction = GetComponent<InteractionBase>();
+
 
     }
     private void Start()
@@ -41,28 +47,36 @@ public class NPCController : MonoBehaviour, Interactable
     {
         if (!isInteractableByPlayer) return;
 
-        switch (npcState)
-        {
+        OnInteractTrigger!.Invoke(_initiator);
 
-            case NPCState.WalkWaiting:
-                npcState = NPCState.Dialogue;
-                character.LookTowards(_initiator.position);
-                StartCoroutine(DialogueManager.Instance.ShowDialogue(inputDialogue, () =>
-                {
-                    idleTimer = 0;
-                    npcState = NPCState.WalkWaiting;
-                }));
-                break;
-            case NPCState.Idle:
-                npcState = NPCState.Dialogue;
-                character.LookTowards(_initiator.position);
-                StartCoroutine(DialogueManager.Instance.ShowDialogue(inputDialogue));
-                break;
-            default:
-                break;
-        }
+        // switch (npcState)
+        // {
 
+        //     case NPCState.WalkWaiting:
+        //         npcState = NPCState.Dialogue;
+        //         NPCCharacter.movementControl.LookTowards(_initiator.position);
+        //         StartCoroutine(DialogueManager.Instance.ShowDialogue(inputDialogue, () =>
+        //         {
+        //             idleTimer = 0;
+        //             npcState = NPCState.WalkWaiting;
+        //         }));
+        //         break;
+        //     case NPCState.Idle:
+        //         npcState = NPCState.Dialogue;
 
+        //         Debug.Log($"Incoming Transform's position is {_initiator.position}");
+        //         NPCCharacter.movementControl.LookTowards(_initiator.position);
+
+        //         StartCoroutine(DialogueManager.Instance.ShowDialogue(inputDialogue));
+        //         break;
+        //     default:
+        //         break;
+        // }
+    }
+
+    public void SetPatrolIndex(int _incomingInt)
+    {
+        currentPatrolIndex = _incomingInt;
     }
     public void Update()
     {
@@ -95,7 +109,7 @@ public class NPCController : MonoBehaviour, Interactable
 
         var _oldPosition = transform.position;
 
-        yield return character.Move(patrolList[currentPatrolIndex], character.gridparentTransform);
+        yield return character.movementControl.Move(patrolList[currentPatrolIndex], character.movementControl.gridparentTransform);
 
         if (transform.position != _oldPosition)
         {

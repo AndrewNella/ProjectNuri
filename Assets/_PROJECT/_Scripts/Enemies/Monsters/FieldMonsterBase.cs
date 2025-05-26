@@ -72,7 +72,7 @@ public class FieldMonsterBase : MonoBehaviour, ISavable
         var _moveVector = _difference - _difference.normalized;
         _moveVector = new Vector2(Mathf.Round(_moveVector.x), Mathf.Round(_moveVector.y));
 
-        yield return character.Move(_moveVector, enemySprite.transform);
+        yield return character.movementControl.Move(_moveVector, enemySprite.transform);
 
         //Show Dialogue
         if (dialogue != null)
@@ -95,7 +95,7 @@ public class FieldMonsterBase : MonoBehaviour, ISavable
             case BattleResultType.BattleOnceThenDead:
                 StopAllCoroutines();
                 fieldMonster?.StopAllCoroutines();
-                Destroy(character.gridparentTransform.gameObject);
+                Destroy(character.movementControl.gridparentTransform.gameObject);
                 break;
             case BattleResultType.BattleOnceThenDisable:
                 isBattlingDisabled = true;
@@ -113,7 +113,7 @@ public class FieldMonsterBase : MonoBehaviour, ISavable
     public void OnWonBattle()
     {
         StopAllCoroutines();
-        Destroy(character.gridparentTransform.gameObject);
+        Destroy(character.movementControl.gridparentTransform.gameObject);
     }
     public object CaptureState()
     {
