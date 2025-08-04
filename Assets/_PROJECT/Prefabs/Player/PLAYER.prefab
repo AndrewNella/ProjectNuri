@@ -356,7 +356,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isPlayerCharacter: 0
-  animator: {fileID: 7418393227601992938}
+  characterAnimator: {fileID: 0}
   movementControl: {fileID: 0}
 --- !u!114 &8633863757036578865
 MonoBehaviour:
@@ -473,11 +473,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b056359f003a9174f88def14528f5ce1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gridparentTransform: {fileID: 0}
+  gridparentTransform: {fileID: 8322848907016068502}
   isMoving: 0
-  moveSpeed: 0
-  movementMagnitudeLimit: 0
-  solidObjectDetectionRadius: 0
+  moveSpeed: 4
+  movementMagnitudeLimit: 0.02
+  solidObjectDetectionRadius: 0.04
 --- !u!1 &9004455613256910730
 GameObject:
   m_ObjectHideFlags: 0
