@@ -7,20 +7,18 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour, ISavable
 {
-
     public bool enablePlayerInputs = true;
     [SerializeField] Entity mainPlayerEntity;
     public Entity PlayerEntity => mainPlayerEntity;
 
 
-
     [SerializeField] float randomEncounterChance;
-    [SerializeField] bool isInMenu { get; set; }
+    [SerializeField] private bool isInMenu;
 
 
-    [Header("Movement Data")]
+    [Header("Movement Data")] [SerializeField]
+    GameObject headPlayerControllerParent;
 
-    [SerializeField] GameObject headPlayerControllerParent;
     Character character;
     Vector2 inputVector;
 
@@ -31,16 +29,20 @@ public class PlayerController : MonoBehaviour, ISavable
 
         character = PlayerInstanceHUB.Instance.PlayerCharacter;
     }
+
     private void Start()
     {
-        MainInputActionController.instance.actionMap.PlayerControllerMap.Movement.performed += x => OnPlayerMoveInput(x.ReadValue<Vector2>());
-        MainInputActionController.instance.actionMap.PlayerControllerMap.Movement.canceled += x => OnPlayerMoveInput(x.ReadValue<Vector2>());
+        MainInputActionController.instance.actionMap.PlayerControllerMap.Movement.performed +=
+            x => OnPlayerMoveInput(x.ReadValue<Vector2>());
+        MainInputActionController.instance.actionMap.PlayerControllerMap.Movement.canceled +=
+            x => OnPlayerMoveInput(x.ReadValue<Vector2>());
 
         MainInputActionController.instance.OnInteractTrigger += OnInteract;
 
 
         mainPlayerEntity.Init();
     }
+
     public void SetIsInMenu(bool _incomingBool)
     {
         isInMenu = _incomingBool;
@@ -50,6 +52,7 @@ public class PlayerController : MonoBehaviour, ISavable
     {
         return isInMenu;
     }
+
     void OnEnable()
     {
     }
@@ -76,7 +79,8 @@ public class PlayerController : MonoBehaviour, ISavable
         if (!isInMenu)
         {
             Debug.Log("Interact");
-            var _facingDir = new Vector3(character.MainAnimator.GetFloat("moveX"), character.MainAnimator.GetFloat("moveY"));
+            var _facingDir = new Vector3(character.MainAnimator.GetFloat("moveX"),
+                character.MainAnimator.GetFloat("moveY"));
             var _interactPosition = transform.position + _facingDir;
 
             // Debug.DrawLine(transform.position, _interactPosition, Color.red, 0.5f);
@@ -101,16 +105,19 @@ public class PlayerController : MonoBehaviour, ISavable
 
                 if (inputVector != Vector2.zero)
                 {
-                    StartCoroutine(character.movementControl.Move(inputVector, character.movementControl.gridparentTransform, OnMoveOver));
+                    StartCoroutine(character.movementControl.Move(inputVector,
+                        character.movementControl.gridparentTransform, OnMoveOver));
                 }
 
                 character.HandleUpdate();
             }
         }
     }
+
     void OnMoveOver()
     {
-        var _colliders = Physics2D.OverlapCircleAll(character.movementControl.gridparentTransform.position, 0.2f, GameLayers.Instance.TriggerableLayer);
+        var _colliders = Physics2D.OverlapCircleAll(character.movementControl.gridparentTransform.position, 0.2f,
+            GameLayers.Instance.TriggerableLayer);
         foreach (var _collider in _colliders)
         {
             var _trigger = _collider.GetComponent<IPlayerTriggerable>();
@@ -124,7 +131,6 @@ public class PlayerController : MonoBehaviour, ISavable
 
     public void StopPlayerAnimator()
     {
-
         character.MainAnimator.SetBool("isMoving", false);
     }
 
@@ -132,9 +138,12 @@ public class PlayerController : MonoBehaviour, ISavable
     {
         var _saveData = new PlayerSaveData()
         {
-            savedPlayerPosition = new float[] { character.movementControl.gridparentTransform.position.x, character.movementControl.gridparentTransform.position.y },
+            savedPlayerPosition = new float[]
+            {
+                character.movementControl.gridparentTransform.position.x,
+                character.movementControl.gridparentTransform.position.y
+            },
             savedPlayerEntity = mainPlayerEntity.GetSaveData()
-
         };
 
         return _saveData;
