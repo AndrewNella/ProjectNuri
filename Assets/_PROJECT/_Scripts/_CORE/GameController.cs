@@ -1,8 +1,8 @@
 using UnityEngine;
-using Cinemachine;
 using System;
 using Kisei.BattleSystem;
 using Kisei.Player;
+using Unity.Cinemachine;
 
 
 public enum GameState { FreeRoam, Battle, Dialogue, CutScene, Pause, Busy, GameOver }
@@ -13,7 +13,7 @@ public class GameController : MonoBehaviour
 
     public bool isDataLoaded { get; private set; } = false;
     [Header("Camera Data")]
-    [SerializeField] CinemachineVirtualCamera overworldPlayerCamera, battleCamera;
+    [SerializeField] CinemachineCamera overworldPlayerCamera, battleCamera;
     public static GameController instance;
 
     [Header("System Controller Data")]
