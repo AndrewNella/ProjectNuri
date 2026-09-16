@@ -170,6 +170,22 @@ PrefabInstance:
       propertyPath: m_AnchorMin.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 722843182714378500, guid: d11429ecca7867a4188908e221cab435, type: 3}
+      propertyPath: Priority.Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 722843182714378500, guid: d11429ecca7867a4188908e221cab435, type: 3}
+      propertyPath: Priority.m_Value
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 722843182714378500, guid: d11429ecca7867a4188908e221cab435, type: 3}
+      propertyPath: m_LegacyPriority
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 722843182714378500, guid: d11429ecca7867a4188908e221cab435, type: 3}
+      propertyPath: m_StreamingVersion
+      value: 20241001
+      objectReference: {fileID: 0}
     - target: {fileID: 914251761360442583, guid: d11429ecca7867a4188908e221cab435, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -269,6 +285,10 @@ PrefabInstance:
     - target: {fileID: 4503731622806585604, guid: d11429ecca7867a4188908e221cab435, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4749083456072929254, guid: d11429ecca7867a4188908e221cab435, type: 3}
+      propertyPath: uniqueId
+      value: 35442995-8647-4b3a-af14-f01fc8769dca
       objectReference: {fileID: 0}
     - target: {fileID: 5323253419864879653, guid: d11429ecca7867a4188908e221cab435, type: 3}
       propertyPath: m_AnchorMax.y
@@ -412,6 +432,8 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 4931584820227326492, guid: d11429ecca7867a4188908e221cab435, type: 3}
+    - {fileID: 1378288754413266962, guid: d11429ecca7867a4188908e221cab435, type: 3}
+    - {fileID: 3606947168666958021, guid: d11429ecca7867a4188908e221cab435, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
@@ -436,8 +458,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86c6556701af9e04380698b89f691b6e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: FMODUnity::FMODUnity.StudioListener
-  nonRigidbodyVelocity: 0
-  attenuationObject: {fileID: 0}
 --- !u!1 &1273037501
 GameObject:
   m_ObjectHideFlags: 0

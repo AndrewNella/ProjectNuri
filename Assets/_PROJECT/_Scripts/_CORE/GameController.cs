@@ -213,7 +213,9 @@ public class GameController : MonoBehaviour
         EnableOrDisableOverworldHUD(false);
         state = GameState.Battle;
         battleController.gameObject.SetActive(true);
-        battleCamera.Priority = 6;
+        
+        
+        // battleCamera.Priority.Value = 6;
         Entity areaEnemy = mapArea.GetRandomAreaEnemy();
         battleController.StartBattle(areaEnemy);
     }
@@ -249,7 +251,7 @@ public class GameController : MonoBehaviour
         EnableOrDisableOverworldHUD(true);
         state = GameState.FreeRoam;
         battleController.gameObject.SetActive(false);
-        battleCamera.Priority = 1;
+        // battleCamera.Priority = 1;
 
         if (currentFieldMonsterBase != null) currentFieldMonsterBase = null;
     }

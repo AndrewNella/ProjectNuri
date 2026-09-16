@@ -455,6 +455,10 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5163631221164846733, guid: d11429ecca7867a4188908e221cab435, type: 3}
+      propertyPath: m_Name
+      value: BattleCamera
+      objectReference: {fileID: 0}
     - target: {fileID: 5323253419864879653, guid: d11429ecca7867a4188908e221cab435, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -591,6 +595,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8117924416841870649, guid: d11429ecca7867a4188908e221cab435, type: 3}
+      propertyPath: m_Name
+      value: 2DMainPlayerCamera
+      objectReference: {fileID: 0}
     - target: {fileID: 8703822701037198431, guid: d11429ecca7867a4188908e221cab435, type: 3}
       propertyPath: m_Size
       value: 1
@@ -623,7 +631,12 @@ PrefabInstance:
       propertyPath: isPlayerCharacter
       value: 1
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 2723827953645502848, guid: d11429ecca7867a4188908e221cab435, type: 3}
+    - {fileID: 8809810841655697663, guid: d11429ecca7867a4188908e221cab435, type: 3}
+    - {fileID: 1378288754413266962, guid: d11429ecca7867a4188908e221cab435, type: 3}
+    - {fileID: 3606947168666958021, guid: d11429ecca7867a4188908e221cab435, type: 3}
+    - {fileID: 3658114467272501004, guid: d11429ecca7867a4188908e221cab435, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
